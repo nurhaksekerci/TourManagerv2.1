@@ -262,56 +262,97 @@
         </script>
         <script>
             function applySelect2() {
-                $('#id_operation_type').select2();
-                $('#id_hotel').select2();
-                $('#id_tour').select2();
-                $('#id_transfer').select2();
-                $('#id_guide').select2();
-                $('#id_vehicle').select2();
-                $('#id_supplier').select2();
-                $('#id_activity').select2();
-                $('#id_activity_supplier').select2();
-                $("#id_new_museum").select2({
-                  maximumSelectionLength: 44
+                $(document).ready(function() {
+                    $('select').select2();
+                    for(var i = 160; i < 9999; i++) {
+                        var div_id = `formitem-${i}`;
+                        
+                        // Alış İşlemleri
+                        $(`#${div_id} #alis_islemleri .col #id_operation_type`).attr('id', `id_operation_type-${i}`).select2();
+                        
+                        // Tur İşlemleri
+                        $(`#${div_id} #tur_islemleri:nth-child(2) #id_tour`).attr('id', `id_tour-${i}`).select2();
+                        $(`#${div_id} #tur_islemleri:nth-child(2) #id_transfer`).attr('id', `id_transfer-${i}`).select2();
+                        $(`#${div_id} #tur_islemleri:nth-child(2) #id_vehicle`).attr('id', `id_vehicle-${i}`).select2();
+                        
+                        // Otel İşlemleri
+                        $(`#${div_id} #otel_islemleri:nth-child(3) #id_hotel`).attr('id', `id_hotel-${i}`).select2();
+                        
+                        // Aktivite İşlemleri
+                        $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity`).attr('id', `id_activity-${i}`).select2();
+                        $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity_supplier`).attr('id', `id_activity_supplier-${i}`).select2();
+                        
+                        // Personel İşlemleri
+                        $(`#${div_id} #personel_islemleri:nth-child(6) #id_guide`).attr('id', `id_guide-${i}`).select2();
+                        
+                        // Müze İşlemleri
+                        $(`#${div_id} #muze_islemleri:nth-child(5) #id_new_museum`).attr('id', `id_new_museum-${i}`).select2({
+                            maximumSelectionLength: 44
+                        });
+                    }
                 });
-              }
-              
+                
+            }
               // Sayfa yüklendiğinde Select2 uygula
-              $(document).ready(function() {
+            $(document).ready(function() {
                 setTimeout(function() {
                     applySelect2();
-                }, 1000);
-              });
+                }, 2000);
+            });
               
               // Dinamik olarak yeni select elementleri oluşturulduğunda Select2 uygula
               // Örnek olay dinleyici: bir düğmeye tıklama olayı
-              $('#submit-all').click(function() {
+            $('#submit-all').click(function() {
                 // Yeni select elementlerini oluştur
                 // ...
               
                 // Yeni select elementlerine Select2'yi yeniden uygula
                 setTimeout(function() {
                     applySelect2();
-                }, 1000);
-              });
+                }, 2000);
+            });
+            $('#form-add').click(function() {
+                // Yeni select elementlerini oluştur
+                // ...
+              
+                // Yeni select elementlerine Select2'yi yeniden uygula
+                setTimeout(function() {
+                    applySelect2();
+                }, 2000);
+            });
         </script>
         <script>
-            // Document ready function
             $(document).ready(function() {
-              // Select2 initialization
-              $('#id_operation_type').select2();
-              $('#id_hotel').select2();
-              $('#id_tour').select2();
-              $('#id_transfer').select2();
-              $('#id_guide').select2();
-              $('#id_vehicle').select2();
-              $('#id_supplier').select2();
-              $('#id_activity').select2();
-              $('#id_activity_supplier').select2();
-              $("#id_new_museum").select2({
-                maximumSelectionLength: 44
-              });
+                $('select').select2();
+                for(var i = 160; i < 9999; i++) {
+                    var div_id = `formitem-${i}`;
+                    
+                    // Alış İşlemleri
+                    $(`#${div_id} #alis_islemleri .col #id_operation_type`).attr('id', `id_operation_type-${i}`).select2();
+                    
+                    // Tur İşlemleri
+                    $(`#${div_id} #tur_islemleri:nth-child(2) #id_tour`).attr('id', `id_tour-${i}`).select2();
+                    $(`#${div_id} #tur_islemleri:nth-child(2) #id_transfer`).attr('id', `id_transfer-${i}`).select2();
+                    $(`#${div_id} #tur_islemleri:nth-child(2) #id_vehicle`).attr('id', `id_vehicle-${i}`).select2();
+                    
+                    // Otel İşlemleri
+                    $(`#${div_id} #otel_islemleri:nth-child(3) #id_hotel`).attr('id', `id_hotel-${i}`).select2();
+                    
+                    // Aktivite İşlemleri
+                    $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity`).attr('id', `id_activity-${i}`).select2();
+                    $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity_supplier`).attr('id', `id_activity_supplier-${i}`).select2();
+                    
+                    // Personel İşlemleri
+                    $(`#${div_id} #personel_islemleri .col-md-2:last-child #id_guide`).attr('id', `id_guide-${i}`).select2();
+                    
+                    // Müze İşlemleri
+                    $(`#${div_id} #muze_islemleri:nth-child(5) #id_new_museum`).attr('id', `id_new_museum-${i}`).select2({
+                        maximumSelectionLength: 44
+                    });
+                }
             });
+
+            
         </script>
         
             

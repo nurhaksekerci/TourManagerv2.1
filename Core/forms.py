@@ -1,3 +1,4 @@
+import random
 from django import forms
 from Core.models import *
 from django.contrib.auth.models import User
@@ -252,8 +253,11 @@ class OperationdayForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
+from django.utils.crypto import get_random_string
 
 class OperationitemForm(forms.ModelForm):
+    
+
     class Meta:
         model = Operationitem
         fields = [
@@ -323,6 +327,8 @@ class OperationitemForm(forms.ModelForm):
         self.fields['supplier'].queryset = Supplier.objects.order_by('name')
         self.fields['activity_supplier'].queryset = Activitysupplier.objects.order_by('name')
         # Diğer Select alanları için benzer sıralamalar yapılabilir
+
+
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request', None)
         super(OperationitemForm, self).__init__(*args, **kwargs)

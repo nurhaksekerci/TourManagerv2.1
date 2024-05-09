@@ -121,7 +121,7 @@
           {{ formitem.museum_payment }}
       </div>
     </div>
-    <div class="row {% if request.user.personel.first.company.statu == basic %}d-none{% endif %}" id="muze_islemleri">
+    <div class="row {% if request.user.personel.first.company.statu == basic %}d-none{% endif %}" id="personel_islemleri">
       <h6 class="text-center mt-2">Personel İşlemleri</h6>
       <div class="col-md-2 align-self-end">
         <label for="{{ formitem.driver.id_for_label }}">{{ formitem.driver.label }}</label>

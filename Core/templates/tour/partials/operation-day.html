@@ -5,7 +5,7 @@
             {% include 'tour/partials/operation-item-form.html' %}
         </div>
         <div class="col-md-12 align-self-end">
-            <button class="btn btn-success my-4 me-2" hx-get="{% url 'create_operation_item' day.id %}" hx-target="#formitem-{{ day.id }}" hx-swap="beforeend">Form Ekle</button>
+            <button class="btn btn-success my-4 me-2" hx-get="{% url 'create_operation_item' day.id %}" hx-target="#formitem-{{ day.id }}" id="form-add" hx-swap="beforeend">Form Ekle</button>
         </div>
     </div>
 
