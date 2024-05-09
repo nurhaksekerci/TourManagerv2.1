@@ -138,7 +138,7 @@ class Museum(models.Model):
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="Adı", max_length=100)
     city = models.CharField(verbose_name="Şehir", max_length=155)
-    contact = models.CharField(verbose_name="İletişim", max_length=155)
+    contact = models.CharField(verbose_name="İletişim", max_length=155, blank=True, null=True)
     price = models.DecimalField(verbose_name="Ücreti", max_digits=10, decimal_places=2, default=0)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Para Birimi", default="TL")
 

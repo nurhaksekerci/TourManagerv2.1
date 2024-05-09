@@ -273,7 +273,7 @@ class OperationitemForm(forms.ModelForm):
             'pick_location': forms.TextInput(attrs={'class': 'form-control'}),
             
 
-            'tour': forms.Select(attrs={'class': 'form-control'}),
+            'tour': forms.Select(attrs={'class': 'form-control js-example-placeholder-single js-states'}),
             'transfer': forms.Select(attrs={'class': 'form-control'}),
             'vehicle': forms.Select(attrs={'class': 'form-control'}),
             'supplier': forms.Select(attrs={'class': 'form-control'}),

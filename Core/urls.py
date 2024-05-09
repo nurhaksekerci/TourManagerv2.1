@@ -34,6 +34,7 @@ urlpatterns = [
     path('api/mark-notification-read/', mark_notification_as_read, name='mark-notification-read'),
 
 
+    path('isler/filtre/', filtre, name='filtre'),
       
 ]
 

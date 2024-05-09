@@ -1019,6 +1019,37 @@ def index(request):
     }
 
     return render(request, 'tour/pages/index.html', context)
+@login_required
+def filtre(request):
+    requestPersonel = Personel.objects.get(user=request.user)
+    today = datetime.today()
+    tomorrow = today + timedelta(days=1)
+    totomorrow = today + timedelta(days=2)
+    sirket = requestPersonel.company
+    if request.method == "POST":
+        filtre = request.POST.get('filtre')
+        today_jobs = Operationitem.objects.filter(operation_type=filtre, company=sirket, day__date=today).order_by('pick_time')
+        tomorrow_jobs = Operationitem.objects.filter(operation_type=filtre, company=sirket, day__date=tomorrow).order_by('pick_time')
+        totomorrow_jobs = Operationitem.objects.filter(operation_type=filtre,company=sirket, day__date=totomorrow).order_by('pick_time')
+    else:
+        today_jobs = Operationitem.objects.filter(company=sirket, day__date=today).order_by('pick_time')
+        tomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=tomorrow).order_by('pick_time')
+        totomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=totomorrow).order_by('pick_time')
+
+    # Python'da sıralama yapın
+
+    # Context
+    context = {
+        'today_jobs': today_jobs,
+        'tomorrow_jobs': tomorrow_jobs,
+        'totomorrow_jobs': totomorrow_jobs,
+        'todaytitle': today,
+        'tomorrowtitle': tomorrow,
+        'totomorrowtitle': totomorrow,
+        'title': 'İşler'
+    }
+
+    return render(request, 'tour/pages/index.html', context)
 
 @login_required
 def indexim(request):
