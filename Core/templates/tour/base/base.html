@@ -261,6 +261,41 @@
             });
         </script>
         <script>
+            function applySelect2() {
+                $('#id_operation_type').select2();
+                $('#id_hotel').select2();
+                $('#id_tour').select2();
+                $('#id_transfer').select2();
+                $('#id_guide').select2();
+                $('#id_vehicle').select2();
+                $('#id_supplier').select2();
+                $('#id_activity').select2();
+                $('#id_activity_supplier').select2();
+                $("#id_new_museum").select2({
+                  maximumSelectionLength: 44
+                });
+              }
+              
+              // Sayfa yüklendiğinde Select2 uygula
+              $(document).ready(function() {
+                setTimeout(function() {
+                    applySelect2();
+                }, 1000);
+              });
+              
+              // Dinamik olarak yeni select elementleri oluşturulduğunda Select2 uygula
+              // Örnek olay dinleyici: bir düğmeye tıklama olayı
+              $('#submit-all').click(function() {
+                // Yeni select elementlerini oluştur
+                // ...
+              
+                // Yeni select elementlerine Select2'yi yeniden uygula
+                setTimeout(function() {
+                    applySelect2();
+                }, 1000);
+              });
+        </script>
+        <script>
             // Document ready function
             $(document).ready(function() {
               // Select2 initialization
