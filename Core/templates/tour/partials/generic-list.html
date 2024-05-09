@@ -1,0 +1,14 @@
+<tr id="model-div-{{ obj_data.id }}"  hx-swap="outerHTML swap:.5s" target="this">
+    {% for field in fields %}
+        <td>{{ obj_data|get_field_value:field|upper }}</td>
+    {% endfor %}
+    <td>
+        <button class="btn btn-success btn-sm" hx-get="{% url 'generic_edit_view' model_name obj_data.id %}" hx-target="#model-div-{{ obj_data.id }}" hx-swap="outerHTML swap:.5s">
+            EDIT
+        </button>
+        <button class="btn btn-danger btn-sm" hx-delete="{% url 'generic_delete_view' model_name obj_data.id %}" hx-confirm="Silmek istediğine emin misin?" hx-target="#model-div-{{ obj_data.id }}">DELETE</button>
+    </td>
+</tr>
+
+    
+        

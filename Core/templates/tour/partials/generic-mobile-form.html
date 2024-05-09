@@ -1,0 +1,16 @@
+<form hx-post="{% url 'generic_mobile_create_view' model_name %}" hx-target="#generic-mobile-list" hx-swap="beforeend" hx-on="htmx:afterRequest: this.remove()" hx-trigger="click from:#submit-all">
+    {% csrf_token %}  <!-- CSRF token for form security -->
+    <div class="row justify-content-center">
+        <!-- Loop through each form field -->
+        {% for field in form %}
+        <div class="col-sm-12  col-md-auto align-self-end">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div class="col-sm-12 mt-2 col-md-auto align-self-end">
+            <button type="button" class="btn btn-danger" hx-on="click: this.closest('form').remove()">İptal</button>
+        </div>
+    </div>
+</form>
+

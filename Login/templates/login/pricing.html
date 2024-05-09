@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Pricepeg | Themesdesign</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Premium Bootstrap 5 Landing Page Template" />
+    <meta name="keywords" content="bootstrap 5, premium, marketing, multipurpose" />
+    <meta content="Themesdesign" name="Author" />
+
+    <!--CDN Material Icon  -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.9.55/css/materialdesignicons.min.css"
+        integrity="sha512-vIgFb4o1CL8iMGoIF7cYiEVFrel13k/BkTGvs0hGfVnlbV6XjAA0M0oEHdWqGdAVRTDID3vIZPOHmKdrMAUChA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap CDN-->
+    <link rel="stylesheet" href="{% static 'login/css/bootstrap.min.css' %}" />
+
+    <!-- Custom  Css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'login/css/style.css' %}" />
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
+    />
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+</head>
+
+<body>
+    {% include "tour/partials/_navbar.html" %}
+    <section class="bg-pricing-12 bg-light">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{error}}
+                        </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="pricing_box text-center border p-3">
+                                <div class="pricing_img">
+                                    <img src="{% static 'login/images/pricing-img/img-1.png' %}" class="img-fluid">
+                                </div>
+                                <div class="pricing_contant mt-3">
+                                    <h5 class="text-uppercase fw-bold text-primary">Basic</h5>
+
+                                    <div class="text-start mt-4 mb-3 ps-5">
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Operasyon Takibi</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Tur</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Transfer</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Aktiviteler</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Müşteri Kayıtları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Araç Firmaları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Aktivite Firmaları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Şoför Atama</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Rehber Atama</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Otomatik Mail</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Otomatik SMS (1.000 SMS/Ay)</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Otomatik Fatura</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Destek Kaydı</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> 7/24 Canlı Destek</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Ücretsiz Güncellemeler</p>
+                                    </div>
+                                    <a href=""><h1 class="text-primary fw-bold mb-0">
+                                        <sup>
+                                            <small class="f-18">$</small>
+                                        </sup>240<small class="f-20">/Yıllık</small>
+                                    </h1></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-lg-4">
+                            <div class="pricing_box text-center border p-3">
+                                <div class="pricing_img">
+                                    <img src="{% static 'login/images/pricing-img/img-1.png' %}" class="img-fluid">
+                                </div>
+                                <div class="pricing_contant mt-3">
+                                    <h5 class="text-uppercase fw-bold text-primary">Team</h5>
+
+                                    <div class="text-start mt-4 mb-3 ps-5">
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Operasyon Takibi</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Tur</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Transfer</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Aktiviteler</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Müşteri Kayıtları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Araç Firmaları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Aktivite Firmaları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Şoför Atama</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Rehber Atama</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Otomatik Mail</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Otomatik SMS (1.000 SMS/Ay)</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> Otomatik Fatura</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Destek Kaydı</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-close text-danger"></i> 7/24 Canlı Destek</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Ücretsiz Güncellemeler</p>
+                                    </div>
+                                    <a href=""><h1 class="text-primary fw-bold mb-0">
+                                        <sup>
+                                            <small class="f-18">$</small>
+                                        </sup>720<small class="f-20">/Yıllık</small>
+                                    </h1></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-lg-4">
+                            <div class="pricing_box text-center border p-3">
+                                <div class="pricing_img">
+                                    <img src="{% static 'login/images/pricing-img/img-1.png' %}" class="img-fluid">
+                                </div>
+                                <div class="pricing_contant mt-3">
+                                    <h5 class="text-uppercase fw-bold text-primary">Professional</h5>
+
+                                    <div class="text-start mt-4 mb-3 ps-5">
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Operasyon Takibi</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Tur</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Transfer</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Aktiviteler</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Müşteri Kayıtları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Araç Firmaları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Aktivite Firmaları</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Şoför Atama</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Rehber Atama</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Otomatik Mail</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Otomatik SMS (1.000 SMS/Ay)</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Otomatik Fatura</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Destek Kaydı</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> 7/24 Canlı Destek</p>
+                                        <p style="font-size:.7rem;" class="text-muted mx-5"><i class="mdi mdi-check text-success"></i> Ücretsiz Güncellemeler</p>
+                                    </div>
+                                    <a href=""><h1 class="text-primary fw-bold mb-0">
+                                        <sup>
+                                            <small class="f-18">$</small>
+                                        </sup>900<small class="f-20">/Yıllık</small>
+                                    </h1></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                        
+
+                    </div>
+                    <!-- end row -->
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap -->
+    <script src="{% static 'login/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+{% extends "tour/base/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div id="close">
+        <h1 class="text-center my-5">{{ createtitle }}</h1>
+        <div id="forms">
+            {% include 'tour/partials/operation-form.html' %}
+        </div>
+        <div class="row my-4">
+            <div class="col-12">
+                <button class="btn btn-success" id="submit-all">Oluştur</button>
+            </div>
+        </div>
+        <div class="row my-4" id="opertaion-day" hx-swap="beforeend">
+            <h1 class="text-center my-5">Operasyon Detayı</h1>
+            {% include 'tour/partials/operation-day.html' %}
+        </div>
+        <button class="btn btn-success" id="submit-item-all">Kaydet</button>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    document.getElementById('id_ticket').addEventListener('input', function() {
+        var ticket = this.value;
+        var inputField = document.getElementById('id_ticket');
+        var submitButton = document.getElementById('submit-all');
+
+        if (ticket === '') {
+            inputField.style.borderColor = 'red';
+            submitButton.disabled = true;
+        } else {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/TourManagerV2/check_ticket/?ticket=' + encodeURIComponent(ticket), true);
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var isTaken = JSON.parse(this.responseText).is_taken;
+                    if (isTaken) {
+                        inputField.style.borderColor = 'red';
+                        submitButton.disabled = true;
+                    } else {
+                        inputField.style.borderColor = 'green';
+                        submitButton.disabled = false;
+                    }
+                }
+            }
+            xhr.send();
+        }
+    });
+    
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var submitButton = document.getElementById('submit-item-all');
+        
+        if (submitButton) {
+            submitButton.addEventListener('click', function() {
+                // Butona tıklanınca 1 saniye bekleyip başka bir sayfaya yönlendir
+                setTimeout(function() {
+                    window.location.href = 'http://127.0.0.1:8000/TourManagerV2/operation_list/';  // Buraya istediğiniz URL'yi yazın
+                }, 700);  // 1000 milisaniye = 1 saniye
+            });
+        }
+    });
+    </script>
+    
+{% endblock js %}
+

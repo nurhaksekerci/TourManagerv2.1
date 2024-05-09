@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Giriş Yap | Tour Manager</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Bootstrap CSS v5.3.2 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+        <style>
+            body {
+                background: #222D32;
+                font-family: 'Roboto', sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .login-box {
+                background: #1A2226;
+                text-align: center;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+                padding: 20px;
+                width: 25%;
+                min-width:300px;
+                border-radius: 8px;
+            }
+
+            .login-key {
+                height: 100px;
+                font-size: 80px;
+                line-height: 100px;
+                background: -webkit-linear-gradient(#27EF9F, #0DB8DE);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .login-title {
+                font-size: 30px;
+                letter-spacing: 2px;
+                font-weight: bold;
+                color: #ECF0F5;
+                margin-bottom: 20px;
+            }
+
+            .form-control {
+                background-color: #1A2226;
+                border: none;
+                border-bottom: 2px solid #0DB8DE;
+                border-top: 0;
+                border-radius: 0;
+                font-weight: bold;
+                color: #ECF0F5;
+                margin-bottom: 20px;
+            }
+
+            .form-control:focus {
+                border-color: inherit;
+                box-shadow: none;
+                border-bottom: 2px solid #0DB8DE;
+                background-color: #1A2226;
+                color: #ECF0F5;
+            }
+
+            .btn-outline-primary {
+                border-color: #0DB8DE;
+                color: #0DB8DE;
+                border-radius: 0;
+                font-weight: bold;
+                letter-spacing: 1px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            }
+
+            .btn-outline-primary:hover {
+                background-color: #0DB8DE;
+                color: #fff;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="login-box">
+            <div class="login-key">
+                <i class="fa fa-key" aria-hidden="true"></i>
+            </div>
+            <div class="login-title">
+                Tour Manager v2 <br> Astrolabe Software
+            </div>
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{error}}
+            </div>
+            {% endif %}
+            {% if welcome %}
+            <div class="alert alert-success" role="alert">
+                {{welcome}}
+            </div>
+            {% endif %}
+            <div class="login-form">
+                <form method="POST">
+                    <!-- CSRF Token -->
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-control-label">Kullanıcı Adı</label>
+                        <input type="text" name="username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label">Parola</label>
+                        <input type="password" name="password" class="form-control">
+                    </div>
+                    <div class="login-button d-flex flex-column justify-content-between  w-100">
+                        <a class="btn btn-dark text-start mb-3 align-items-start" href="{% url 'register' %}" style="font-size:0.8rem;">Deneme Sürümü Başlat</a>
+                        <button type="submit" class="btn btn-outline-primary">Giriş <i class="fa fa-sign-in" aria-hidden="true"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bootstrap JavaScript Libraries -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    </body>
+</html>

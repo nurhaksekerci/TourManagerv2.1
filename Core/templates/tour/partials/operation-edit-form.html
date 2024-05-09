@@ -1,0 +1,61 @@
+<div id="">
+    <div id="form-{{ operation_form.instance.id }}">
+        <!-- Operation Form Alanları -->
+        <form hx-post="" hx-target="#form-{{ operation_form.instance.id }}"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
+            <div class="row">
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.follow_staff.id_for_label }}">{{ operation_form.follow_staff.label }}</label>
+                    {{ operation_form.follow_staff }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.buyer_company.id_for_label }}">{{ operation_form.buyer_company.label }}</label>
+                    {{ operation_form.buyer_company }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.ticket.id_for_label }}">{{ operation_form.ticket.label }}</label>
+                    {{ operation_form.ticket }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.start.id_for_label }}">{{ operation_form.start.label }}</label>
+                    {{ operation_form.start }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.finish.id_for_label }}">{{ operation_form.finish.label }}</label>
+                    {{ operation_form.finish }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.number_passengers.id_for_label }}">{{ operation_form.number_passengers.label }}</label>
+                    {{ operation_form.number_passengers }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.usd_sales_price.id_for_label }}">{{ operation_form.usd_sales_price.label }}</label>
+                    {{ operation_form.usd_sales_price }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.eur_sales_price.id_for_label }}">{{ operation_form.eur_sales_price.label }}</label>
+                    {{ operation_form.eur_sales_price }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.tl_sales_price.id_for_label }}">{{ operation_form.tl_sales_price.label }}</label>
+                    {{ operation_form.tl_sales_price }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.rbm_sales_price.id_for_label }}">{{ operation_form.rbm_sales_price.label }}</label>
+                    {{ operation_form.rbm_sales_price }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.payment_type.id_for_label }}">{{ operation_form.payment_type.label }}</label>
+                    {{ operation_form.payment_type }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.payment_channel.id_for_label }}">{{ operation_form.payment_channel.label }}</label>
+                    {{ operation_form.payment_channel }}
+                </div>
+                <div class="col-md-4 align-self-end">
+                    <label for="{{ operation_form.passenger_info.id_for_label }}">{{ operation_form.passenger_info.label }}</label>
+                    {{ operation_form.passenger_info }}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

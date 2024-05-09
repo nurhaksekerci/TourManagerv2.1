@@ -1,0 +1,12 @@
+{% for day in days %}
+    <div class="bg-light my-2">
+        <h3 class="m-4" id="day-{{ day.id }}">{{ day.date|date:"d.m.Y" }}</h3>
+        <div id="formitem">
+            {% include 'tour/partials/operation-item-form.html' %}
+        </div>
+        <div class="col-md-12 align-self-end">
+            <button class="btn btn-success my-4 me-2" hx-get="{% url 'create_operation_item' day.id %}" hx-target="#formitem-{{ day.id }}" hx-swap="beforeend">Form Ekle</button>
+        </div>
+    </div>
+
+{% endfor %}

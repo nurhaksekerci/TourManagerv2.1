@@ -1,0 +1,227 @@
+{% extends "tour/base/base.html" %}
+
+{% block content %}
+<div class="p-5">
+
+    <h1 class="text-center my-5">{{ createtitle }}</h1>
+    <div class="row">
+        <div class="col-lg-2 my-4">
+            <div class="my-2">
+                <input class="form-control me-2" id="search" type="search" placeholder="Ticket Search" aria-label="Search">
+            </div>
+            <div class="tabs  mb-2">
+                <button class="tab-button btn active" style="width:30%; font-size:0.6rem;" onclick="openTab(event, 'DevamEden')">
+                    Devam Eden
+                </button>
+                <button class="tab-button btn" style="width:30%; font-size:0.6rem;" onclick="openTab(event, 'Tamamlanmis')">
+                    Biten
+                </button>
+                <button class="tab-button btn" style="width:30%; font-size:0.6rem;" onclick="openTab(event, 'Gelecek')">
+                    Gelecek
+                </button>
+            </div>
+        
+            <div id="DevamEden" class="tab-content" style="display: block;">
+                <ul class="list-group">
+                    {% for operation in started_jobs %}
+                        <li class="list-group-item">
+                            <button class="btn w-100 text-left" hx-get="{% url 'operation_details' operation.id %}" hx-target="#operation-details" hx-swap="innerHTML">
+                                {{ operation.ticket }}
+                            </button>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Hiç operasyon kaydı bulunamadı.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div id="Tamamlanmis" class="tab-content" style="display: none;">
+                <ul class="list-group">
+                    {% for operation in finished_jobs %}
+                        <li class="list-group-item">
+                            <button class="btn w-100 text-left" hx-get="{% url 'operation_details' operation.id %}" hx-target="#operation-details" hx-swap="innerHTML">
+                                {{ operation.ticket }}
+                            </button>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Hiç operasyon kaydı bulunamadı.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div id="Gelecek" class="tab-content" style="display: none;">
+                <ul class="list-group">
+                    {% for operation in future_jobs %}
+                        <li class="list-group-item">
+                            <button class="btn w-100 text-left" hx-get="{% url 'operation_details' operation.id %}" hx-target="#operation-details" hx-swap="innerHTML">
+                                {{ operation.ticket }}
+                            </button>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Hiç operasyon kaydı bulunamadı.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+    <div class="col-lg-10" id="operation-details">
+
+        {% if comp == False %}
+            {% include 'tour/partials/operation-details.html' %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
+{% block js %}
+<script>
+    function printOperation(operationId) {
+        var operationElement = document.getElementById(operationId);
+        var printContents = operationElement.innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        // Detay butonlarını ve print_dnone sınıfına sahip öğeleri gizle
+        var detailButtons = operationElement.getElementsByClassName('btn-detail');
+        var printDnoneElements = operationElement.getElementsByClassName('print_dnone');
+
+        Array.from(detailButtons).forEach(function(button) {
+            button.style.display = 'none';
+        });
+
+        Array.from(printDnoneElements).forEach(function(element) {
+            element.style.display = 'none';
+        });
+
+        // Yazdırma işlemi
+        document.body.innerHTML = printContents;
+        window.print();
+
+        // Orijinal içeriği, butonları ve print_dnone öğelerini geri yükle
+        document.body.innerHTML = originalContents;
+
+        Array.from(detailButtons).forEach(function(button) {
+            button.style.display = 'block';
+        });
+
+        // Not: Bu adım gereksiz olabilir çünkü orijinal içeriği geri yüklediğimizde,
+        // print_dnone sınıfına sahip öğelerin görünürlüğü de otomatik olarak eski haline gelecektir.
+        // Ancak, spesifik bir durum için tekrar görünür yapmak isterseniz, bu kodu kullanabilirsiniz.
+        Array.from(printDnoneElements).forEach(function(element) {
+            element.style.display = 'block';
+        });
+    }
+</script>
+<script>
+function downloadExcel() {
+    // ID'lerden verileri al
+    const tourDetails = [
+        ["Şirket", document.getElementById("company").innerText],
+        ["Başlangıç Tarihi", document.getElementById("startDate").innerText],
+        ["Bitiş Tarihi", document.getElementById("endDate").innerText],
+        ["Oluşturulma Tarihi", document.getElementById("creationDate").innerText],
+        ["Oluşturan", document.getElementById("createdBy").innerText],
+        ["Takip Eden", document.getElementById("followedBy").innerText],
+        ["Satış Fiyatı", document.getElementById("salesPrice").innerText],
+        ["Maliyet Fiyatı", document.getElementById("costPrice").innerText],
+        ["", ""] // Tablo ile bilgiler arasında boşluk bırakmak için
+    ];
+
+    // SheetJS ile yeni bir workbook oluştur
+    var wb = XLSX.utils.book_new();
+
+    // Tur detaylarını ve tabloyu içeren bir sheet oluştur
+    var ws = XLSX.utils.aoa_to_sheet(tourDetails);
+
+    // Tur detay başlıklarını kalın yap
+    const headerStyle = { font: { bold: true } };
+    tourDetails.forEach((row, rowIndex) => {
+        if (rowIndex < tourDetails.length - 1) { // Son boş satır hariç
+            const cellRef = XLSX.utils.encode_cell({c: 0, r: rowIndex});
+            if (!ws[cellRef]) ws[cellRef] = {};
+            ws[cellRef].s = headerStyle;
+        }
+    });
+
+    // Tabloyu seç ve mevcut sheet'e ekleyin
+    var table = document.getElementById("table-id");
+    XLSX.utils.sheet_add_dom(ws, table, {
+        origin: -1, // origin: -1, mevcut verilerin sonuna ekler
+        sheetStubs: true // Hücreler boş olsa bile hücre nesnelerini oluşturur
+    });
+
+    // Tablo başlıklarını kalın yap
+    const tableHeaderRows = table.querySelectorAll('th');
+    tableHeaderRows.forEach((th, index) => {
+        const cellRef = XLSX.utils.encode_cell({c: index, r: tourDetails.length}); // tourDetails.length, tablo başlıklarının başladığı satırı belirler
+        if (!ws[cellRef]) ws[cellRef] = {};
+        ws[cellRef].s = headerStyle;
+    });
+
+    // 'etiket' ID'sine sahip elementten içerik al
+    const etiketContent = document.getElementById("etiket").innerText;
+
+    // G1:H1:I1 hücrelerini birleştir ve 'etiket' içeriğini yaz
+    if (!ws['!merges']) ws['!merges'] = []; // Eğer merges özelliği yoksa oluştur
+    ws['!merges'].push({ s: { r: 0, c: 6 }, e: { r: 0, c: 8 } }); // G1:I1 hücrelerini birleştir
+    ws[XLSX.utils.encode_cell({ r: 0, c: 6 })] = { t: 's', v: etiketContent };
+
+    // 'yolcu' ID'sine sahip <pre> elementinden içerik al ve satırlara ayır
+    const yolcuContent = document.getElementById("yolcu").innerText;
+    const yolcuLines = yolcuContent.split('\n');
+
+    // Yolcu bilgilerini Excel'e yaz
+    yolcuLines.forEach((line, index) => {
+        const cellRef = XLSX.utils.encode_cell({ r: 1 + index, c: 6 }); // G2'den itibaren başla
+        ws[cellRef] = { t: 's', v: line };
+        // Her satır için G:H:I hücrelerini birleştir
+        ws['!merges'].push({ s: { r: 1 + index, c: 6 }, e: { r: 1 + index, c: 8 } });
+    });
+
+    // Workbook'a sheet ekleyin
+    XLSX.utils.book_append_sheet(wb, ws, "Tur Detayları ve Tablo");
+
+    // Excel dosyasını indir
+    XLSX.writeFile(wb, `${etiketContent}.xlsx`);
+
+}
+</script>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tabbuttons;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tabbuttons = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tabbuttons.length; i++) {
+            tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            searchInput.addEventListener('input', function() {
+                filterTickets(this.value);
+            });
+        });
+        
+        function filterTickets(searchTerm) {
+            const tabs = ['DevamEden', 'Tamamlanmis', 'Gelecek'];
+            tabs.forEach(tab => {
+                const tabContent = document.getElementById(tab);
+                const listItems = tabContent.querySelectorAll('.list-group-item');
+                listItems.forEach(item => {
+                    const button = item.querySelector('button');
+                    if (button) {
+                        const ticketValue = button.textContent.toLowerCase();
+                        item.style.display = ticketValue.includes(searchTerm.toLowerCase()) ? '' : 'none';
+                    }
+                });
+            });
+        }
+    </script>
+        
+        
+{% endblock %}

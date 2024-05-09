@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>{{ title }} | Tour Manager</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Admin Panel Log in</title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <!-- Bootstrap 3.3.6 -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+        <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+        
+
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <style>
+            tr.htmx-swapping td {
+                opacity: 0;
+                transition: opacity 1s ease-out;
+            }
+            @media print {
+                .print-hide {
+                    display: none;
+                }
+                .print_dnone {
+                    display: none !important;
+                }
+            }
+            .form-label {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end; /* Labelleri altta tutmak için */
+                height: 100%; /* İçindeki elemanları tam boyuta uzat */
+            }
+            
+            
+            .dark-mode-active {
+                color: white !important;
+            }
+
+            @media (min-width: 768px) {
+                .mobile-only {
+                    display: none;
+                }
+                .desktop-only {
+                    display: block;
+                }
+            }
+            
+            @media (max-width: 767px) {
+                .mobile-only {
+                    display: block;
+                }
+                .desktop-only {
+                    display: none;
+                }
+            }
+
+            .toast-container {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: 1050;
+                padding: 3rem;
+            }
+        
+            .toast {
+                background-color: #343a40; /* Koyu gri arka plan */
+                color: white; /* Beyaz metin renk */
+            }
+        
+            .btn-close {
+                filter: invert(1); /* Çarpı işaretini beyaz yap */
+            }
+        
+            .toast-header {
+                background-color: #212529; /* Daha koyu gri başlık */
+                color: white;
+            }
+
+            .red_tr td{
+                color: red;
+            }
+        </style>
+        {% if request.user.personel.first.dark_mode %}
+            <style>    
+                body, .navbar, .navbar a, .dropdown, textarea, label .dropdown-menu, input, select, table th, table tr, table, li .dropdown-item span, li .dropdown-item button {
+                    background-color: #333 !important;
+                    color: white !important;
+                }
+                .dark-mode-active {
+                    color: white !important;
+                }
+                .dropdown-item:hover {
+                    color: white !important;
+                }
+                
+            </style>
+        {% endif %}
+        {% block css %}{% endblock css %}
+    </head>
+
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-personel-id="{{request.user.personel.first.id}}">
+        <header>
+            {% include "tour/partials/_navbar.html" %}
+        </header>
+        <main>
+            <div class="container-fluid">
+                {% block content %}{% endblock content %}                
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    {% for notification in notifications %}
+                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-notification-id="${notification.id}" data-bs-autohide="false" data-bs-delay="1000000000">
+                            <div class="toast-header">
+                                <strong class="me-auto">{{ notification.title }}</strong>
+                                <small class="text-muted">{{ notification.timestamp }}</small>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                {{ notification.message }}
+                            </div>
+                            <div class="toast-footer">
+                                <small class="mx-5 my-2">${notification.sender}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>            
+            </div>
+        </main>
+        <!-- Bootstrap JavaScript Libraries -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        {% if model_name == "Personel" %}
+            <script>
+                document.getElementById('id_username').addEventListener('input', function() {
+                    var username = this.value;
+                    var inputField = document.getElementById('id_username');
+                
+                    if (username === '') {
+                        // Kullanıcı adı alanı boşsa, çerçeve rengini direkt kırmızı yap
+                        inputField.style.borderColor = 'red';
+                    } else {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET', '/check_username/?username=' + encodeURIComponent(username), true);
+                        xhr.onreadystatechange = function() {
+                            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                                var isTaken = JSON.parse(this.responseText).is_taken;
+                                // Kullanıcı adı alınmışsa kırmızı, alınmamışsa yeşil
+                                inputField.style.borderColor = isTaken ? 'red' : 'green';
+                            }
+                        }
+                        xhr.send();
+                    }
+                });
+            </script>
+        {% endif %}
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("Document is ready, fetching notifications.");
+                const personelId = document.body.getAttribute('data-personel-id');
+                fetchNotifications(personelId);
+        
+                function getCurrentPersonelId() {
+                    // Bu örnekte statik bir ID kullanılmıştır. Gerçek uygulamada bu bilgi dinamik olarak elde edilmelidir.
+                    return 123; // Örnek personel ID'si
+                }
+            
+                function fetchNotifications(personelId) {
+                    console.log("Sending request to fetch notifications.");
+                    fetch('/TourManagerV2/api/notifications/')
+                    .then(response => {
+                        console.log("Received response from server.");
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Data parsed as JSON:", data);
+                        if (data.notifications.length === 0) {
+                            console.log("No notifications to show.");
+                        } else {
+                            data.notifications.forEach(notification => {
+                                console.log("Showing notification:", notification);
+                                showNotification(notification);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching notifications:', error));
+                }
+            
+                function showNotification(notification) {
+                    console.log("Creating HTML for notification:", notification);
+                    const toastHTML = `
+                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-notification-id="${notification.id}" data-bs-autohide="false" data-bs-delay="1000000000">
+                            <div class="toast-header">
+                                <strong class="me-auto">${notification.title}</strong>
+                                <small>${notification.timestamp}</small>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="markAsRead(${notification.id}, ${personelId})"></button>
+                            </div>
+                            <div class="toast-body">
+                                ${notification.message}
+                            </div>
+                            <div class="toast-footer">
+                                <small class="mx-5 my-2">${notification.sender}</small>
+                            </div>
+                        </div>
+                    `;
+                    const toastContainer = document.querySelector('.toast-container');
+                    toastContainer.innerHTML += toastHTML;
+                    console.log("Toast HTML added to the container.");
+                    const toastElement = new bootstrap.Toast(toastContainer.lastElementChild);
+                    toastElement.show();
+                    console.log("Toast is now being shown.");
+                }
+            
+                window.markAsRead = function(notificationId, personelId) {
+                    console.log("Marking notification as read:", notificationId);
+                    fetch('/TourManagerV2/api/notifications/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ notification_id: notificationId, personel_id: personelId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Response from marking as read:", data);
+                        if (data.status == 'success') {
+                            console.log('Notification marked as read');
+                            document.querySelector(`[data-notification-id="${notificationId}"]`).remove();
+                            console.log('Notification element removed from DOM.');
+                        }
+                    })
+                    .catch(error => console.error('Error marking notification as read:', error));
+                };
+            });
+        </script>
+        
+            
+        {% block js %}{% endblock js %}
+    </body>
+</html>

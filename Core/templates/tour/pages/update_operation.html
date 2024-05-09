@@ -1,0 +1,59 @@
+{% extends "tour/base/base.html" %}
+
+{% block content %}
+
+<div class="m-5" id="close">
+    {% include 'tour/partials/operation-edit-form.html' %}
+
+    <!-- Operation Day ve Operation Item Formları -->
+    {% for day_form, item_forms in operation_day_forms %}
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-4 align-self-end">
+                    <h4 class="my-3">Operasyon Tarihi</h4>
+
+                    <h2>{{ day_form.instance.date }}</h2>
+                </div>
+            </div>
+
+            <div class="form-group" id="form_add-{{ day_form.instance.id }}">
+                <h4 class="my-3">Operasyon İçerikleri</h4>
+                <div  id="form_item_add-{{ day_form.instance.id }}">
+                {% for formitem in item_forms %}
+                    <div class=" mb-2">
+
+                        {% include 'tour/partials/update_formitem_add.html' %}
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-3 align-self-end">
+                <button class="btn btn-success my-4 me-2" hx-get="{% url 'add_operation_item' day_form.instance.id %}" hx-target="#form_item_add-{{ day_form.instance.id }}" hx-swap="beforeend">Form Ekle</button>
+            </div>
+        </div>
+
+    {% endfor %}
+
+    <button type="submit" id="submit-item-all" class="btn btn-success">Operasyonu Güncelle</button>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var submitButton = document.getElementById('submit-item-all');
+        
+        if (submitButton) {
+            submitButton.addEventListener('click', function() {
+                // Butona tıklanınca 1 saniye bekleyip sayfayı yenile
+                setTimeout(function() {
+                    window.location.reload();
+                }, 700);  // 1000 milisaniye = 1 saniye
+            });
+        }
+    });
+    </script>
+    
+    
+
+{% endblock js %}

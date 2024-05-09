@@ -1,0 +1,387 @@
+{% if comp_jobs %}
+    <div class="card my-4" id="operation-{{ forloop.counter }}" style="font-size: 0.7rem;">
+{% else %}
+    <div class="card my-4" id="operation-{{ forloop.counter }}">
+{% endif %}
+    <div class="card-header d-lg-flex justify-content-lg-between align-items-center">
+        <div class="row">
+            <div class="col-lg">
+                <div class="row g-0">
+                    <strong class="col-auto">Şirket:</strong>
+                    <span class="col-auto" id="company">{{ operation.company }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Başlangıç Tarihi:</strong>
+                    <span class="col-auto" id="startDate">{{ operation.start|date:"d.m.Y" }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Bitiş Tarihi:</strong>
+                    <span class="col-auto" id="endDate">{{ operation.finish|date:"d.m.Y" }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Oluşturulma Tarihi:</strong>
+                    <span class="col-auto" id="creationDate">{{ operation.create_date|date:"d.m.Y H:i" }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Son Güncellenme Tarihi:</strong>
+                    <span class="col-auto" id="lastUpdated">{{ operation.update_date|date:"d.m.Y H:i" }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Oluşturan:</strong>
+                    <span class="col-auto" id="createdBy">{{ operation.selling_staff }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Takip Eden:</strong>
+                    <span class="col-auto" id="followedBy">{{ operation.follow_staff }}</span>
+                </div>
+                <div class="row g-0">
+                    <div class="col-lg-12">
+                        <strong>Satış Fiyatı:</strong>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="usdSalesPrice">{{ operation.usd_sales_price }} USD</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="eurSalesPrice">{{ operation.eur_sales_price }} EUR</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="tlSalesPrice">{{ operation.tl_sales_price }} TL</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="rbmSalesPrice">{{ operation.rbm_sales_price }} RBM</span>
+                    </div>
+                </div>
+                <div class="row g-0">
+                    <div class="col-lg-12">
+                        <strong>Maliyet Fiyatı:</strong>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="usdCostPrice">{{ operation.usd_cost_price }} USD</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="eurCostPrice">{{ operation.eur_cost_price }} EUR</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="tlCostPrice">{{ operation.tl_cost_price }} TL</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span id="rbmCostPrice">{{ operation.rbm_cost_price }} RBM</span>
+                    </div>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Ödeme Tipi:</strong>
+                    <span class="col-auto" id="paymentType">{{ operation.payment_type }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Ödeme Kanalı:</strong>
+                    <span class="col-auto" id="paymentChannel">{{ operation.payment_channel }}</span>
+                </div>
+                <div class="row g-0">
+                    <strong class="col-auto">Ödeme Kalan:</strong>
+                    <span class="col-auto" id="remainingPayment">{{ operation.remaining_payment }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 id="etiket" class="text-center">{{ operation.ticket }} {{ operation.number_passengers }}PAX</h2>
+            <h4 class="text-center">Yolcu Bilgileri</h4>
+            <pre id="yolcu">{{ operation.passenger_info }}</pre>
+        </div>
+        <div>
+            <div id="template_form">
+            {% if operation %}
+                <form class="m-3" hx-post="{% url 'template_create' operation.id %}" hx-on="htmx:afterRequest: this.closest('#template_form').remove()">
+                    <input tpye="text" name="template_name" class="">
+                    <button type="submit" class="btn btn-success print_dnone">
+                        Şablon Kaydet
+                    </button>
+                </form>
+            {% endif %}
+            </div>
+            <button onclick="downloadExcel()" class="btn btn-light print_dnone">
+                <i class="fa fa-download"></i> Excel İndir
+            </button>
+
+            <button onclick="printOperation('operation-{{ forloop.counter }}')" class="btn btn-light print_dnone">
+                <i class="fa fa-print"></i> Yazdır
+            </button>
+            {% if operation.id %}
+                <a href="{% url 'update_operation' operation.id %}" class="btn btn-secondary print_dnone">Düzenle</a>
+            {% endif %}
+            {% if operation.id %}
+                <button class="btn btn-secondary print_dnone" hx-delete="{% url 'delete_operation' operation.id %}" hx-confirm="Silmek istediğine emin misin?" hx-target="#operation-{{ forloop.counter }}" hx-swap="outerHTML">Sil</button>
+            {% endif %}
+            <div class="row">
+                {% for supplier_payment in supplier_payments %}
+                    <div class="col-md-12 my-2  print_dnone">
+                        <a href="https://www.cargaopr.com/media/{{supplier_payment.document}}" target="_blank">Belge ({{ supplier_payment.upload_date }})</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% for day in operation.operationday_set.all %}
+            <h5 class="card-title">Tarih: {{ day.date|date:"d.m.Y" }}</h5>
+            <div style="overflow-x: auto;">
+                <table class="table table-bordered table-striped table-hover mb-2" id="table-id" style="font-size:0.7rem;">
+                    {% for item in day.operationitem_set.all %}
+                        <thead class="thead-light">
+                            <tr>
+                                <th colspan="30">Tur Açıklaması</th>
+                            </tr>
+                        </thead>
+                        <tbody class="">
+                            <tr>
+                                <td colspan="30">{{ item.description|default:"----" }}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>İşlem Türü</th>
+                                <th>Alış Saati</th>
+                                <th>Bırakış Saati</th>
+                                <th colspan="2">Alış Yeri</th>
+                                <th colspan="2">Bırakış Yeri</th>
+
+                                <th colspan="2">Tur</th>
+                                <th colspan="2">Transfer</th>
+                                <th>Araç</th>
+                                <th colspan="2">Araç Tedarikçi</th>
+                                
+                                <th colspan="2">Otel</th>
+                                <th>Oda Türü</th>
+
+
+                                <th>Aktivite</th>
+                                <th colspan="2">Aktivite Tedarikçi</th>
+                                
+                                <th colspan="2">Müze</th>
+
+                                <th colspan="2">Rehber</th>
+                                <th colspan="2">Şoför</th>
+                                <th colspan="2">Şoför Telefon</th>
+                                <th colspan="2">Plaka</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>{{ item.get_operation_type_display }}</td>
+                                <td>{{ item.pick_time|time:"H:i" }}</td>
+                                <td>{{ item.release_time|time:"H:i" }}</td>
+                                <td colspan="2">{{ item.release_location|time:"H:i" }}</td>
+                                <td colspan="2">{{ item.pick_location|time:"H:i" }}</td>
+
+                                <td colspan="2">{{ item.tour|default:"---" }}</td>
+                                <td colspan="2">{{ item.transfer|default:"----" }}</td>
+                                <td>{{ item.vehicle|default:"----" }}</td>
+                                <td colspan="2">{{ item.supplier|default:"----" }}</td>
+
+                                <td colspan="2">{{ item.hotel|default:"----" }}</td>
+                                <td>{{ item.get_room_type_display }}</td>
+
+                                
+                                <td>{{ item.activity|default:"----" }}</td>
+                                <td colspan="2">{{ item.activitysuplier|default:"----" }}</td>
+                                <td colspan="2">
+                                    {% if item.new_museum.all %}
+                                        {% for museum in item.new_museum.all %}
+                                            {{ forloop.counter }} {{ museum.name }}{% if not forloop.last %}, {% endif %}<br>
+                                        {% endfor %}
+                                    {% else %}
+                                        ----
+                                    {% endif %}
+                                </td>
+                                <td colspan="2">{{ item.guide|default:"----" }}</td>
+                                <td colspan="2">{{ item.driver|default:"----" }}</td>
+                                <td colspan="2">{{ item.driver_phone|default:"----" }}</td>
+                                <td colspan="2">{{ item.plaka|default:"----" }}</td>
+                            </tr>
+
+                        </tbody>
+                        <thead class="thead-light print_dnone">
+                        <tr>
+                                <th colspan="3">Otel Ücreti</th>
+                                <th colspan="3">Rehber Ücreti</th>
+                                <th colspan="3">Aktivite Ücreti</th>
+                                <th colspan="3">Müze Ücreti</th>
+                                <th colspan="2">Diğer Ücretler</th>
+                                <th colspan="2">Araç Ücretleri</th>
+                                <th colspan="2">Toplam Maliyet (USD)</th>
+                                <th colspan="2">Toplam Maliyet (EUR)</th>
+                                <th colspan="2">Toplam Maliyet (TL)</th>
+                                <th colspan="2">Toplam Maliyet (RBM)</th>
+                                <th colspan="2">Otel Ödemesi Bizde</th>
+                                <th colspan="2">Aktivite Ödemesi Bizde</th>
+                                <th colspan="2">Müze Ödemesi Bizde</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class=" print_dnone">
+                            <tr>
+                                {% if hotel_price != 0 and hotel_price != 0.00 %}
+                                    <td colspan="3">{{ item.hotel_price }} {{ item.hotel_currency }}</td>
+                                {% else %}
+                                    <td colspan="3">----</td>
+                                {% endif %}
+                                {% if guide_price != 0 %}
+                                    <td colspan="3">{{ item.guide_price }} {{ item.guide_currency }}</td>
+                                {% else %}
+                                    <td colspan="3">----</td>
+                                {% endif %}
+                                {% if activity_price != 0 %}
+                                    <td colspan="3">{{ item.activity_price }} {{ item.activity_currency }}</td>
+                                {% else %}
+                                    <td colspan="3">----</td>
+                                {% endif %}
+                                {% if museum_price != 0 %}
+                                    <td colspan="3">{{ item.museum_price }} {{ item.museum_currency }}</td>
+                                {% else %}
+                                    <td colspan="3">----</td>
+                                {% endif %}
+                                {% if other_price != 0 %}
+                                    <td colspan="2">{{ item.other_price }} {{ item.other_currency }}</td>
+                                {% else %}
+                                    <td colspan="2">----</td>
+                                {% endif %}
+                                {% if vehicle_price != 0 %}
+                                    <td colspan="2">{{ item.vehicle_price }} {{ item.vehicle_currency }}</td>
+                                {% else %}
+                                    <td colspan="2">----</td>
+                                {% endif %}
+                                <td colspan="2">{{ item.usd_cost_price }} </td>
+                                <td colspan="2">{{ item.eur_cost_price }} </td>
+                                <td colspan="2">{{ item.tl_cost_price }} </td>
+                                <td colspan="2">{{ item.rmb_cost_price }} </td>
+                                <td colspan="2">{{ item.hotel_payment }} </td>
+                                <td colspan="2">{{ item.activity_payment }} </td>
+                                <td colspan="2">{{ item.museum_payment }} </td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% block js %}
+<script>
+    function printOperation(operationId) {
+        var operationElement = document.getElementById(operationId);
+        var printContents = operationElement.innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        // Detay butonlarını ve print_dnone sınıfına sahip öğeleri gizle
+        var detailButtons = operationElement.getElementsByClassName('btn-detail');
+        var printDnoneElements = operationElement.getElementsByClassName('print_dnone');
+
+        Array.from(detailButtons).forEach(function(button) {
+            button.style.display = 'none';
+        });
+
+        Array.from(printDnoneElements).forEach(function(element) {
+            element.style.display = 'none';
+        });
+
+        // Yazdırma işlemi
+        document.body.innerHTML = printContents;
+        window.print();
+
+        // Orijinal içeriği, butonları ve print_dnone öğelerini geri yükle
+        document.body.innerHTML = originalContents;
+
+        Array.from(detailButtons).forEach(function(button) {
+            button.style.display = 'block';
+        });
+
+        // Not: Bu adım gereksiz olabilir çünkü orijinal içeriği geri yüklediğimizde,
+        // print_dnone sınıfına sahip öğelerin görünürlüğü de otomatik olarak eski haline gelecektir.
+        // Ancak, spesifik bir durum için tekrar görünür yapmak isterseniz, bu kodu kullanabilirsiniz.
+        Array.from(printDnoneElements).forEach(function(element) {
+            element.style.display = 'block';
+        });
+    }
+</script>
+<script>
+function downloadExcel() {
+    // ID'lerden verileri al
+    const tourDetails = [
+        ["Şirket", document.getElementById("company").innerText],
+        ["Başlangıç Tarihi", document.getElementById("startDate").innerText],
+        ["Bitiş Tarihi", document.getElementById("endDate").innerText],
+        ["Oluşturulma Tarihi", document.getElementById("creationDate").innerText],
+        ["Oluşturan", document.getElementById("createdBy").innerText],
+        ["Takip Eden", document.getElementById("followedBy").innerText],
+        ["Satış Fiyatı", document.getElementById("salesPrice").innerText],
+        ["Maliyet Fiyatı", document.getElementById("costPrice").innerText],
+        ["", ""] // Tablo ile bilgiler arasında boşluk bırakmak için
+    ];
+
+    // SheetJS ile yeni bir workbook oluştur
+    var wb = XLSX.utils.book_new();
+
+    // Tur detaylarını ve tabloyu içeren bir sheet oluştur
+    var ws = XLSX.utils.aoa_to_sheet(tourDetails);
+
+    // Tur detay başlıklarını kalın yap
+    const headerStyle = { font: { bold: true } };
+    tourDetails.forEach((row, rowIndex) => {
+        if (rowIndex < tourDetails.length - 1) { // Son boş satır hariç
+            const cellRef = XLSX.utils.encode_cell({c: 0, r: rowIndex});
+            if (!ws[cellRef]) ws[cellRef] = {};
+            ws[cellRef].s = headerStyle;
+        }
+    });
+
+    // Tabloyu seç ve mevcut sheet'e ekleyin
+    var table = document.getElementById("table-id");
+    XLSX.utils.sheet_add_dom(ws, table, {
+        origin: -1, // origin: -1, mevcut verilerin sonuna ekler
+        sheetStubs: true // Hücreler boş olsa bile hücre nesnelerini oluşturur
+    });
+
+    // Tablo başlıklarını kalın yap
+    const tableHeaderRows = table.querySelectorAll('th');
+    tableHeaderRows.forEach((th, index) => {
+        const cellRef = XLSX.utils.encode_cell({c: index, r: tourDetails.length}); // tourDetails.length, tablo başlıklarının başladığı satırı belirler
+        if (!ws[cellRef]) ws[cellRef] = {};
+        ws[cellRef].s = headerStyle;
+    });
+
+    // 'etiket' ID'sine sahip elementten içerik al
+    const etiketContent = document.getElementById("etiket").innerText;
+
+    // G1:H1:I1 hücrelerini birleştir ve 'etiket' içeriğini yaz
+    if (!ws['!merges']) ws['!merges'] = []; // Eğer merges özelliği yoksa oluştur
+    ws['!merges'].push({ s: { r: 0, c: 6 }, e: { r: 0, c: 8 } }); // G1:I1 hücrelerini birleştir
+    ws[XLSX.utils.encode_cell({ r: 0, c: 6 })] = { t: 's', v: etiketContent };
+
+    // 'yolcu' ID'sine sahip <pre> elementinden içerik al ve satırlara ayır
+    const yolcuContent = document.getElementById("yolcu").innerText;
+    const yolcuLines = yolcuContent.split('\n');
+
+    // Yolcu bilgilerini Excel'e yaz
+    yolcuLines.forEach((line, index) => {
+        const cellRef = XLSX.utils.encode_cell({ r: 1 + index, c: 6 }); // G2'den itibaren başla
+        ws[cellRef] = { t: 's', v: line };
+        // Her satır için G:H:I hücrelerini birleştir
+        ws['!merges'].push({ s: { r: 1 + index, c: 6 }, e: { r: 1 + index, c: 8 } });
+    });
+
+    // Workbook'a sheet ekleyin
+    XLSX.utils.book_append_sheet(wb, ws, "Tur Detayları ve Tablo");
+
+    // Excel dosyasını indir
+    XLSX.writeFile(wb, `${etiketContent}.xlsx`);
+
+}
+</script>
+
+
+
+{% endblock %}

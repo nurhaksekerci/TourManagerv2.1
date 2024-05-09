@@ -1,0 +1,20 @@
+<tr id="model-div-{{ obj_data.id }}" hx-swap="outerHTML swap:.5s">
+    <td colspan="11"> <!-- Tüm sütunları kapsayacak şekilde ayarlayın -->
+        <form hx-post="{% url 'generic_edit_view' model_name obj_data.id %}" hx-target="#model-div-{{ obj_data.id }}">
+            <table class="table">
+                <tr>
+                    {% for field in form.visible_fields %}
+                    <td>
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </td>
+                    {% endfor %}
+                    <td style="vertical-align: bottom;">
+                        <button type="submit" class="btn btn-success" style="margin-right: 2px;">Kaydet</button>
+                        <button type="button" class="btn btn-danger" hx-get="{% url 'generic_cancel_view' model_name obj_data.id %}">İptal</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </td>
+</tr>

@@ -1,0 +1,3 @@
+<li class="list-group-item border" style="height:50px !important;">
+    <button hx-get="{% url 'comp_jobs_islem' company.id %}" hx-target="#cari-item" hx-swap="innerHTML" class="text-dark"  style="border: none; background: none;">{{ company.name }}</button>
+</li>

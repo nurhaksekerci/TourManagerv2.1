@@ -1,0 +1,19 @@
+<div id="model-{{ obj_data.id }}">
+    <form hx-post="{% url 'generic_mobile_edit_view' model_name obj_data.id %}" hx-target="#model-{{ obj_data.id }}">
+        <div class="row">
+            {% for field in form.visible_fields %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success" style="margin-right: 2px;">Kaydet</button>
+                <button type="button" class="btn btn-danger" hx-get="{% url 'generic_mobile_cancel_view' model_name obj_data.id %}">İptal</button>
+            </div>
+        </div>
+    </form>
+</div>
+

@@ -1,0 +1,237 @@
+{% if today.operation_type == 'Tur' or today.operation_type == 'Tur + Transfer' or today.operation_type == 'Transfer + Tur' %}
+    {% if today.vehicle != None and today.supplier != None and today.guide != None and today.pick_time != None %}
+        {% if today.hotel_payment == 'Evet' %}
+            {% if today.hotel != None and today.room_type != None and today.hotel_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% elif today.museum_payment == 'Evet' %}
+            {% if today.new_museum != None and today.museum_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}    
+        {% elif today.activity_payment == 'Evet' %}
+            {% if today.activity != None and today.activity_price != None and today.activity_supplier != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% else %}
+            <tr>
+        {% endif %}
+    {% else %}
+        <tr class="red_tr">
+    {% endif %}
+{% elif today.operation_type == 'Transfer' or today.operation_type == 'Araç' %}
+    {% if today.vehicle != None and today.supplier != None and today.pick_time != None %}
+        {% if today.hotel_payment == 'Evet' %}
+            {% if today.hotel != None and today.room_type != None and today.hotel_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% elif today.museum_payment == 'Evet' %}
+            {% if today.new_museum != None and today.museum_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}    
+        {% elif today.activity_payment == 'Evet' %}
+            {% if today.activity != None and today.activity_price != None and today.activity_supplier != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% else %}
+            <tr>
+        {% endif %}
+    {% else %}
+    <tr class="red_tr">
+    {% endif %}
+{% elif today.operation_type == 'Aktivite' %}
+    {% if today.activity != None and today.activity_supplier != None and today.activity_price != None %}
+        {% if today.hotel_payment == 'Evet' %}
+            {% if today.hotel != None and today.room_type != None and today.hotel_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% elif today.museum_payment == 'Evet' %}
+            {% if today.new_museum != None and today.museum_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}    
+        {% elif today.activity_payment == 'Evet' %}
+            {% if today.activity != None and today.activity_price != None and today.activity_supplier != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% else %}
+            <tr>
+        {% endif %}
+    {% else %}
+        <tr class="red_tr">
+    {% endif %}
+
+{% elif today.operation_type == 'Müze' %}
+    {% if today.new_museum != None and today.museum_price != None and today.museum_payment != None %}
+        {% if today.hotel_payment == 'Evet' %}
+            {% if today.hotel != None and today.room_type != None and today.hotel_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% elif today.museum_payment == 'Evet' %}
+            {% if today.new_museum != None and today.museum_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}    
+        {% elif today.activity_payment == 'Evet' %}
+            {% if today.activity != None and today.activity_price != None and today.activity_supplier != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% else %}
+            <tr>
+        {% endif %}
+    {% else %}
+    <tr class="red_tr">
+    {% endif %}
+{% elif today.operation_type == 'Otel' %}
+    {% if today.hotel != None and today.room_type != None and today.hotel_price != None and today.hotel_payment != None %}
+        {% if today.hotel_payment == 'Evet' %}
+            {% if today.hotel != None and today.room_type != None and today.hotel_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% elif today.museum_payment == 'Evet' %}
+            {% if today.new_museum != None and today.museum_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}    
+        {% elif today.activity_payment == 'Evet' %}
+            {% if today.activity != None and today.activity_price != None and today.activity_supplier != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% else %}
+            <tr>
+        {% endif %}
+    {% else %}
+    <tr class="red_tr">
+    {% endif %}
+{% elif today.operation_type == 'Reher' %}
+    {% if today.guide != None and today.guide_price != None %}
+        {% if today.hotel_payment == 'Evet' %}
+            {% if today.hotel != None and today.room_type != None and today.hotel_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% elif today.museum_payment == 'Evet' %}
+            {% if today.new_museum != None and today.museum_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}    
+        {% elif today.activity_payment == 'Evet' %}
+            {% if today.activity != None and today.activity_price != None and today.activity_supplier != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% else %}
+            <tr>
+        {% endif %}
+    {% else %}
+        <tr class="red_tr">
+    {% endif %}
+{% elif today.operation_type == 'Araçlı Reher' %}
+    {% if today.vehicle != None and today.guide != None and today.guide_price != None %}
+        {% if today.hotel_payment == 'Evet' %}
+            {% if today.hotel != None and today.room_type != None and today.hotel_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% elif today.museum_payment == 'Evet' %}
+            {% if today.new_museum != None and today.museum_price != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}    
+        {% elif today.activity_payment == 'Evet' %}
+            {% if today.activity != None and today.activity_price != None and today.activity_supplier != None %}
+                <tr>
+            {% else %}
+                <tr class="red_tr">
+            {% endif %}
+        {% else %}
+            <tr>
+        {% endif %}
+    {% else %}
+        <tr class="red_tr">
+    {% endif %}
+{% else %}    
+    <tr class="red_tr">
+{% endif %}
+     
+    <td><a href="{% url 'update_operation' today.day.operation.id %}">{{ today.day.operation.ticket|default:"----" }}</a></td>
+    <td>{{ today.operation_type|default:"----" }}</td>
+    <td>{{ today.pick_time|time:"H:i"|default:"----" }}</td>
+    <td>{{ today.release_time|time:"H:i"|default:"----" }}</td>
+    <td>{{ today.release_location|default:"----" }}</td>
+    <td>{{ today.pick_location|default:"----" }}</td>
+
+    <td>{{ today.tour|default:"---" }}</td>
+    <td>{{ today.transfer|default:"----" }}</td>
+    <td>{{ today.vehicle|default:"----" }}</td>
+    <td>{{ today.supplier|default:"----" }}</td>
+    
+    <td>{{ today.hotel|default:"----" }}</td>
+    <td>{{ today.room_type|default:"----" }}</td>
+    <td>{{ today.hotel_price|default:"----" }}</td>
+    <td>{{ today.hotel_payment|default:"----" }}</td>
+
+    <td>{{ today.activity|default:"----" }}</td>
+    <td>{{ today.activity_supplier|default:"----" }}</td>
+    <td>{{ today.activity_price|default:"----" }}</td>
+    <td>{{ today.activity_payment|default:"----" }}</td>
+    
+    <td>
+        {% with museums=today.new_museum.all %}
+            {% if museums.exists %}
+                {% for museum in museums %}
+                    {{ forloop.counter }}) {{ museum.name }}{% if not forloop.last %}, {% endif %}<br>
+                {% endfor %}
+            {% else %}
+                ----
+            {% endif %}
+        {% endwith %}
+    </td>
+    
+    
+    <td>{{ today.museum_price|default:"----" }}</td>
+    <td>{{ today.museum_payment|default:"----" }}</td>
+
+
+        
+    <td>{{ today.guide|default:"----" }}</td>
+    <td>{{ today.guide_price|default:"----" }}</td>
+    <td>{{ today.driver|default:"----" }}</td>
+    <td>{{ today.driver_phone|default:"----" }}</td>
+    <td>{{ today.plaka|default:"----" }}</td>
+    <td>{{ today.other_price|default:"----" }}</td>
+
+    <td>{{ today.description|default:"----" }}</td>
+</tr>
+    

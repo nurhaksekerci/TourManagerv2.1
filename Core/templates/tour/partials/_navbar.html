@@ -1,0 +1,143 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'index' %}">
+            {% if request.user.is_authenticated %}
+                {% with company=request.user.personel.first.company %}
+                    {{ company.name }}
+                {% endwith %}
+            {% else %}
+                Astrolabe Software & Agency
+            {% endif %}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-list" style="color: black;"></i> <!-- Bootstrap Icons kullanımı ve rengi siyah yapma -->
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <!-- Dropdown for Kayıtlar -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Kayıtlar
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Transfer' %}">Transferler</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Tour' %}">Turlar</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Guide' %}">Rehberler</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Hotel' %}" >Oteller</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Activity' %}">Aktiviteler</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Museum' %}">Müzeler</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Buyercompany' %}">Firmalar</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <!-- Dropdown for Kayıtlar -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tedarikçiler
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Supplier' %}">Araç Tedarikçileri</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Activitysupplier' %}">Aktivite Tedarikçileri</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <!-- Dropdown for Kayıtlar -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Yönetim
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Cost' %}">Araç Maliyet</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Activitycost' %}">Aktivite Maliyet</a></li>
+                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Personel' %}">Personeller</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <!-- Dropdown for Kayıtlar -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Operasyonlar
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                        <li><a class="dropdown-item" href="{% url 'operation' %}">Operasyon Oluştur</a></li>
+                        <li><a class="dropdown-item" href="{% url 'template_list' %}">Şablondan Oluştur</a></li>
+                        <li><a class="dropdown-item" href="{% url 'operation_list' %}">Operasyon Listesi</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <!-- Dropdown for Kayıtlar -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        İşler
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                        <li><a class="dropdown-item" href="{% url 'jobs' %}">İşler</a></li>
+                        <li><a class="dropdown-item" href="{% url 'myjobs' %}">Takip Ettiğim İşler</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <!-- Dropdown for Kayıtlar -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Cariler
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                        <li><a class="dropdown-item" href="#">Grafikler</a></li>
+                        <li><a class="dropdown-item" href="#">Karlılık</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <!-- Dropdown for Kayıtlar -->
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'pricing' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                        Fiyatlandırma
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                        Geçmiş Ödemeler
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'logs' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                        Loglar
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'notification_create' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                        Bildirim
+                    </a>
+                </li>
+            </ul>
+            <div class="ms-auto navbar-text">
+                {% if request.user.is_authenticated %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span>{{ request.user.get_full_name }}</span><br><span>{{ user.personel.first.job }}</span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownUser">
+                                <li><span class="dropdown-item {% if request.user.personel.first.dark_mode == True %}dark-mode-active{% endif %}" {% if request.user.personel.first.dark_mode == True %}style="color: white !important;"{% endif %}>{{ request.user.personel.first.company }}</span></li>
+                                <form method="POST" action="{% url 'dark_mode' %}">
+                                    {% csrf_token %}
+                                    {% if request.user.personel.first.dark_mode == True %}
+                                        <li><button type="submit" class="dropdown-item {% if request.user.personel.first.dark_mode == True %}dark-mode-active{% endif %}" style="color: white !important;">Light Mode</button></li>
+                                    {% else %}
+                                        <li><button type="submit" class="dropdown-item">Dark Mode</button></li>
+                                    {% endif %}
+                                </form>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Çıkış Yap</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
