@@ -351,6 +351,7 @@ class Operationitem(models.Model):
     guide = models.ForeignKey(Guide, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Rehber")
     guide_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Rehber Ücreti")
     guide_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Rehber Para Birimi", default="USD")
+    guide_var = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Rehber var mı?", default="Hayır")
     other_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Diğer Ücretler")
     other_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Diğer Ücretler Para Birimi", default="USD")
     

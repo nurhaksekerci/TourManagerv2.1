@@ -262,7 +262,7 @@ class OperationitemForm(forms.ModelForm):
             'hotel', 'room_type', 'hotel_price', 'hotel_currency',
             'activity', 'activity_price', 'activity_currency', 'activity_supplier',
             'new_museum', 'museum_price', 'museum_currency',
-            'driver', 'driver_phone', 'plaka', 'guide', 'guide_price', 'guide_currency',
+            'driver', 'driver_phone', 'plaka', 'guide', 'guide_price', 'guide_currency', 'guide_var',
             'other_price', 'other_currency', 'description', 'activity_payment', 'museum_payment', 'hotel_payment'
         ]
         widgets = {
@@ -302,6 +302,7 @@ class OperationitemForm(forms.ModelForm):
             'driver_phone': forms.TextInput(attrs={'class': 'form-control'}),
             'plaka': forms.TextInput(attrs={'class': 'form-control'}),
             'guide': forms.Select(attrs={'class': 'form-control'}),
+            'guide_var': forms.Select(attrs={'class': 'form-control'}),
             'guide_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'guide_currency': forms.Select(attrs={'class': 'form-control'}),
             'other_price': forms.NumberInput(attrs={'class': 'form-control'}),

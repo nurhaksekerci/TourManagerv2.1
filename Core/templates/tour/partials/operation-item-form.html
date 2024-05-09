@@ -140,6 +140,10 @@
           {{ formitem.guide }}
       </div>
       <div class="col align-self-end">
+        <label for="{{ formitem.guide_var.id_for_label }}">{{ formitem.guide_var.label }}</label>
+        {{ formitem.guide_var }}
+      </div>
+      <div class="col align-self-end">
         <label for="{{ formitem.guide_price.id_for_label }}">{{ formitem.guide_price.label }}</label>
         {{ formitem.guide_price }}
       </div>
