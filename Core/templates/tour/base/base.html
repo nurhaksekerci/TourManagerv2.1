@@ -30,9 +30,9 @@
         
 
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
         <style>
             tr.htmx-swapping td {
                 opacity: 0;
@@ -147,6 +147,8 @@
             </div>
         </main>
         <!-- Bootstrap JavaScript Libraries -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -259,7 +261,22 @@
             });
         </script>
         <script>
-            $("select").select2();
+            // Document ready function
+            $(document).ready(function() {
+              // Select2 initialization
+              $('#id_operation_type').select2();
+              $('#id_hotel').select2();
+              $('#id_tour').select2();
+              $('#id_transfer').select2();
+              $('#id_guide').select2();
+              $('#id_vehicle').select2();
+              $('#id_supplier').select2();
+              $('#id_activity').select2();
+              $('#id_activity_supplier').select2();
+              $("#id_new_museum").select2({
+                maximumSelectionLength: 44
+              });
+            });
         </script>
         
             
