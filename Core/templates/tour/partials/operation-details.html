@@ -173,8 +173,8 @@
                                 <td>{{ item.get_operation_type_display }}</td>
                                 <td>{{ item.pick_time|time:"H:i" }}</td>
                                 <td>{{ item.release_time|time:"H:i" }}</td>
-                                <td colspan="2">{{ item.release_location|time:"H:i" }}</td>
-                                <td colspan="2">{{ item.pick_location|time:"H:i" }}</td>
+                                <td colspan="2">{{ item.pick_location }}</td>
+                                <td colspan="2">{{ item.release_locationi }}</td>
 
                                 <td colspan="2">{{ item.tour|default:"---" }}</td>
                                 <td colspan="2">{{ item.transfer|default:"----" }}</td>

@@ -17,7 +17,7 @@ urlpatterns = [
     path('mobile_cancel/<str:model>/<int:obj_id>', generic_mobile_cancel_view, name='generic_mobile_cancel_view'),
     path('operation/', operation, name='operation'),
     path('operation/delete/<int:operation_id>', delete_operation, name='delete_operation'),
-    path('operation/item/delete/<int:operation_id>', delete_operationitem, name='delete_operationitem'),
+    path('operation/item/delete/<int:operationitem_id>', delete_operationitem, name='delete_operationitem'),
     path('operation/update/<int:operation_id>', update_operation, name='update_operation'),
     path('operation/item/update/<int:day_id>/<int:item_id>', update_or_add_operation_item, name='update_operation_item'),
     path('operation/item/update/<int:day_id>/', update_or_add_operation_item, name='add_operation_item'),
@@ -32,9 +32,25 @@ urlpatterns = [
     path('notification/create_notification/', create_notification, name='notification_create'),
     path('api/notifications/', notifications_api, name='notifications_api'),
     path('api/mark-notification-read/', mark_notification_as_read, name='mark-notification-read'),
+    path('download-template/<str:model>/', generic_excel_download, name='generic_excel_download'),
+    path('upload-template/<str:model>/', generic_excel_upload, name='generic_excel_upload'),
+
+    path('get_exchange_rates/', get_exchange_rates, name='get_exchange_rates'),
 
 
     path('isler/filtre/', filtre, name='filtre'),
+    path('check-cost-duplicate/', check_cost_duplicate, name='check_cost_duplicate'),
+    path('check-hotel-duplicate/', check_hotel_duplicate, name='check_hotel_duplicate'),
+    path('check-activity-duplicate/', check_activity_duplicate, name='check_activity_duplicate'),
+    path('check-transfer-duplicate/', check_transfer_duplicate, name='check_transfer_duplicate'),
+    path('check-tour-duplicate/', check_tour_duplicate, name='check_tour_duplicate'),
+    path('cari/', cari, name='cari'),
+    path('cari/<int:tedarikci_id>/', cari_category, name='cari_category'),
+    path('cari/<int:tedarikci_id>/<str:month>/<str:field>/', cari_category, name='cari_category_field'),
+    path('activity/cari/<int:tedarikci_id>/<str:month>/<str:field>/', activity_cari_category, name='activity_cari_category_field'),
+    path('activity/cari/<int:tedarikci_id>/<str:month>/<str:field>/', activity_cari_category, name='activity_cari_category'),
+    path('activity/cari/<int:tedarikci_id>/', activity_cari_category, name='activity_cari_category'),
+    path('activity/cari/', activity_cari, name='activity_cari'),
       
 ]
 

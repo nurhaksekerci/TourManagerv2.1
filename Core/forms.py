@@ -244,6 +244,7 @@ class OperationForm(forms.ModelForm):
         else:
             # Uygun bir alternatif veya hata yönetimi
             self.fields['follow_staff'].queryset = Personel.objects.none()
+        
 
 class OperationdayForm(forms.ModelForm):
     class Meta:

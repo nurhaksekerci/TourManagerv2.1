@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 # Create your models here.
 # Create your models here.
@@ -181,9 +183,9 @@ class Cost(models.Model):
 
     def __str__(self):
         if self.tour != None:
-            return f"{self.tour} {self.supplier.name}"
+            return f"{self.tour} {self.supplier}"
         else:
-            return f"{self.transfer} {self.supplier.name}"
+            return f"{self.transfer} {self.supplier}"
 
 class Activitycost(models.Model):
     CURRENCY_CHOICES = (
@@ -267,6 +269,8 @@ class Operation(models.Model):
     
     def __str__(self):
         return f"{self.ticket}"
+    
+    
 
 
 
@@ -364,10 +368,9 @@ class Operationitem(models.Model):
     description = models.TextField(verbose_name="Tur Detayı", blank=True, null=True)
 
     def __str__(self):
-        return f"{self.day} - {self.operation_type}"
-    
-    
-
+        day_str = self.day or "Day not set"
+        operation_type_str = self.operation_type or "Operation Type not set"
+        return f"{day_str} - {operation_type_str}"
     
 
 
@@ -512,3 +515,17 @@ class OperationitemTemplate(models.Model):
 
     def __str__(self):
         return f"{self.operation} - {self.operation_type}"
+    
+
+class ExchangeRate(models.Model):
+    usd_to_try = models.FloatField(verbose_name='USD to TRY')
+    usd_to_eur = models.FloatField(verbose_name='USD to EUR')
+    usd_to_rmb = models.FloatField(verbose_name='USD to RMB')
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Döviz Kuru ({self.created_at})"
+
+    class Meta:
+        verbose_name = 'Döviz Kuru'
+        verbose_name_plural = 'Döviz Kurları'

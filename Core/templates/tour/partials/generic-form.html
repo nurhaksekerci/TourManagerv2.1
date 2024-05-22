@@ -9,8 +9,132 @@
         </div>
         {% endfor %}
         <div class="col-sm-12 mt-2 col-md-auto align-self-end">
-            <button type="button" class="btn btn-danger" hx-on="click: this.closest('form').remove()">İptal</button>
+            <button type="button" class="btn btn-danger" hx-on="click: this.closest('form').remove()">Cancel</button>
         </div>
     </div>
 </form>
 
+{% block js %}
+<script>
+    $(document).ready(function() {
+        var modelName = "{{ model_name }}"; // Model adını Django template'den alıyoruz.
+        if (modelName == "Cost") {
+            $('#id_tour, #id_transfer, #id_supplier').change(function() {
+                var tour = $('#id_tour').val(); // Boşsa null olarak ayarla
+                var transfer = $('#id_transfer').val(); // Boşsa null olarak ayarla
+                var supplier = $('#id_supplier').val(); // Boşsa null olarak ayarla
+
+                var selected = tour ? {'tour': tour} : {'transfer': transfer}; // Tour veya transfer seçimi
+
+                if ((tour || transfer) && supplier) {
+                    $.ajax({
+                        url: '{% url 'check_cost_duplicate' %}', // AJAX sorgusunun yapılacağı URL
+                        data: {
+                            ...selected,
+                            'supplier': supplier
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.exists) {
+                                alert('Bu seçim için zaten bir maliyet kaydı var!');
+                                $('#submit-all').prop('disabled', true); // Form gönderimini engelle
+                            } else {
+                                $('#submit-all').prop('disabled', false); // Form gönderimine izin ver
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        if (modelName == "Hotel") {
+            $('#id_name, #id_city').change(function() {
+                var name = $('#id_name').val(); // Boşsa null olarak ayarla
+                var city = $('#id_city').val(); // Boşsa null olarak ayarla
+
+                $.ajax({
+                    url: '{% url 'check_hotel_duplicate' %}', // AJAX sorgusunun yapılacağı URL
+                    data: {
+                        'name' : name,
+                        'city': city
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.exists) {
+                            alert('Bu seçim için zaten bir otel kaydı var!');
+                            $('#submit-all').prop('disabled', true); // Form gönderimini engelle
+                        } else {
+                            $('#submit-all').prop('disabled', false); // Form gönderimine izin ver
+                        }
+                    }
+                });
+            });
+        }
+        if (modelName == "Activitycost") {
+            $('#id_supplier, #id_activity').change(function() {
+                var supplier = $('#id_supplier').val(); // Boşsa null olarak ayarla
+                var activity = $('#id_activity').val(); // Boşsa null olarak ayarla
+
+                $.ajax({
+                    url: '{% url 'check_activity_duplicate' %}', // AJAX sorgusunun yapılacağı URL
+                    data: {
+                        'supplier' : supplier,
+                        'activity': activity
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.exists) {
+                            alert('Bu seçim için zaten bir aktivite maliyet kaydı var!');
+                            $('#submit-all').prop('disabled', true); // Form gönderimini engelle
+                        } else {
+                            $('#submit-all').prop('disabled', false); // Form gönderimine izin ver
+                        }
+                    }
+                });
+            });
+        }
+        if (modelName == "Transfer") {
+            $('#id_route').change(function() {
+                var route = $('#id_route').val(); // Boşsa null olarak ayarla
+
+                $.ajax({
+                    url: '{% url 'check_transfer_duplicate' %}', // AJAX sorgusunun yapılacağı URL
+                    data: {
+                        'route' : route,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.exists) {
+                            alert('Bu seçim için zaten bir otel kaydı var!');
+                            $('#submit-all').prop('disabled', true); // Form gönderimini engelle
+                        } else {
+                            $('#submit-all').prop('disabled', false); // Form gönderimine izin ver
+                        }
+                    }
+                });
+            });
+        }
+        if (modelName == "Tour") {
+            $('#id_route').change(function() {
+                var route = $('#id_route').val(); // Boşsa null olarak ayarla
+
+                $.ajax({
+                    url: '{% url 'check_tour_duplicate' %}', // AJAX sorgusunun yapılacağı URL
+                    data: {
+                        'route' : route,
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.exists) {
+                            alert('Bu seçim için zaten bir otel kaydı var!');
+                            $('#submit-all').prop('disabled', true); // Form gönderimini engelle
+                        } else {
+                            $('#submit-all').prop('disabled', false); // Form gönderimine izin ver
+                        }
+                    }
+                });
+            });
+        }
+    });
+</script>
+
+{% endblock js %}

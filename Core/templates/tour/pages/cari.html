@@ -1,0 +1,38 @@
+{% extends "tour/base/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="text-center my-4">Tedarikçi İşleri</h1>
+    <div class="row">
+        <div class="col-md-2">
+            
+            <div class="my-2">
+                <div class="border" style="min-height:56px; padding-top:9px;">
+                    <h3 class="text-center">Tedarikçiler</h3>
+                </div>
+                <div class="list-group my-2">
+                    {% if activity %}
+                        {% for sup in suppliers %}
+                            <button type="button" hx-get="{% url 'activity_cari_category' sup.id %}" hx-target="#cat" hx-swap="innerHTML" class="list-group-item list-group-item-action">{{ sup.name }}</button>
+                        {% endfor %}
+                    {% else %}
+                        {% for sup in suppliers %}
+                            <button type="button" hx-get="{% url 'cari_category' sup.id %}" hx-target="#cat" hx-swap="innerHTML" class="list-group-item list-group-item-action">{{ sup.name }}</button>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="row my-2 border" id="cat" style="min-height:56px;">
+                {% include 'tour/partials/cost_categories.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+
+{% endblock js %}
+

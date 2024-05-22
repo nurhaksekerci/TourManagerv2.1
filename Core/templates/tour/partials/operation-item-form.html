@@ -1,187 +1,195 @@
-<div id="formitem-{{ day.id }}">
-  <form hx-post="{% url 'create_operation_item' day.id %}" hx-target="#opertaion-day"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
-    {{ formitem.id }}
-    <div class="row" id="alis_islemleri">
-      <h6 class="text-center">Alış İşlemleri</h6>
-      <div class="col align-self-end">
-          <label for="{{ formitem.operation_type.id_for_label }}">{{ formitem.operation_type.label }}</label>
-          {{ formitem.operation_type }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.pick_time.id_for_label }}">{{ formitem.pick_time.label }}</label>
-          {{ formitem.pick_time }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.release_time.id_for_label }}">{{ formitem.release_time.label }}</label>
-          {{ formitem.release_time }}
-      </div>
-      <div class="col-md-3 align-self-end">
-          <label for="{{ formitem.pick_location.id_for_label }}">{{ formitem.pick_location.label }}</label>
-          {{ formitem.pick_location }}
-      </div>
-      <div class="col-md-3 align-self-end">
-          <label for="{{ formitem.release_location.id_for_label }}">{{ formitem.release_location.label }}</label>
-          {{ formitem.release_location }}
-      </div>
-    </div>
-    <div class="row" id="tur_islemleri">
-      <h6 class="text-center mt-2">Tur|Transfer İşlemleri</h6>
-      <div class="col-md-3 align-self-end">
-        <label for="{{ formitem.tour.id_for_label }}">{{ formitem.tour.label }}</label>
-        {{ formitem.tour }}
-      </div>
-      <div class="col-md-3 align-self-end">
-        <label for="{{ formitem.transfer.id_for_label }}">{{ formitem.transfer.label }}</label>
-        {{ formitem.transfer }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.vehicle.id_for_label }}">{{ formitem.vehicle.label }}</label>
-          {{ formitem.vehicle }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.vehicle_price.id_for_label }}">{{ formitem.vehicle_price.label }}</label>
-        {{ formitem.vehicle_price }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.vehicle_currency.id_for_label }}">{{ formitem.vehicle_currency.label }}</label>
-        {{ formitem.vehicle_currency }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.supplier.id_for_label }}">{{ formitem.supplier.label }}</label>
-        {{ formitem.supplier }}
-      </div>
-    </div>
-    <div class="row" id="otel_islemleri">
-      <h6 class="text-center mt-2">Otel İşlemleri</h6>
-      <div class="col-md-4 align-self-end">
-        <label for="{{ formitem.hotel.id_for_label }}">{{ formitem.hotel.label }}</label>
-        {{ formitem.hotel }}
-      </div>
+<div class="" id="formitem-add-div-{{day.id}}">
+<div class="accordion-item" id="formitem-{{ day.id }}">
+  <h2 class="accordion-header">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{day.id}}-{{ random_number }}" aria-expanded="false" aria-controls="collapse-{{day.id}}-{{ random_number }}">
+      {{ day.date|date:'d.m.Y' }} İçeriği
+    </button>
+  </h2>
+  <div id="collapse-{{day.id}}-{{ random_number }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+    <div class="accordion-body">
+      <div>
+        <form hx-post="{% url 'create_operation_item' day.id %}" hx-target="#opertaion-day"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
+          {{ formitem.id }}
+          <div class="row" id="alis_islemleri">
+            <h6 class="text-center text-danger">Alış İşlemleri</h6>
+            <div class="col align-self-end">
+                <label for="{{ formitem.operation_type.id_for_label }}" class="text-dark">{{ formitem.operation_type.label }}</label>
+                {{ formitem.operation_type }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.pick_time.id_for_label }}" class="text-dark">{{ formitem.pick_time.label }}</label>
+                {{ formitem.pick_time }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.release_time.id_for_label }}" class="text-dark">{{ formitem.release_time.label }}</label>
+                {{ formitem.release_time }}
+            </div>
+            <div class="col-md-3 align-self-end">
+                <label for="{{ formitem.pick_location.id_for_label }}" class="text-dark">{{ formitem.pick_location.label }}</label>
+                {{ formitem.pick_location }}
+            </div>
+            <div class="col-md-3 align-self-end">
+                <label for="{{ formitem.release_location.id_for_label }}" class="text-dark">{{ formitem.release_location.label }}</label>
+                {{ formitem.release_location }}
+            </div>
+          </div>
+          <div class="row" id="tur_islemleri">
+            <h6 class="text-center mt-2 text-danger">Tur|Transfer İşlemleri</h6>
+            <div class="col align-self-end">
+              <label for="{{ formitem.tour.id_for_label }}" class="text-dark">{{ formitem.tour.label }}</label>
+              {{ formitem.tour }}
+            </div>
+            <div class="col align-self-end">
+              <label for="{{ formitem.transfer.id_for_label }}" class="text-dark">{{ formitem.transfer.label }}</label>
+              {{ formitem.transfer }}
+            </div>
+            <div class="col-md-2 align-self-end">
+                <label for="{{ formitem.vehicle.id_for_label }}" class="text-dark">{{ formitem.vehicle.label }}</label>
+                {{ formitem.vehicle }}
+            </div>
+            <div class="col align-self-end d-none">
+              <label for="{{ formitem.vehicle_price.id_for_label }}" class="text-dark">{{ formitem.vehicle_price.label }}</label>
+              {{ formitem.vehicle_price }}
+            </div>
+            <div class="col align-self-end d-none">
+              <label for="{{ formitem.vehicle_currency.id_for_label }}" class="text-dark">{{ formitem.vehicle_currency.label }}</label>
+              {{ formitem.vehicle_currency }}
+            </div>
+            <div class="col align-self-end d-none">
+              <label for="{{ formitem.supplier.id_for_label }}" class="text-dark">{{ formitem.supplier.label }}</label>
+              {{ formitem.supplier }}
+            </div>
+          </div>
+          <div class="row" id="otel_islemleri">
+            <h6 class="text-center mt-2 text-danger">Otel İşlemleri</h6>
+            <div class="col-md-4 align-self-end">
+              <label for="{{ formitem.hotel.id_for_label }}" class="text-dark">{{ formitem.hotel.label }}</label>
+              {{ formitem.hotel }}
+            </div>
 
-      <div class="col align-self-end">
-          <label for="{{ formitem.room_type.id_for_label }}">{{ formitem.room_type.label }}</label>
-          {{ formitem.room_type }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.hotel_price.id_for_label }}">{{ formitem.hotel_price.label }}</label>
-        {{ formitem.hotel_price }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.hotel_currency.id_for_label }}">{{ formitem.hotel_currency.label }}</label>
-          {{ formitem.hotel_currency }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.hotel_payment.id_for_label }}">{{ formitem.hotel_payment.label }}</label>
-          {{ formitem.hotel_payment }}
+            <div class="col align-self-end">
+                <label for="{{ formitem.room_type.id_for_label }}" class="text-dark">{{ formitem.room_type.label }}</label>
+                {{ formitem.room_type }}
+            </div>
+            <div class="col align-self-end">
+              <label for="{{ formitem.hotel_price.id_for_label }}" class="text-dark">{{ formitem.hotel_price.label }}</label>
+              {{ formitem.hotel_price }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.hotel_currency.id_for_label }}" class="text-dark">{{ formitem.hotel_currency.label }}</label>
+                {{ formitem.hotel_currency }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.hotel_payment.id_for_label }}" class="text-dark">{{ formitem.hotel_payment.label }}</label>
+                {{ formitem.hotel_payment }}
+            </div>
+          </div>
+          <div class="row" id="aktivite_islemleri">
+            <h6 class="text-center mt-2 text-danger">Aktivite İşlemleri</h6>
+            <div class="col align-self-end">
+                <label for="{{ formitem.activity.id_for_label }}" class="text-dark">{{ formitem.activity.label }}</label>
+                {{ formitem.activity }}
+            </div>
+            <div class="col-md-3 align-self-end d-none">
+                <label for="{{ formitem.activity_supplier.id_for_label }}" class="text-dark">{{ formitem.activity_supplier.label }}</label>
+                {{ formitem.activity_supplier }}
+            </div>
+            <div class="col align-self-end d-none">
+                <label for="{{ formitem.activity_price.id_for_label }}" class="text-dark">{{ formitem.activity_price.label }}</label>
+                {{ formitem.activity_price }}
+            </div>
+            <div class="col align-self-end d-none">
+                <label for="{{ formitem.activity_currency.id_for_label }}" class="text-dark">{{ formitem.activity_currency.label }}</label>
+                {{ formitem.activity_currency }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.activity_payment.id_for_label }}" class="text-dark">{{ formitem.activity_payment.label }}</label>
+                {{ formitem.activity_payment }}
+            </div>
+          </div>
+          <div class="row" id="muze_islemleri">
+            <h6 class="text-center mt-2 text-danger">Müze İşlemleri</h6>
+            <div class="col-md-6 align-self-end">
+              <label for="{{ formitem.new_museum.id_for_label }}" class="text-dark">{{ formitem.new_museum.label }}</label>
+              {{ formitem.new_museum }}
+            </div>
+            <div class="col align-self-end d-none">
+              <label for="{{ formitem.museum_price.id_for_label }}" class="text-dark">{{ formitem.museum_price.label }}</label>
+              {{ formitem.museum_price }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.museum_person.id_for_label }}" class="text-dark">{{ formitem.museum_person.label }}</label>
+                {{ formitem.museum_person }}
+            </div>
+            <div class="col align-self-end d-none">
+                <label for="{{ formitem.museum_currency.id_for_label }}" class="text-dark">{{ formitem.museum_currency.label }}</label>
+                {{ formitem.museum_currency }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.museum_payment.id_for_label }}" class="text-dark">{{ formitem.museum_payment.label }}</label>
+                {{ formitem.museum_payment }}
+            </div>
+          </div>
+          <div class="row {% if request.user.personel.first.company.statu == basic %}d-none{% endif %}" id="personel_islemleri">
+            <h6 class="text-center mt-2 text-danger">Personel İşlemleri</h6>
+            <div class="col-md-2 align-self-end d-none">
+              <label for="{{ formitem.driver.id_for_label }}" class="text-dark">{{ formitem.driver.label }}</label>
+              {{ formitem.driver }}
+            </div>
+            <div class="col-md-2 align-self-end d-none">
+                <label for="{{ formitem.driver_phone.id_for_label }}" class="text-dark">{{ formitem.driver_phone.label }}</label>
+                {{ formitem.driver_phone }}
+            </div>
+            <div class="col-md-2 align-self-end d-none">
+                <label for="{{ formitem.plaka.id_for_label }}" class="text-dark">{{ formitem.plaka.label }}</label>
+                {{ formitem.plaka }}
+            </div>
+            <div class="col align-self-end">
+                <label for="{{ formitem.guide.id_for_label }}" class="text-dark">{{ formitem.guide.label }}</label>
+                {{ formitem.guide }}
+            </div>
+            <div class="col-md-2 align-self-end">
+              <label for="{{ formitem.guide_var.id_for_label }}" class="text-dark">{{ formitem.guide_var.label }}</label>
+              {{ formitem.guide_var }}
+            </div>
+            <div class="col-md-2 align-self-end d-none">
+              <label for="{{ formitem.guide_price.id_for_label }}" class="text-dark">{{ formitem.guide_price.label }}</label>
+              {{ formitem.guide_price }}
+            </div>
+            <div class="col-md-2 align-self-end d-none">
+                <label for="{{ formitem.guide_currency.id_for_label }}" class="text-dark">{{ formitem.guide_currency.label }}</label>
+                {{ formitem.guide_currency }}
+            </div>
+            <div class="col-md-2 align-self-end">
+              <label for="{{ formitem.other_price.id_for_label }}" class="text-dark">{{ formitem.other_price.label }}</label>
+              {{ formitem.other_price }}
+            </div>
+            <div class="col-md-2 align-self-end">
+                <label for="{{ formitem.other_currency.id_for_label }}" class="text-dark">{{ formitem.other_currency.label }}</label>
+                {{ formitem.other_currency }}
+            </div>
+          </div>
+          <div class="row">
+            <h6 class="text-center mt-2 text-danger">Tur Detayları</h6>
+            <div class="col align-self-end">
+              <label for="{{ formitem.description.id_for_label }}" class="text-dark">{{ formitem.description.label }}</label>
+              {{ formitem.description }}
+            </div>
+            {% if formitem.instance.id == None %}
+              <div class="col-md-1 align-self-end mt-3">
+                <button type="button" class="btn btn-danger" hx-on="click: this.closest('#formitem-{{ day.id }}').remove()">İptal</button>
+              </div>
+            {% else %}
+              <div class="col-md-3 align-self-end mt-3">
+                <button class="btn btn-danger" hx-delete="{% url 'delete_operationitem' formitem.instance.id %}" hx-confirm="Silmek istediğine emin misin?" hx-target="#formitem-{{ day_form.instance.id }}-{{ forloop.counter }}" hx-swap="outerHTML">Sil</button>
+              </div>
+            {% endif %}
+          </div>
+        </form>
       </div>
     </div>
-    <div class="row" id="aktivite_islemleri">
-      <h6 class="text-center mt-2">Aktivite İşlemleri</h6>
-      <div class="col-md-3 align-self-end">
-          <label for="{{ formitem.activity.id_for_label }}">{{ formitem.activity.label }}</label>
-          {{ formitem.activity }}
-      </div>
-      <div class="col-md-3 align-self-end">
-          <label for="{{ formitem.activity_supplier.id_for_label }}">{{ formitem.activity_supplier.label }}</label>
-          {{ formitem.activity_supplier }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.activity_price.id_for_label }}">{{ formitem.activity_price.label }}</label>
-          {{ formitem.activity_price }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.activity_currency.id_for_label }}">{{ formitem.activity_currency.label }}</label>
-          {{ formitem.activity_currency }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.activity_payment.id_for_label }}">{{ formitem.activity_payment.label }}</label>
-          {{ formitem.activity_payment }}
-      </div>
-    </div>
-    <div class="row" id="muze_islemleri">
-      <h6 class="text-center mt-2">Müze İşlemleri</h6>
-      <div class="col-md-6 align-self-end">
-        <label for="{{ formitem.new_museum.id_for_label }}">{{ formitem.new_museum.label }}</label>
-        {{ formitem.new_museum }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.museum_price.id_for_label }}">{{ formitem.museum_price.label }}</label>
-        {{ formitem.museum_price }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.museum_person.id_for_label }}">{{ formitem.museum_person.label }}</label>
-          {{ formitem.museum_person }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.museum_currency.id_for_label }}">{{ formitem.museum_currency.label }}</label>
-          {{ formitem.museum_currency }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.museum_payment.id_for_label }}">{{ formitem.museum_payment.label }}</label>
-          {{ formitem.museum_payment }}
-      </div>
-    </div>
-    <div class="row {% if request.user.personel.first.company.statu == basic %}d-none{% endif %}" id="personel_islemleri">
-      <h6 class="text-center mt-2">Personel İşlemleri</h6>
-      <div class="col-md-2 align-self-end">
-        <label for="{{ formitem.driver.id_for_label }}">{{ formitem.driver.label }}</label>
-        {{ formitem.driver }}
-      </div>
-      <div class="col-md-2 align-self-end">
-          <label for="{{ formitem.driver_phone.id_for_label }}">{{ formitem.driver_phone.label }}</label>
-          {{ formitem.driver_phone }}
-      </div>
-      <div class="col-md-2 align-self-end">
-          <label for="{{ formitem.plaka.id_for_label }}">{{ formitem.plaka.label }}</label>
-          {{ formitem.plaka }}
-      </div>
-      <div class="col-md-2 align-self-end">
-          <label for="{{ formitem.guide.id_for_label }}">{{ formitem.guide.label }}</label>
-          {{ formitem.guide }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.guide_var.id_for_label }}">{{ formitem.guide_var.label }}</label>
-        {{ formitem.guide_var }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.guide_price.id_for_label }}">{{ formitem.guide_price.label }}</label>
-        {{ formitem.guide_price }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.guide_currency.id_for_label }}">{{ formitem.guide_currency.label }}</label>
-          {{ formitem.guide_currency }}
-      </div>
-      <div class="col align-self-end">
-        <label for="{{ formitem.other_price.id_for_label }}">{{ formitem.other_price.label }}</label>
-        {{ formitem.other_price }}
-      </div>
-      <div class="col align-self-end">
-          <label for="{{ formitem.other_currency.id_for_label }}">{{ formitem.other_currency.label }}</label>
-          {{ formitem.other_currency }}
-      </div>
-    </div>
-    <div class="row">
-      <h6 class="text-center mt-2">Tur Detayları</h6>
-      <div class="col align-self-end">
-        <label for="{{ formitem.description.id_for_label }}">{{ formitem.description.label }}</label>
-        {{ formitem.description }}
-      </div>
-      {% if formitem.instance.id == None %}
-        <div class="col-md-1 align-self-end my-2">
-          <button type="button" class="btn btn-danger" hx-on="click: this.closest('form').remove()">İptal</button>
-        </div>
-      {% else %}
-        <div class="col-md-3 align-self-end my-2">
-          <button class="btn btn-danger" hx-delete="{% url 'delete_operationitem' formitem.instance.id %}" hx-confirm="Silmek istediğine emin misin? (你确定要删除吗？)" hx-target="#formitem-{{ day_form.instance.id }}-{{ forloop.counter }}" hx-swap="outerHTML">Sil (删除)</button>
-        </div>
-      {% endif %}
-    </div>
-  </form>
+  </div>
 </div>
-
-
-{% block js %}
-{% endblock js %}
 
 
 

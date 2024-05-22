@@ -31,6 +31,7 @@
 
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
         <style>
@@ -261,99 +262,42 @@
             });
         </script>
         <script>
-            function applySelect2() {
-                $(document).ready(function() {
-                    $('select').select2();
-                    for(var i = 160; i < 9999; i++) {
-                        var div_id = `formitem-${i}`;
-                        
-                        // Alış İşlemleri
-                        $(`#${div_id} #alis_islemleri .col #id_operation_type`).attr('id', `id_operation_type-${i}`).select2();
-                        
-                        // Tur İşlemleri
-                        $(`#${div_id} #tur_islemleri:nth-child(2) #id_tour`).attr('id', `id_tour-${i}`).select2();
-                        $(`#${div_id} #tur_islemleri:nth-child(2) #id_transfer`).attr('id', `id_transfer-${i}`).select2();
-                        $(`#${div_id} #tur_islemleri:nth-child(2) #id_vehicle`).attr('id', `id_vehicle-${i}`).select2();
-                        
-                        // Otel İşlemleri
-                        $(`#${div_id} #otel_islemleri:nth-child(3) #id_hotel`).attr('id', `id_hotel-${i}`).select2();
-                        
-                        // Aktivite İşlemleri
-                        $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity`).attr('id', `id_activity-${i}`).select2();
-                        $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity_supplier`).attr('id', `id_activity_supplier-${i}`).select2();
-                        
-                        // Personel İşlemleri
-                        $(`#${div_id} #personel_islemleri:nth-child(6) #id_guide`).attr('id', `id_guide-${i}`).select2();
-                        
-                        // Müze İşlemleri
-                        $(`#${div_id} #muze_islemleri:nth-child(5) #id_new_museum`).attr('id', `id_new_museum-${i}`).select2({
-                            maximumSelectionLength: 44
-                        });
-                    }
-                });
-                
-            }
-              // Sayfa yüklendiğinde Select2 uygula
             $(document).ready(function() {
-                setTimeout(function() {
-                    applySelect2();
-                }, 2000);
-            });
-              
-              // Dinamik olarak yeni select elementleri oluşturulduğunda Select2 uygula
-              // Örnek olay dinleyici: bir düğmeye tıklama olayı
-            $('#submit-all').click(function() {
-                // Yeni select elementlerini oluştur
-                // ...
-              
-                // Yeni select elementlerine Select2'yi yeniden uygula
-                setTimeout(function() {
-                    applySelect2();
-                }, 2000);
-            });
-            $('#form-add').click(function() {
-                // Yeni select elementlerini oluştur
-                // ...
-              
-                // Yeni select elementlerine Select2'yi yeniden uygula
-                setTimeout(function() {
-                    applySelect2();
-                }, 2000);
-            });
-        </script>
-        <script>
-            $(document).ready(function() {
-                $('select').select2();
-                for(var i = 160; i < 9999; i++) {
-                    var div_id = `formitem-${i}`;
-                    
-                    // Alış İşlemleri
-                    $(`#${div_id} #alis_islemleri .col #id_operation_type`).attr('id', `id_operation_type-${i}`).select2();
-                    
-                    // Tur İşlemleri
-                    $(`#${div_id} #tur_islemleri:nth-child(2) #id_tour`).attr('id', `id_tour-${i}`).select2();
-                    $(`#${div_id} #tur_islemleri:nth-child(2) #id_transfer`).attr('id', `id_transfer-${i}`).select2();
-                    $(`#${div_id} #tur_islemleri:nth-child(2) #id_vehicle`).attr('id', `id_vehicle-${i}`).select2();
-                    
-                    // Otel İşlemleri
-                    $(`#${div_id} #otel_islemleri:nth-child(3) #id_hotel`).attr('id', `id_hotel-${i}`).select2();
-                    
-                    // Aktivite İşlemleri
-                    $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity`).attr('id', `id_activity-${i}`).select2();
-                    $(`#${div_id} #aktivite_islemleri:nth-child(4) #id_activity_supplier`).attr('id', `id_activity_supplier-${i}`).select2();
-                    
-                    // Personel İşlemleri
-                    $(`#${div_id} #personel_islemleri .col-md-2:last-child #id_guide`).attr('id', `id_guide-${i}`).select2();
-                    
-                    // Müze İşlemleri
-                    $(`#${div_id} #muze_islemleri:nth-child(5) #id_new_museum`).attr('id', `id_new_museum-${i}`).select2({
-                        maximumSelectionLength: 44
-                    });
+              // Function to apply Select2 to select elements inside a specific target
+              function applySelect2ToTarget(target) {
+                console.log(target)
+                $(target).find('select').select2();
+              }
+          
+              // Initial Select2 setup on page load
+              applySelect2ToTarget('.accordion-content'); // Assuming a common class for all accordion contents
+          
+              // Select2 initialization on accordion button click
+              $(document).on('click', '.accordion-button', function() {
+                // Check if there are any changes in the page content
+                var pageChanged = checkPageContentChanges();
+          
+                if (pageChanged) {
+                  // If there are changes, update Select2 in the accordion content
+                  var target = $(this).attr('data-bs-target');
+                  applySelect2ToTarget(target);
                 }
+              });
+          
+              // Function to check for changes in page content
+              function checkPageContentChanges() {
+                // You can implement your logic here to check for any changes in page content
+                // For example, check if new accordions have been added or if existing ones have been modified
+                // Return true if changes are detected, false otherwise
+                // Example logic:
+                // var pageChanged = ...; // Implement your logic here
+                // return pageChanged;
+                
+                // For demonstration purposes, always return true (indicating changes)
+                return true;
+              }
             });
-
-            
-        </script>
+          </script>
         
             
         {% block js %}{% endblock js %}

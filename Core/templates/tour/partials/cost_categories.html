@@ -1,0 +1,59 @@
+{% if activity %}
+    {% if categories %}
+        {% for cat in categories %}
+            
+            <div class="col" style="margin-top:9px;">
+                <button hx-post="{% url 'activity_cari_category_field' tedarikci_id month cat.activity.name %}" hx-target="#details" hx-swap="innerHTML" class="btn btn-secondary">{{ cat.activity.name }}</button>
+            </div>
+        {% endfor %}
+        <div class="col-md-2 ms-auto" style="height:56px;">
+            <form method="POST" style="margin-top:9px;">
+                <input type="text" class="d-none" value="{{ tedarikci_id }}">
+                <div class="input-group mb-3">
+                    <input type="month" class="form-control" name="month">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" hx-post="{% url 'activity_cari_category' tedarikci_id %}" hx-target="#details" hx-swap="innerHTML" type="button">Ara</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+{% else %}
+    {% if categories %}
+        <div class="col" style="margin-top:9px;">
+            <button hx-post="{% url 'cari_category_field' tedarikci_id month 'tour' %}" hx-target="#details" hx-swap="innerHTML" class="btn btn-secondary">Turlar</button>
+        </div>
+        <div class="col" style="margin-top:9px;">
+            <button hx-post="{% url 'cari_category_field' tedarikci_id month 'transfer' %}" hx-target="#details" hx-swap="innerHTML" class="btn btn-secondary">Transferler</button>
+        </div>
+        {% for cat in categories %}
+            {% if cat.tour  %}
+                <div class="col" style="margin-top:9px;">
+                    <button hx-post="{% url 'cari_category_field' tedarikci_id month cat.tour.route %}" hx-target="#details" hx-swap="innerHTML" class="btn btn-secondary">{{ cat.tour.route }}</button>
+                </div>
+            {% else %}
+                <div class="col" style="margin-top:9px;">
+                    <button hx-post="{% url 'cari_category_field' tedarikci_id month cat.transfer.route %}" hx-target="#details" hx-swap="innerHTML" class="btn btn-secondary">{{ cat.transfer.route }}</button>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="col-md-2 ms-auto" style="height:56px;">
+            <form method="POST" style="margin-top:9px;">
+                <input type="text" class="d-none" value="{{ tedarikci_id }}">
+                <div class="input-group mb-3">
+                    <input type="month" class="form-control" name="month">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" hx-post="{% url 'cari_category' tedarikci_id %}" hx-target="#details" hx-swap="innerHTML" type="button">Ara</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <p class="my-auto">Tedarikçi Seçin.</p>
+    {% endif %}
+{% endif %}
+
+
+<div id="details">
+    {% include 'tour/partials/tedarikci_isleri.html' %}
+</div>

@@ -59,6 +59,7 @@
                     <tr>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
+                        <th>Açıklama</th>
                         <th>Alış Zamanı</th>
                         <th>Bırakış Zamanı</th>
                         <th>Alış Yeri</th>
@@ -90,7 +91,6 @@
                         <th>Plaka</th>
                         <th>Diğer Ücretler</th>
 
-                        <th>Açıklama</th>
 
                     </tr>
                 </thead>
@@ -126,8 +126,8 @@
                     <tr>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
+                        <th>Açıklama</th>
                         <th>Alış Zamanı</th>
-                        <th>Bırakış Zamanı</th>
                         <th>Alış Yeri</th>
                         <th>Bırakış Yeri</th>
 
@@ -137,12 +137,10 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
-                        <th>Oda Tipi</th>
                         <th>Otel Ücreti</th>
                         <th>Otel Ücreti Bizde</th>
                         
                         <th>Aktivite</th>
-                        <th>Aktivite Ücreti</th>
                         <th>Aktivite Tedarikçi</th>
                         <th>Aktivite Ücreti Bizde</th>
                         
@@ -155,9 +153,7 @@
                         <th>Şoför</th>
                         <th>Şoför Telefon</th>
                         <th>Plaka</th>
-                        <th>Diğer Ücretler</th>
 
-                        <th>Açıklama</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -190,8 +186,8 @@
                     <tr>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
+                        <th>Açıklama</th>
                         <th>Alış Zamanı</th>
-                        <th>Bırakış Zamanı</th>
                         <th>Alış Yeri</th>
                         <th>Bırakış Yeri</th>
 
@@ -201,12 +197,10 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
-                        <th>Oda Tipi</th>
                         <th>Otel Ücreti</th>
                         <th>Otel Ücreti Bizde</th>
                         
                         <th>Aktivite</th>
-                        <th>Aktivite Ücreti</th>
                         <th>Aktivite Tedarikçi</th>
                         <th>Aktivite Ücreti Bizde</th>
                         
@@ -219,9 +213,7 @@
                         <th>Şoför</th>
                         <th>Şoför Telefon</th>
                         <th>Plaka</th>
-                        <th>Diğer Ücretler</th>
 
-                        <th>Açıklama</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -240,12 +232,18 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-3">
+                <label>Başlangıç Tarihi (Zorunlu)</label>
                 <input class="form-control" type="date" name="date_job" required>
             </div>
             <div class="col-3">
+                <label>Bitiş Tarihi (İsteğe Bağlı)</label>
+                <input class="form-control" type="date" name="date_finish_job">
+            </div>
+            <div class="col-3 align-self-end">
                 <button class="btn btn-success">İşleri Getir</button>
             </div>
         </div>
+        
     </form>
     
     <div class="card my-4" id="cardWeek">
@@ -266,8 +264,8 @@
                     <tr>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
+                        <th>Açıklama</th>
                         <th>Alış Zamanı</th>
-                        <th>Bırakış Zamanı</th>
                         <th>Alış Yeri</th>
                         <th>Bırakış Yeri</th>
 
@@ -277,12 +275,10 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
-                        <th>Oda Tipi</th>
                         <th>Otel Ücreti</th>
                         <th>Otel Ücreti Bizde</th>
                         
                         <th>Aktivite</th>
-                        <th>Aktivite Ücreti</th>
                         <th>Aktivite Tedarikçi</th>
                         <th>Aktivite Ücreti Bizde</th>
                         
@@ -294,9 +290,7 @@
                         <th>Şoför</th>
                         <th>Şoför Telefon</th>
                         <th>Plaka</th>
-                        <th>Diğer Ücretler</th>
 
-                        <th>Açıklama</th>
                     </tr>
                 </thead>
                 <tbody>

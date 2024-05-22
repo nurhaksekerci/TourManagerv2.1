@@ -9,8 +9,37 @@
     <div class="desktop-only">
         <div class="d-flex justify-content-center">
             <div id="forms">
-                <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_create_view' model_name %}" hx-target="#forms" hx-swap="beforeend">Form Ekle</button>
-                <button type="button" class="btn btn-primary my-4"  id="submit-all">Kaydet</button>
+                <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_create_view' model_name %}" hx-target="#forms" hx-swap="beforeend">Add Form</button>
+                <button type="button" class="btn btn-primary my-4"  id="submit-all">Save</button>
+                {% if model_name != "Personel" and model_name != "Cost" and model_name != "Activitycost"  %}
+                    <a class="btn btn-success my-4 me-2" href="{% url 'generic_excel_download' model_name %}">Download Excel</a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">
+                        Upload Excel
+                    </button>
+                    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="uploadModalLabel">Upload Excel Form</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Form -->
+                                    <form method="post" action="{% url 'generic_excel_upload' model_name %}" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="excel_file">Select Excel Form:</label>
+                                            <input type="file" name="excel_file" id="excel_file" class="form-control" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -21,8 +50,9 @@
     <div class="mobile-only">
         <div class="d-flex justify-content-center">
             <div id="forms-mobile">
-                <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_mobile_create_view' model_name %}" hx-target="#forms-mobile" hx-swap="beforeend">Form Ekle</button>
-                <button type="button" class="btn btn-primary my-4"  id="submit-all">Kaydet</button>
+                <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_mobile_create_view' model_name %}" hx-target="#forms-mobile" hx-swap="beforeend">Add Form</button>
+                <button type="button" class="btn btn-primary my-4"  id="submit-all">Save</button>
+                <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_excel_download' model_name %}" hx-target="#forms-mobile" hx-swap="beforeend">Download Excel Form</button>
             </div>
         </div>
     </div>
@@ -69,6 +99,10 @@
 
 {% endblock content %}
 
-
+{% block js %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+{% endblock js %}
 
 

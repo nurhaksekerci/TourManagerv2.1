@@ -87,13 +87,17 @@
                         Cariler
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                        <li><a class="dropdown-item" href="{% url 'cari' %}">Araç Carileri</a></li>
+                        <li><a class="dropdown-item" href="{% url 'activity_cari' %}">Aktivite Carileri</a></li>
                         <li><a class="dropdown-item" href="#">Grafikler</a></li>
                         <li><a class="dropdown-item" href="#">Karlılık</a></li>
                     </ul>
                 </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-lg-0">
-                <!-- Dropdown for Kayıtlar -->
+            {% if request.user.personel.first.company.name == "CARGA TOUR" %}
+
+            {% else %}
                 <li class="nav-item ">
                     <a class="nav-link" href="{% url 'pricing' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
                         Fiyatlandırma
@@ -104,6 +108,7 @@
                         Geçmiş Ödemeler
                     </a>
                 </li>
+            {% endif %}
                 <li class="nav-item ">
                     <a class="nav-link" href="{% url 'logs' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
                         Loglar
@@ -118,6 +123,11 @@
             <div class="ms-auto navbar-text">
                 {% if request.user.is_authenticated %}
                     <ul class="navbar-nav">
+                        <li style="font-size: 0.7rem;" class="align-self-center">
+                            <span id="usd_to_try"></span> TRY <br>
+                            <span id="usd_to_eur"></span> EUR <br>
+                            <span id="usd_to_rmb"></span> RMB <br>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span>{{ request.user.get_full_name }}</span><br><span>{{ user.personel.first.job }}</span>
@@ -141,3 +151,19 @@
         </div>
     </div>
 </nav>
+<script>
+    // JavaScript kullanarak döviz kurlarını güncelle
+    function updateExchangeRates() {
+        fetch('/TourManagerV2/get_exchange_rates/') // Django'da uygun URL'yi belirtin
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('usd_to_try').textContent = "1 USD: " + data.usd_to_try;
+                document.getElementById('usd_to_eur').textContent = "1 USD: " + data.usd_to_eur;
+                document.getElementById('usd_to_rmb').textContent = "1 USD: " + data.usd_to_rmb;
+            })
+            .catch(error => console.error('Döviz kurları alınırken hata oluştu:', error));
+    }
+
+    // Sayfa yüklendiğinde döviz kurlarını güncelle
+    document.addEventListener('DOMContentLoaded', updateExchangeRates);
+</script>

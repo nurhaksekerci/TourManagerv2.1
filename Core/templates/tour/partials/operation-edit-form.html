@@ -1,7 +1,7 @@
-<div id="">
+<div>
     <div id="form-{{ operation_form.instance.id }}">
         <!-- Operation Form Alanları -->
-        <form hx-post="" hx-target="#form-{{ operation_form.instance.id }}"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
+        <form hx-post="{% url 'update_operation' operation_form.instance.id %}" hx-target="#form-{{ operation_form.instance.id }}" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
             <div class="row">
                 <div class="col-md-2 align-self-end">
                     <label for="{{ operation_form.follow_staff.id_for_label }}">{{ operation_form.follow_staff.label }}</label>
