@@ -1,11 +1,46 @@
 {% extends "tour/base/base.html" %}
+{% block css %}
+<style>
+    /* Ekran genişliği 1762 piksel veya daha büyükse */
+    @media (min-width: 1762px) {
+        .table {
+            font-size: 0.6rem !important;
+        }
+    }
 
+    /* Ekran genişliği 1762 pikselden küçükse */
+    @media (max-width: 1761px) {
+        .table_font {
+            font-size: 0.4rem !important;
+        }
+    }
+    @media (max-width: 1415px) {
+        .table_font {
+            font-size: 0.3rem !important;
+        }
+    }
+</style>
+{% endblock css %}
 {% block content %}
 <div class="p-5">
     <div class="card my-4"  id="cardToday">
         <div class="card-header d-md-flex justify-content-md-between align-items-md-center">
             <h1 class="my-1 card_title">{{ todaytitle|date:"d.m.Y" }}</h1>
             <div>
+                <select name="filtre_today" id="filtre_today" class="form-control">
+                    <option value="Hepsi">Hepsi</option>
+                    <option value="Tur">Tur</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="TurTransfer">Tur + Transfer</option>
+                    <option value="TransferTur">Transfer + Tur</option>
+                    <option value="Aktivite">Aktivite</option>
+                    <option value="Muze">Muze</option>
+                    <option value="Otel">Otel</option>
+                    <option value="Rehber">Rehber</option>
+                    <option value="Arac">Arac</option>
+                    <option value="Aracli Rehber">Aracli Rehber</option>
+                    <option value="Serbest Zaman">Serbest Zaman</option>
+                </select>
                 <button onclick="downloadCard('cardToday');" class="btn btn-outline-secondary">
                     <i class="fas fa-download"></i> Excel İndir
                 </button>
@@ -15,55 +50,18 @@
             </div>
         </div>
         <div class="card-body" style=" overflow-x: auto;">
-            <button class="btn btn-secondaty mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                Filtre Uygula
-            </button>
-            <a class="btn btn-secondaty mb-3" href="{% url 'jobs' %}">
-                Filtre Sıfırla
-            </a>
-              
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filtre</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <div>
-                        Filtre uygulamak için seçim yapınız.
-                    </div>
-                    <div class="dropdown mt-3">
-                        <form method="POST" action="{% url 'filtre' %}">
-                            {% csrf_token %}
-                            <label>İşlem Türü Seçiniz</label>
-                            <select name="filtre" class="form-control">
-                                <option value="Tur">Tur</option>
-                                <option value="Tur + Transfer">Tur + Transfer</option>
-                                <option value="Transfer + Tur">Transfer + Tur</option>
-                                <option value="Transfer">Transfer</option>
-                                <option value="Araç">Araç</option>
-                                <option value="Aktivite">Aktivite</option>
-                                <option value="Müze">Müze</option>
-                                <option value="Otel">Otel</option>
-                                <option value="Rehber">Rehber</option>
-                                <option value="Araçlı Rehber">Araçlı Rehber</option>
-                                <option value="Serbest Zaman">Serbest Zaman</option>
-                            </select>
 
-                            <button class="btn btn-secondary my-3">Uygula</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <table class="table table-striped table-hover" style="font-size:0.6rem;">
+            <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Takip Eden</th>
+                        {% endif %}
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
                         <th>Alış Zamanı</th>
-                        <th>Bırakış Zamanı</th>
                         <th>Alış Yeri</th>
-                        <th>Bırakış Yeri</th>
 
                         <th>Tur</th>
                         <th>Transfer</th>
@@ -71,25 +69,24 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
-                        <th>Oda Tipi</th>
-                        <th>Otel Ücreti</th>
-                        <th>Otel Ücreti Bizde</th>
-                        
+
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
                         <th>Aktivite Ücreti</th>
-                        <th>Aktivite Ücreti Bizde</th>
-                        
+
                         <th>Müzeler</th>
                         <th>Müze Ücreti</th>
-                        <th>Müze Ücreti Bizde</th>
 
                         <th>Rehber</th>
+                        <th>Rehber Var</th>
                         <th>Rehber Ücreti</th>
+
                         <th>Şoför</th>
                         <th>Şoför Telefon</th>
                         <th>Plaka</th>
-                        <th>Diğer Ücretler</th>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Whatsapp</th>
+                        {% endif %}
 
 
                     </tr>
@@ -112,6 +109,20 @@
         <div class="card-header d-md-flex justify-content-md-between align-items-md-center">
             <h1 class="my-1 card_title">{{ tomorrowtitle|date:"d.m.Y" }}</h1>
             <div>
+                <select name="filtre_tomorrow" id="filtre_tomorrow" class="form-control">
+                    <option value="Hepsi">Hepsi</option>
+                    <option value="Tur">Tur</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="TurTransfer">Tur + Transfer</option>
+                    <option value="TransferTur">Transfer + Tur</option>
+                    <option value="Aktivite">Aktivite</option>
+                    <option value="Muze">Muze</option>
+                    <option value="Otel">Otel</option>
+                    <option value="Rehber">Rehber</option>
+                    <option value="Arac">Arac</option>
+                    <option value="Aracli Rehber">Aracli Rehber</option>
+                    <option value="Serbest Zaman">Serbest Zaman</option>
+                </select>
                 <button onclick="downloadCard('cardTomorrow');" class="btn btn-outline-secondary">
                     <i class="fas fa-download"></i> Excel İndir
                 </button>
@@ -121,15 +132,17 @@
             </div>
         </div>
         <div class="card-body" style=" overflow-x: auto;">
-            <table class="table table-striped table-hover" style="font-size:0.6rem;">
+            <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Takip Eden</th>
+                        {% endif %}
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
                         <th>Alış Zamanı</th>
                         <th>Alış Yeri</th>
-                        <th>Bırakış Yeri</th>
 
                         <th>Tur</th>
                         <th>Transfer</th>
@@ -137,22 +150,24 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
-                        <th>Otel Ücreti</th>
-                        <th>Otel Ücreti Bizde</th>
-                        
+
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
-                        <th>Aktivite Ücreti Bizde</th>
-                        
+                        <th>Aktivite Ücreti</th>
+
                         <th>Müzeler</th>
                         <th>Müze Ücreti</th>
-                        <th>Müze Ücreti Bizde</th>
 
                         <th>Rehber</th>
+                        <th>Rehber Var</th>
                         <th>Rehber Ücreti</th>
+
                         <th>Şoför</th>
                         <th>Şoför Telefon</th>
                         <th>Plaka</th>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Whatsapp</th>
+                        {% endif %}
 
                     </tr>
                 </thead>
@@ -172,6 +187,20 @@
         <div class="card-header d-md-flex justify-content-md-between align-items-md-center">
             <h1 class="my-1 card_title">{{ totomorrowtitle|date:"d.m.Y" }}</h1>
             <div>
+                <select name="filtre_today" id="filtre_totomorrow" class="form-control">
+                    <option value="Hepsi">Hepsi</option>
+                    <option value="Tur">Tur</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="TurTransfer">Tur + Transfer</option>
+                    <option value="TransferTur">Transfer + Tur</option>
+                    <option value="Aktivite">Aktivite</option>
+                    <option value="Muze">Muze</option>
+                    <option value="Otel">Otel</option>
+                    <option value="Rehber">Rehber</option>
+                    <option value="Arac">Arac</option>
+                    <option value="Aracli Rehber">Aracli Rehber</option>
+                    <option value="Serbest Zaman">Serbest Zaman</option>
+                </select>
                 <button onclick="downloadCard('cardtoTomorrow');" class="btn btn-outline-secondary">
                     <i class="fas fa-download"></i> Excel İndir
                 </button>
@@ -181,15 +210,17 @@
             </div>
         </div>
         <div class="card-body" style=" overflow-x: auto;">
-            <table class="table table-striped table-hover" style="font-size:0.6rem;">
+            <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Takip Eden</th>
+                        {% endif %}
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
                         <th>Alış Zamanı</th>
                         <th>Alış Yeri</th>
-                        <th>Bırakış Yeri</th>
 
                         <th>Tur</th>
                         <th>Transfer</th>
@@ -197,22 +228,24 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
-                        <th>Otel Ücreti</th>
-                        <th>Otel Ücreti Bizde</th>
-                        
+
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
-                        <th>Aktivite Ücreti Bizde</th>
-                        
+                        <th>Aktivite Ücreti</th>
+
                         <th>Müzeler</th>
                         <th>Müze Ücreti</th>
-                        <th>Müze Ücreti Bizde</th>
 
                         <th>Rehber</th>
+                        <th>Rehber Var</th>
                         <th>Rehber Ücreti</th>
+
                         <th>Şoför</th>
                         <th>Şoför Telefon</th>
                         <th>Plaka</th>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Whatsapp</th>
+                        {% endif %}
 
                     </tr>
                 </thead>
@@ -243,13 +276,27 @@
                 <button class="btn btn-success">İşleri Getir</button>
             </div>
         </div>
-        
+
     </form>
-    
+
     <div class="card my-4" id="cardWeek">
         <div class="card-header d-md-flex justify-content-md-between align-items-md-center">
             <h1 class="my-1 card_title">{{ weektitle }}</h1>
             <div>
+                <select name="filtre" id="filtre" class="form-control">
+                    <option value="Hepsi">Hepsi</option>
+                    <option value="Tur">Tur</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="TurTransfer">Tur + Transfer</option>
+                    <option value="TransferTur">Transfer + Tur</option>
+                    <option value="Aktivite">Aktivite</option>
+                    <option value="Muze">Muze</option>
+                    <option value="Otel">Otel</option>
+                    <option value="Rehber">Rehber</option>
+                    <option value="Arac">Arac</option>
+                    <option value="Aracli Rehber">Aracli Rehber</option>
+                    <option value="Serbest Zaman">Serbest Zaman</option>
+                </select>
                 <button onclick="downloadCard('cardWeek');" class="btn btn-outline-secondary">
                     <i class="fas fa-download"></i> Excel İndir
                 </button>
@@ -259,15 +306,17 @@
             </div>
         </div>
         <div class="card-body" style=" overflow-x: auto;">
-            <table class="table table-striped table-hover" style="font-size:0.6rem;">
+            <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Takip Eden</th>
+                        {% endif %}
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
                         <th>Alış Zamanı</th>
                         <th>Alış Yeri</th>
-                        <th>Bırakış Yeri</th>
 
                         <th>Tur</th>
                         <th>Transfer</th>
@@ -275,21 +324,24 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
-                        <th>Otel Ücreti</th>
-                        <th>Otel Ücreti Bizde</th>
-                        
+
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
-                        <th>Aktivite Ücreti Bizde</th>
-                        
+                        <th>Aktivite Ücreti</th>
+
                         <th>Müzeler</th>
                         <th>Müze Ücreti</th>
-                        <th>Müze Ücreti Bizde</th>
 
                         <th>Rehber</th>
+                        <th>Rehber Var</th>
+                        <th>Rehber Ücreti</th>
+
                         <th>Şoför</th>
                         <th>Şoför Telefon</th>
                         <th>Plaka</th>
+                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                            <th>Whatsapp</th>
+                        {% endif %}
 
                     </tr>
                 </thead>
@@ -343,6 +395,158 @@
             XLSX.writeFile(wb, fileName);
         }
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filtreSelect = document.getElementById('filtre');
+        const tableRows = document.querySelectorAll('#cardWeek tbody tr');
+
+        filtreSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            tableRows.forEach(row => {
+                const islemTuruCell = row.querySelector('td:nth-child(3)'); // İşlem Türü sütununu seçiyoruz
+                const aktiviteCell = row.querySelector('td:nth-child(12)'); // Aktivite sütununu seçiyoruz
+                const muzeCell = row.querySelector('td:nth-child(15)'); // Müze sütununu seçiyoruz
+
+                if (selectedValue === 'Hepsi') {
+                    row.style.display = '';
+                } else if (selectedValue === 'Aktivite') {
+                    if (aktiviteCell && aktiviteCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else if (selectedValue === 'Muze') {
+                    if (muzeCell && muzeCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else {
+                    if (islemTuruCell && islemTuruCell.textContent.trim() === selectedValue) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filtreSelect = document.getElementById('filtre_tomorrow');
+        const tableRows = document.querySelectorAll('#cardTomorrow tbody tr');
+
+        filtreSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            tableRows.forEach(row => {
+                const islemTuruCell = row.querySelector('td:nth-child(3)'); // İşlem Türü sütununu seçiyoruz
+                const aktiviteCell = row.querySelector('td:nth-child(12)'); // Aktivite sütununu seçiyoruz
+                const muzeCell = row.querySelector('td:nth-child(15)'); // Müze sütununu seçiyoruz
+
+                if (selectedValue === 'Hepsi') {
+                    row.style.display = '';
+                } else if (selectedValue === 'Aktivite') {
+                    if (aktiviteCell && aktiviteCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else if (selectedValue === 'Muze') {
+                    if (muzeCell && muzeCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else {
+                    if (islemTuruCell && islemTuruCell.textContent.trim() === selectedValue) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filtreSelect = document.getElementById('filtre_today');
+        const tableRows = document.querySelectorAll('#cardToday tbody tr');
+
+        filtreSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            tableRows.forEach(row => {
+                const islemTuruCell = row.querySelector('td:nth-child(3)'); // İşlem Türü sütununu seçiyoruz
+                const aktiviteCell = row.querySelector('td:nth-child(12)'); // Aktivite sütununu seçiyoruz
+                const muzeCell = row.querySelector('td:nth-child(15)'); // Müze sütununu seçiyoruz
+
+                if (selectedValue === 'Hepsi') {
+                    row.style.display = '';
+                } else if (selectedValue === 'Aktivite') {
+                    if (aktiviteCell && aktiviteCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else if (selectedValue === 'Muze') {
+                    if (muzeCell && muzeCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else {
+                    if (islemTuruCell && islemTuruCell.textContent.trim() === selectedValue) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filtreSelect = document.getElementById('filtre_totomorrow');
+        const tableRows = document.querySelectorAll('#cardtoTomorrow tbody tr');
+
+        filtreSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            tableRows.forEach(row => {
+                const islemTuruCell = row.querySelector('td:nth-child(3)'); // İşlem Türü sütununu seçiyoruz
+                const aktiviteCell = row.querySelector('td:nth-child(12)'); // Aktivite sütununu seçiyoruz
+                const muzeCell = row.querySelector('td:nth-child(15)'); // Müze sütununu seçiyoruz
+
+                if (selectedValue === 'Hepsi') {
+                    row.style.display = '';
+                } else if (selectedValue === 'Aktivite') {
+                    if (aktiviteCell && aktiviteCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else if (selectedValue === 'Muze') {
+                    if (muzeCell && muzeCell.textContent.trim() !== '----') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else {
+                    if (islemTuruCell && islemTuruCell.textContent.trim() === selectedValue) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
 {% endblock %}
 
 

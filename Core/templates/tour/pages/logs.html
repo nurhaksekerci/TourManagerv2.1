@@ -5,17 +5,29 @@
 
     <h1 class="text-center my-4">Loglar</h1>
     <div class="row mt-2">
-        <div class="col my-2">
-            <a class="btn btn-light" href="{% url 'logs' %}">Tümü</a>
-        </div>
-        {% for staff in staffs %}
+        {% if login == False %}
             <div class="col my-2">
-                <a class="btn btn-light" href="{% url 'log_staff' staff.id %}">{{staff.user.get_full_name }}</a>
+                <a class="btn btn-light" href="{% url 'logs' %}">Tümü</a>
             </div>
+        {% else %}
+            <div class="col my-2">
+                <a class="btn btn-light" href="{% url 'login_logs' %}">Tümü</a>
+            </div>
+        {% endif %}
+        {% for staff in staffs %}
+            {% if login == False %}
+                <div class="col my-2">
+                    <a class="btn btn-light" href="{% url 'log_staff' staff.id %}">{{staff.user.get_full_name }}</a>
+                </div>
+            {% else %}
+                <div class="col my-2">
+                    <a class="btn btn-light" href="{% url 'log_staff_login' staff.id %}">{{staff.user.get_full_name }}</a>
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
     <div style="overflow-x: auto;">
-        <table class="table table-striped table-hover table-borderless table-light align-middle">
+        <table class="table table-striped table-hover table-borderless table-light align-middle" id="myTable">
             <thead>
                 <tr>
                     <th>KULLANICI</th>
@@ -100,5 +112,14 @@
 {% endblock content %}
 
 
+{% block js %}
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
+{% endblock js %}
 

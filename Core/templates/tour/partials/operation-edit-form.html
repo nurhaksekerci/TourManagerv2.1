@@ -51,7 +51,23 @@
                     <label for="{{ operation_form.payment_channel.id_for_label }}">{{ operation_form.payment_channel.label }}</label>
                     {{ operation_form.payment_channel }}
                 </div>
-                <div class="col-md-4 align-self-end">
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.usd_sales_price.id_for_label }}">{{ operation_form.usd_activity_price.label }}</label>
+                    {{ operation_form.usd_activity_price }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.eur_sales_price.id_for_label }}">{{ operation_form.eur_activity_price.label }}</label>
+                    {{ operation_form.eur_activity_price }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.tl_sales_price.id_for_label }}">{{ operation_form.tl_activity_price.label }}</label>
+                    {{ operation_form.tl_activity_price }}
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <label for="{{ operation_form.rbm_sales_price.id_for_label }}">{{ operation_form.rbm_activity_price.label }}</label>
+                    {{ operation_form.rbm_activity_price }}
+                </div>
+                <div class="col-md-8 align-self-end">
                     <label for="{{ operation_form.passenger_info.id_for_label }}">{{ operation_form.passenger_info.label }}</label>
                     {{ operation_form.passenger_info }}
                 </div>

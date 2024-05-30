@@ -1,7 +1,11 @@
 {% extends "tour/base/base.html" %}
 
+{% block css %}
+
+
+{% endblock css %}
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid" data-bs-theme="dark">
     <h1 class="text-center my-5">{{ createtitle }}</h1>
     <div id="forms" class="desktop-only">
         {% include 'tour/partials/generic-form.html' %}
@@ -12,7 +16,8 @@
                 <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_create_view' model_name %}" hx-target="#forms" hx-swap="beforeend">Add Form</button>
                 <button type="button" class="btn btn-primary my-4"  id="submit-all">Save</button>
                 {% if model_name != "Personel" and model_name != "Cost" and model_name != "Activitycost"  %}
-                    <a class="btn btn-success my-4 me-2" href="{% url 'generic_excel_download' model_name %}">Download Excel</a>
+                    <a class="btn btn-success my-4 me-2" href="{% url 'generic_excel_download' model_name %}">Download Excel Form</a>
+
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">
                         Upload Excel
                     </button>
@@ -40,6 +45,8 @@
                         </div>
                     </div>
                 {% endif %}
+                <a class="btn btn-danger my-4 me-2" href="{% url 'generic_excel_full_download' model_name %}">Download Full Excel</a>
+
             </div>
         </div>
     </div>
@@ -52,7 +59,7 @@
             <div id="forms-mobile">
                 <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_mobile_create_view' model_name %}" hx-target="#forms-mobile" hx-swap="beforeend">Add Form</button>
                 <button type="button" class="btn btn-primary my-4"  id="submit-all">Save</button>
-                <button class="btn btn-success my-4 me-2" hx-get="{% url 'generic_excel_download' model_name %}" hx-target="#forms-mobile" hx-swap="beforeend">Download Excel Form</button>
+                <button class="btn btn-danger my-4 me-2" hx-get="{% url 'generic_excel_full_download' model_name %}" hx-target="#forms-mobile" hx-swap="beforeend">Download Full Excel</button>
             </div>
         </div>
     </div>
@@ -75,11 +82,11 @@
                             </div>
                         </div>
                     {% endfor %}
-                </div>            
-            </div>            
+                </div>
+            </div>
         </div>
         <div class="desktop-only">
-            <table class="table table-striped table-hover table-bordered table-light align-middle">
+            <table class="table table-striped table-hover table-bordered table-light align-middle" id="myTable">
                 <thead>
                     {% for field in fields %}
                         <th>{{ field|upper }}</th>
@@ -91,7 +98,7 @@
                         {% include "tour/partials/generic-list.html" with fields=fields obj_data=obj_data %}
                     {% endfor %}
                 </tbody>
-            </table>        
+            </table>
         </div>
     </div>
 </div>
@@ -100,9 +107,28 @@
 {% endblock content %}
 
 {% block js %}
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Select2'u uygulamak için
+            $('#id_staff').select2({
+                multiple: true
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-masker@1.2.0/build/vanilla-masker.min.js"></script>
+    <script>
+        // Inputmask'in uygulanması
+        VMasker(document.getElementById("id_phone")).maskPattern("(999) 999-9999");
+
+    </script>
 {% endblock js %}
 
 

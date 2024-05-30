@@ -8,7 +8,7 @@
         <div id="collapseformitem-{{ day_id }}-{{ random_number }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div class="accordion-body">
                 <div id="formitem-{{ day_id }}-{{ random_number }}">
-                    <form  hx-wait="1000" hx-post="{% url 'add_operation_item' day_id %}" hx-target="#formitem-{{ day_id }}-{{ random_number }}"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
+                    <form  hx-wait="1000" hx-post="{% url 'add_operation_item' day_id %}" id="form-{{ day_id }}-{{ random_number }}" hx-target="#formitem-{{ day_id }}-{{ random_number }}"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
     {% else %}
         <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseformitem-{{ day_form.instance.id }}-{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseformitem-{{ day_form.instance.id }}-{{ forloop.counter }}">
@@ -16,9 +16,9 @@
         </button>
         </h2>
         <div id="collapseformitem-{{ day_form.instance.id }}-{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <div class="accordion-body"> 
+            <div class="accordion-body">
         <div id="formitem-{{ day_form.instance.id }}-{{ forloop.counter }}">
-            <form hx-wait="1000" hx-post="{% url 'update_operation_item' day_form.instance.id formitem.instance.id %}" hx-target="#formitem-{{ day_form.instance.id  }}-{{ forloop.counter }}"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
+            <form hx-wait="1000" hx-post="{% url 'update_operation_item' day_form.instance.id formitem.instance.id %}" id="{{ formitem.instance.id }}" hx-target="#formitem-{{ day_form.instance.id  }}-{{ forloop.counter }}"  hx-on="htmx:afterRequest: this.closest('#close').remove()" hx-swap="beforeend" hx-trigger="click from:#submit-item-all">
     {% endif %}
 
             <h5>İçerik</h5>

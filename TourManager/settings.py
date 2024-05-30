@@ -116,6 +116,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+# settings.py
+DATE_FORMAT = 'd.m.Y'
+TIME_FORMAT = 'H:i'
+# settings.py
+DATETIME_FORMAT = 'd.m.Y H:i'
 
 
 # Static files (CSS, JavaScript, Images)

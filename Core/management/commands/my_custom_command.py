@@ -4,7 +4,7 @@ from Core.models import *
 class Command(BaseCommand):
     help = 'My custom Django command'
 
-    tours = Buyercompany.objects.filter(company__id=2)
+    tours = Supplier.objects.filter(company__id=2)
 
     def handle(self, *args, **options):
         # Türkçe karakterleri İngilizce karakterlere dönüştürmek için bir sözlük oluşturun
@@ -21,11 +21,11 @@ class Command(BaseCommand):
             # Türkçe karakterleri İngilizce karakterlere dönüştürün
             for turkish_char, english_char in turkish_to_english.items():
                 tour.name = tour.name.replace(turkish_char, english_char)
-                tour.short_name = tour.short_name.replace(turkish_char, english_char)
+
 
             # Tur adını büyük harfe çevirin
             tour.name = tour.name.upper()
-            tour.short_name = tour.short_name.upper()
+
             tour.save()
 
         self.stdout.write(self.style.SUCCESS('Successfully executed my custom command!'))

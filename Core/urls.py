@@ -3,9 +3,14 @@ from .views import *
 urlpatterns = [
     path('', indexim, name="index"),
     path('jobs/', index, name='jobs'),
-    path('my-jobs/', indexim, name='myjobs'),  
+    path('my-jobs/', indexim, name='myjobs'),
+
     path('logs', logs, name="logs"),
     path('log_staff/<int:personel_id>', log_staff, name="log_staff"),
+    path('logs/login/', login_logs, name='login_logs'),
+    path('logs/staff/<int:personel_id>/login/', log_staff_login, name='log_staff_login'),
+
+
     path('dark_mode', dark_mode, name="dark_mode"),
     path('main/<str:model>/', generic_view, name='generic_view'),
     path('create/<str:model>/', generic_create_view, name='generic_create_view'),
@@ -33,6 +38,7 @@ urlpatterns = [
     path('api/notifications/', notifications_api, name='notifications_api'),
     path('api/mark-notification-read/', mark_notification_as_read, name='mark-notification-read'),
     path('download-template/<str:model>/', generic_excel_download, name='generic_excel_download'),
+    path('download-excel-files/<str:model>/', generic_excel_full_download, name='generic_excel_full_download'),
     path('upload-template/<str:model>/', generic_excel_upload, name='generic_excel_upload'),
 
     path('get_exchange_rates/', get_exchange_rates, name='get_exchange_rates'),
@@ -51,6 +57,14 @@ urlpatterns = [
     path('activity/cari/<int:tedarikci_id>/<str:month>/<str:field>/', activity_cari_category, name='activity_cari_category'),
     path('activity/cari/<int:tedarikci_id>/', activity_cari_category, name='activity_cari_category'),
     path('activity/cari/', activity_cari, name='activity_cari'),
-      
+
+    path('support_ticket/new/', support_ticket_create, name='support_ticket_create'),
+    path('support_ticket/<int:sup_id>/', support_cevap, name='support_cevap'),
+    path('get-suppliers/<int:item_id>/', get_suppliers, name='get_suppliers'),
+
+    path('ortak_cost/', ortak_cost, name='ortak_cost'),
+    path('smsgonder/', smsgonder, name='smsgonder'),
+
+
 ]
 

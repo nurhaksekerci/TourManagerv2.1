@@ -66,7 +66,7 @@ def exchange_rates():
         else:
             print("Veriler çekilemedi. Lütfen daha sonra tekrar deneyin.")
             return JsonResponse({'error': 'Veriler çekilemedi'}, status=500)
-        
+
 def can_access_personel(user):
     # Kullanıcının Personel modeline erişim yetkisini kontrol et
     personel = user.personel.first()
@@ -97,13 +97,13 @@ def generic_view(request, model):
         return HttpResponseForbidden("Bu bölüme erişim yetkiniz bulunmamaktadır.")
     if model == "Activitycost" and not can_access_personel2(request.user):
         return HttpResponseForbidden("Bu bölüme erişim yetkiniz bulunmamaktadır.")
-    
+
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
     ModelClass = globals()[model]
     model_plural_name = model.capitalize() + 's'
     model_lower_plural_name = model.lower() + 's'
-    queryset = ModelClass.objects.filter(company=sirket)
+    queryset = ModelClass.objects.filter(company=sirket, is_delete=False)
     form = globals()[f"{model}Form"]()
     fields = ModelClass._meta.fields
     objects_data = []
@@ -113,7 +113,7 @@ def generic_view(request, model):
             obj_data[field.name] = getattr(obj, field.name)
         objects_data.append(obj_data)
 
-    
+
     context = {
         'title': model.capitalize(),
         'createtitle': f'CREATE {model.upper()}',
@@ -260,7 +260,8 @@ def generic_delete_view(request, model, obj_id):
         obj_data = {field.name: getattr(obj, field.name) for field in ModelClass._meta.fields}
         transfer = get_object_or_404(ModelClass, id=obj_id)
         try:
-            transfer.delete()
+            transfer.is_delete = True
+            transfer.save()
             action_description = f"Silindi {model.capitalize()} {obj_id}: " + ", ".join([f"{key}: {value}" for key, value in obj_data.items()])
             log = UserActivityLog(
                 company=company,
@@ -303,7 +304,7 @@ def generic_excel_download(request, model):
     # Başlıkları yaz
     fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company']]
     field_names = [field.verbose_name for field in fields]
-    
+
     for col_num, field_name in enumerate(field_names, 1):
         cell = ws.cell(row=1, column=col_num)
         cell.value = field_name
@@ -313,7 +314,42 @@ def generic_excel_download(request, model):
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename={model}_template.xlsx'
     wb.save(response)
-    
+
+    return response
+
+@login_required
+def generic_excel_full_download(request, model):
+    # Model sınıfını dinamik olarak yükle
+    ModelClass = apps.get_model(app_label='Core', model_name=model)
+    if ModelClass is None:
+        return HttpResponseNotFound(f"{model} model not found.")
+
+    # Excel dosyasını oluştur
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"{model} Template"
+
+    # Başlıkları yaz
+    fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company']]
+    field_names = [field.verbose_name for field in fields]
+
+    for col_num, field_name in enumerate(field_names, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.value = field_name
+        cell.font = Font(bold=True)
+
+    # Verileri yaz
+    for row_num, obj in enumerate(ModelClass.objects.all(), 2):
+        for col_num, field in enumerate(fields, 1):
+            cell = ws.cell(row=row_num, column=col_num)
+            cell_value = getattr(obj, field.name)
+            cell.value = str(cell_value)  # Tüm veri türlerini stringe çevirerek yaz
+
+    # HttpResponse ile Excel dosyasını döndür
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename={model}_full.xlsx'
+    wb.save(response)
+
     return response
 
 @login_required
@@ -516,6 +552,8 @@ def dark_mode(request):
     else:
         # POST olmayan isteklerde ana sayfaya yönlendirme
         return HttpResponseRedirect('/')
+from django.core.paginator import Paginator
+from django.db.models.functions import TruncDate
 
 @login_required
 def logs(request):
@@ -525,11 +563,12 @@ def logs(request):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
     staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
-    logs = UserActivityLog.objects.filter(company = sirket).order_by('-timestamp')
+    logs = UserActivityLog.objects.filter(company=sirket).exclude(action="Giriş Yaptı.") \
+        .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
     page = Paginator(logs, 50)
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
-    context = {'page' : page, 'title' : 'Loglar', 'login' : False, 'personel':None, 'staffs' : staffs}
+    context = {'page': page, 'title': 'Loglar', 'login': False, 'personel': None, 'staffs': staffs,}
     return render(request, 'tour/pages/logs.html', context)
 
 @login_required
@@ -541,11 +580,45 @@ def log_staff(request, personel_id):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
     staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
-    logs = UserActivityLog.objects.filter(company = sirket, staff=staff).order_by('-timestamp')
+    logs = UserActivityLog.objects.filter(company=sirket, staff=staff).exclude(action="Giriş Yaptı.") \
+        .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
     page = Paginator(logs, 50)
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
-    context = {'page' : page, 'title' : 'Loglar', 'login' : False, 'personel': personel_id, 'staffs' : staffs}
+    context = {'page': page, 'title': 'Loglar', 'login': False, 'personel': personel_id, 'staffs': staffs,}
+    return render(request, 'tour/pages/logs.html', context)
+
+@login_required
+def login_logs(request):
+    if not can_access_personel2(request.user):
+        return HttpResponseForbidden("Bu bölüme erişim yetkiniz bulunmamaktadır.")
+    user = request.user
+    requestPersonel = Personel.objects.get(user=request.user)
+    sirket = requestPersonel.company
+    staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
+    logs = UserActivityLog.objects.filter(company=sirket, action="Giriş Yaptı.") \
+        .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
+    page = Paginator(logs, 50)
+    page_list = request.GET.get('page')
+    page = page.get_page(page_list)
+    context = {'page': page, 'title': 'Giriş Logları', 'login': True, 'personel': None, 'staffs': staffs}
+    return render(request, 'tour/pages/logs.html', context)
+
+@login_required
+def log_staff_login(request, personel_id):
+    staff = Personel.objects.get(id=personel_id)
+    if not can_access_personel2(request.user):
+        return HttpResponseForbidden("Bu bölüme erişim yetkiniz bulunmamaktadır.")
+    user = request.user
+    requestPersonel = Personel.objects.get(user=request.user)
+    sirket = requestPersonel.company
+    staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
+    logs = UserActivityLog.objects.filter(company=sirket, staff=staff, action="Giriş Yaptı.") \
+        .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
+    page = Paginator(logs, 50)
+    page_list = request.GET.get('page')
+    page = page.get_page(page_list)
+    context = {'page': page, 'title': 'Giriş Logları', 'login': True, 'personel': personel_id, 'staffs': staffs}
     return render(request, 'tour/pages/logs.html', context)
 
 
@@ -599,10 +672,10 @@ def create_operation(request):
                     operasyon_gun.operation = operasyon
                     operasyon_gun.company = sirket
                     operasyon_gun.save()
-                    try:
-                        UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Operasyon kaydı yapıldı. Operasyon ID: {operasyon.id} Operasyon Etiket: {operasyon.ticket}")
-                    except Personel.DoesNotExist:
-                        pass  # veya uygun bir hata mesajı göster
+            try:
+                UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Operasyon kaydı yapıldı. Operasyon ID: {operasyon.id} Operasyon Etiket: {operasyon.ticket}")
+            except Personel.DoesNotExist:
+                pass  # veya uygun bir hata mesajı göster
             notification_text = f"Yeni bir operasyon oluşturuldu: Operasyon ID: {operasyon.id}, Operasyon Etiket: {operasyon.ticket}"
             notification_title = "Tur Oluşturuldu. [Otomatik Bildirim]"
             sender = requestPersonel
@@ -611,7 +684,7 @@ def create_operation(request):
             notification.save()
             recipients = Personel.objects.filter(company=sirket)
             for recipient in recipients:
-                NotificationReceipt.objects.create(notification=notification, recipient=recipient)           
+                NotificationReceipt.objects.create(notification=notification, recipient=recipient)
             context = {
                 'operasyon': operasyon,
                 'days' : Operationday.objects.filter(company=sirket, operation=operasyon),
@@ -661,7 +734,7 @@ def create_operation_item(request, day_id):
                 pass
             new.save()
             form.save_m2m()
-            
+
             return HttpResponse('Başarıyla Kaydedildi.')
     context={
         'formitem' : OperationitemForm(request=request),
@@ -690,10 +763,10 @@ def operation_list(request):
     sirket = requestPersonel.company
     today = datetime.today()
     # Operasyonlarla ilişkili günleri ve günlerin operasyon öğelerini çeken sorgu
-    buyer_company = Buyercompany.objects.filter(company = sirket).order_by('name')
-    finished_jobs = Operation.objects.filter(company=sirket, finish__lt=today).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
-    started_jobs = Operation.objects.filter(company=sirket, start__lte=today, finish__gte=today).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
-    future_jobs = Operation.objects.filter(company=sirket, start__gt=today).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
+    buyer_company = Buyercompany.objects.filter(company = sirket, is_delete=False).order_by('name')
+    finished_jobs = Operation.objects.filter(company=sirket, finish__lt=today, is_delete=False).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
+    started_jobs = Operation.objects.filter(company=sirket, start__lte=today, finish__gte=today, is_delete=False).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
+    future_jobs = Operation.objects.filter(company=sirket, start__gt=today, is_delete=False).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
     return render(request, 'tour/pages/operation-list.html', {'comp': True, 'finished_jobs': finished_jobs, 'started_jobs': started_jobs, 'future_jobs': future_jobs, 'buyer_companies': buyer_company, 'title': 'Operasyon', 'createtitle': 'Operasyon Listesi', 'comp' : False})
 
 from django.db.models import Prefetch
@@ -720,7 +793,7 @@ def update_operation(request, operation_id):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
     operation = get_object_or_404(Operation, id=operation_id)
-    
+
     # Eski değerleri sakla
     old_follow_staff = operation.follow_staff
     old_buyer_company = operation.buyer_company
@@ -742,7 +815,7 @@ def update_operation(request, operation_id):
             operation = form.save()
             operation.refresh_from_db()  # En son veritabanı durumunu al
             print(f"Güncellenmiş Etiket: {operation.ticket}")  # Debug çıktısı
-            
+
             # Bitiş tarihi değişikliğini kontrol et
             if operation.finish > old_finish:
                 current_date = old_finish + timedelta(days=1)
@@ -857,18 +930,26 @@ def update_operation(request, operation_id):
 
 def update_total_cost(operation_item, currency, price):
     if currency == "TL":
+        if operation_item.tl_cost_price is None:
+            operation_item.tl_cost_price = Decimal('0.00')
         operation_item.tl_cost_price += price
     elif currency == "USD":
+        if operation_item.usd_cost_price is None:
+            operation_item.usd_cost_price = Decimal('0.00')
         operation_item.usd_cost_price += price
     elif currency == "EUR":
+        if operation_item.eur_cost_price is None:
+            operation_item.eur_cost_price = Decimal('0.00')
         operation_item.eur_cost_price += price
     elif currency == "RMB":
+        if operation_item.rmb_cost_price is None:
+            operation_item.rmb_cost_price = Decimal('0.00')
         operation_item.rmb_cost_price += price
-
+    operation_item.save()
 
 def update_operation_costs(operation):
 
-    
+
     # Tüm maliyetlerin toplamını sıfırla
     total_tl = total_usd = total_eur = total_rmb = 0
 
@@ -878,8 +959,8 @@ def update_operation_costs(operation):
         total_usd += item.usd_cost_price
         total_eur += item.eur_cost_price
         total_rmb += item.rmb_cost_price
-        
-        
+
+
 
     # Operation modelindeki maliyet alanlarını güncelle
     operation.tl_cost_price = total_tl
@@ -930,7 +1011,7 @@ def update_or_add_operation_item(request, day_id, item_id=None):
             old_transfer = operation_item.transfer
         else:
             old_transfer = None
-        
+    old_values = {}
     if operation_item:
         old_values = model_to_dict(operation_item, exclude=['id', 'day'])
         for field, value in old_values.items():
@@ -990,19 +1071,19 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                 if operation_item.supplier and operation_item.vehicle:
                     cost = Cost.objects.filter(supplier=operation_item.supplier, transfer=operation_item.transfer).first()
                     if cost:
-                        if operation_item.vehicle == "BINEK":
+                        if operation_item.vehicle == Vehicle.objects.get(id=38):
                             vehicle = "BINEK"
                             vehicle_price = cost.car
-                        if operation_item.vehicle == "MINIVAN":
+                        if operation_item.vehicle == Vehicle.objects.get(id=39):
                             vehicle = "MINIVAN"
                             vehicle_price = cost.minivan
-                        if operation_item.vehicle == "MINIBUS":
+                        if operation_item.vehicle == Vehicle.objects.get(id=40):
                             vehicle = "MINIBUS"
                             vehicle_price = cost.minibus
-                        if operation_item.vehicle == "MIDIBUS":
+                        if operation_item.vehicle == Vehicle.objects.get(id=41):
                             vehicle = "MIDIBUS"
                             vehicle_price = cost.midibus
-                        if operation_item.vehicle == "OTOBUS":
+                        if operation_item.vehicle == Vehicle.objects.get(id=42):
                             vehicle = "OTOBUS"
                             vehicle_price = cost.bus
                         operation_item.cost = cost
@@ -1014,14 +1095,15 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                         print('cost bulunamadı')
             if operation_item.activity and operation_item.activity_supplier:
                 activity_cost = Activitycost.objects.filter(activity=operation_item.activity, supplier=operation_item.activity_supplier).first()
-                print(activity_cost)
-                operation_item.activity_cost = activity_cost
-                operation_item.activity_price = activity_cost.price
-                operation_item.activity_currency = activity_cost.currency
-                activity_price = activity_cost.price
-                activity_currency = activity_cost.currency
-                if operation_item.activity_payment == "Evet":
-                    update_total_cost(operation_item, activity_currency, activity_price)
+                if activity_cost:
+                    print(activity_cost)
+                    operation_item.activity_cost = activity_cost
+                    operation_item.activity_price = activity_cost.price
+                    operation_item.activity_currency = activity_cost.currency
+                    activity_price = activity_cost.price
+                    activity_currency = activity_cost.currency
+                    if operation_item.activity_payment == "Evet":
+                        update_total_cost(operation_item, activity_currency, activity_price)
             else:
                 print('aktivite cost bulunamadı')
 
@@ -1041,7 +1123,7 @@ def update_or_add_operation_item(request, day_id, item_id=None):
             if operation_item.hotel_payment == "Evet":
                 update_total_cost(operation_item, hotel_currency, hotel_price)
 
-            operation_item.save()  
+            operation_item.save()
             operation_item.refresh_from_db()
 
             new_values = model_to_dict(operation_item, exclude=['id', 'day'])
@@ -1049,7 +1131,7 @@ def update_or_add_operation_item(request, day_id, item_id=None):
             for field, new_value in new_values.items():
                 old_value = old_values.get(field)
                 if old_value is None:  # Eğer old_value None ise
-                    old_value = None 
+                    old_value = None
                 if isinstance(getattr(operation_item, field), Manager):
                     new_value = set(getattr(operation_item, field).all())
                 elif hasattr(getattr(operation_item, field), '__str__'):
@@ -1069,7 +1151,7 @@ def update_or_add_operation_item(request, day_id, item_id=None):
 
             if action and changes_detected:  # Eğer değişiklik algılandıysa ve action doluysa, log kaydını oluştur
                 UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=action)
-            
+
             if action != f"Operasyon İçeriği Güncellendi. Operasyon Etiketi: {operation_item.day.operation.ticket}, Operasyon İtem ID: {operation_item.id}. Değişenler: ":
                 if operation_item.day.date == bugun or operation_item.day.date == yarin or operation_item.day.date == ertesigun:
                     notification_text = f"Ticket: {operation_item.day.operation.ticket} Gün: {operation_item.day.date} İşlem Türü: {operation_item.operation_type} ID: {operation_item.id} {action}"
@@ -1081,20 +1163,20 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                     recipients = Personel.objects.filter(company=sirket)
                     for recipient in recipients:
                         NotificationReceipt.objects.create(notification=notification, recipient=recipient)
-            
+
             # Şoför veya rehber değişikliği kontrol et
             if old_driver != operation_item.driver:
                 new_driver = operation_item.driver
                 new_driver_phone = operation_item.driver_phone
                 if old_driver:
-                    sms("driver", operation_item, "cancelled", old_driver, old_driver_phone)
-                sms("driver", operation_item, "assigned", new_driver, new_driver_phone)
+                    sms("driver", "cancelled", operation_item,old_driver, old_driver_phone)
+                sms("driver", "assigned", operation_item, new_driver, new_driver_phone)
                 if operation_item.guide:
                     new_guide = operation_item.guide.name
                     new_guide_phone = operation_item.guide.phone
-                    sms("guide", operation_item, "assigned", new_guide, new_guide_phone)
+                    sms("guide", "assigned", operation_item, new_guide, new_guide_phone)
             elif operation_item.driver == None and old_driver:
-                sms("driver", operation_item, "cancelled", old_driver, old_driver_phone)
+                sms("driver", "cancelled", operation_item, old_driver, old_driver_phone)
 
             if old_guide != operation_item.guide:
                 if operation_item.guide:
@@ -1102,60 +1184,60 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                     new_guide_phone = operation_item.guide.phone
                     print(new_guide, new_guide_phone)
                     if operation_item.driver:
-                        sms("guide", operation_item, "assigned", new_guide, new_guide_phone)
+                        sms("guide", "assigned", operation_item, new_guide, new_guide_phone)
                 if old_guide:
-                    sms("guide", operation_item, "cancelled", old_guide, old_guide_phone)
+                    sms("guide", "cancelled", operation_item, old_guide, old_guide_phone)
             elif operation_item.guide == None and old_guide:
-                sms("guide", operation_item, "cancelled", old_guide, old_guide_phone)
+                sms("guide", "cancelled", operation_item, old_guide, old_guide_phone)
 
             if old_description != operation_item.description:
-                if operation_item.driver and operation_item.description: 
+                if operation_item.driver and operation_item.description:
                     new_driver = operation_item.driver
                     new_driver_phone = operation_item.driver_phone
-                    sms("driver", operation_item, "assigned", new_driver, new_driver_phone)
+                    sms("driver", "assigned", operation_item, new_driver, new_driver_phone)
                 if operation_item.guide and operation_item.description:
                     new_guide = operation_item.guide.name
                     new_guide_phone = operation_item.guide.phone
-                    sms("guide", operation_item, "assigned", new_guide, new_guide_phone)
+                    sms("guide", "assigned", operation_item, new_guide, new_guide_phone)
 
             if old_pick_time != operation_item.pick_time:
-                if operation_item.driver and operation_item.pick_time: 
+                if operation_item.driver and operation_item.pick_time:
                     new_driver = operation_item.driver
                     new_driver_phone = operation_item.driver_phone
-                    sms("driver", operation_item, "assigned", new_driver, new_driver_phone)
+                    sms("driver", "assigned", operation_item, new_driver, new_driver_phone)
                 if operation_item.guide and operation_item.pick_time:
                     new_guide = operation_item.guide.name
                     new_guide_phone = operation_item.guide.phone
-                    sms("guide", operation_item, "assigned", new_guide, new_guide_phone)
+                    sms("guide", "assigned", operation_item, new_guide, new_guide_phone)
 
             if old_pick_location != operation_item.pick_location:
-                if operation_item.driver and operation_item.pick_location: 
+                if operation_item.driver and operation_item.pick_location:
                     new_driver = operation_item.driver
                     new_driver_phone = operation_item.driver_phone
                     sms("driver", operation_item, "assigned", new_driver, new_driver_phone)
                 if operation_item.guide and operation_item.pick_location:
                     new_guide = operation_item.guide.name
                     new_guide_phone = operation_item.guide.phone
-                    sms("guide", operation_item, "assigned", new_guide, new_guide_phone)
+                    sms("guide", "assigned", operation_item, new_guide, new_guide_phone)
             if old_tour:
                 if old_tour != operation_item.tour:
-                    if operation_item.driver and operation_item.tour: 
+                    if operation_item.driver and operation_item.tour:
                         new_driver = operation_item.driver
                         new_driver_phone = operation_item.driver_phone
-                        sms("driver", operation_item, "assigned", new_driver, new_driver_phone)
+                        sms("driver", "assigned", operation_item, new_driver, new_driver_phone)
                     if operation_item.guide and operation_item.tour:
                         new_guide = operation_item.guide.name
                         new_guide_phone = operation_item.guide.phone
-                        sms("guide", operation_item, "assigned", new_guide, new_guide_phone)
+                        sms("guide", "assigned", operation_item, new_guide, new_guide_phone)
                 elif old_transfer != operation_item.transfer:
-                    if operation_item.driver and operation_item.transfer: 
+                    if operation_item.driver and operation_item.transfer:
                         new_driver = operation_item.driver
                         new_driver_phone = operation_item.driver_phone
-                        sms("driver", operation_item, "assigned", new_driver, new_driver_phone)
+                        sms("driver", "assigned", operation_item, new_driver, new_driver_phone)
                     if operation_item.guide and operation_item.transfer:
                         new_guide = operation_item.guide.name
                         new_guide_phone = operation_item.guide.phone
-                        sms("guide", operation_item, "assigned", new_guide, new_guide_phone)
+                        sms("guide", "assigned", operation_item, new_guide, new_guide_phone)
 
 
             return HttpResponse('Başarıyla Güncellendi.')
@@ -1166,22 +1248,27 @@ def update_or_add_operation_item(request, day_id, item_id=None):
 
     return render(request, 'tour/partials/update_formitem_add.html', {'formitem': formitem, 'day_id': day_id, 'operation_day': operation_day, 'random_number': random.randint(1000, 9999)})
 
-def sms(staff, item, action, old_value=None, phone=None):
+def sms(staff, action, item=None, old_value=None, phone=None):
     url = "http://soap.netgsm.com.tr:8080/Sms_webservis/SMS?wsdl"
     headers = {'content-type': 'text/xml'}
     mesaj = ""
-    operation_detail = item.tour if item.tour else item.transfer
+    if item:
+        operation_detail = item.tour if item.tour else item.transfer
     if staff == "driver":
         if action == "assigned":
-            mesaj = f"Sayın {old_value}, {item.day.date.day} tarihinde {item.operation_type} tanımlanmıştır. Açıklaması: {item.description}, Güzergah: {operation_detail}, Alış Saati: {item.pick_time}, Alış Yeri: {item.pick_location}."
+            mesaj = f"Sayın {old_value}, {item.day.date.day}.{item.day.date.month}.{item.day.date.year} tarihinde {item.operation_type} tanımlanmıştır. Açıklaması: {item.description}, Güzergah: {operation_detail}, Alış Saati: {item.pick_time}, Alış Yeri: {item.pick_location}, Bırakış Yeri: {item.release_location}"
         elif action == "cancelled":
-            mesaj = f"Sayın {old_value}, {item.day.date.day} tarihinde {item.operation_type} iptal edilmiştir."
+            mesaj = f"Sayın {old_value}, {item.day.date.day}.{item.day.date.month}.{item.day.date.year} tarihinde {item.operation_type} iptal edilmiştir."
 
     elif staff == "guide":
         if action == "assigned":
-            mesaj = f"Sayın {old_value}, {item.day.date.day} tarihinde {item.operation_type} tanımlanmıştır. Açıklaması: {item.description}, Güzergah: {operation_detail}, Alış Saati: {item.pick_time}, Alış Yeri: {item.pick_location}. Şoför {item.driver}, Tel: {item.driver_phone}, Plaka {item.plaka}"
+            mesaj = f"Sayın {old_value}, {item.day.date.day}.{item.day.date.month}.{item.day.date.year} tarihinde {item.operation_type} tanımlanmıştır. Açıklaması: {item.description}, Güzergah: {operation_detail}, Alış Saati: {item.pick_time}, Alış Yeri: {item.pick_location}, Bırakış Yeri: {item.release_location}. Şoför {item.driver}, Tel: {item.driver_phone}, Plaka {item.plaka}"
         elif action == "cancelled":
-            mesaj = f"Sayın {old_value}, {item.day.date.day} tarihinde {item.operation_type} iptal edilmiştir."
+            mesaj = f"Sayın {old_value}, {item.day.date.day}.{item.day.date.month}.{item.day.date.year} tarihinde {item.operation_type} iptal edilmiştir."
+
+    elif staff == "destek":
+        if action == "olusturuldu":
+             mesaj = f"Yeni destek kaydı oluşturuldu."
 
     body = f"""<?xml version="1.0"?>
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
@@ -1204,6 +1291,8 @@ def sms(staff, item, action, old_value=None, phone=None):
 
     response = requests.post(url, data=body, headers=headers)
     print("response")
+    print("response.status_code:", response.status_code)
+    print("response.text:", response.text)
 
 
 def delete_operation(request, operation_id):
@@ -1211,13 +1300,19 @@ def delete_operation(request, operation_id):
     sirket = requestPersonel.company
     if request.method == "DELETE":
         operation = get_object_or_404(Operation, id=operation_id)
+        ticket = operation.ticket
         try:
             UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Operasyon kaydı silindi. Operasyon ID: {operation.id} Operasyon Etiket: {operation.ticket}")
         except Personel.DoesNotExist:
             pass  # veya uygun bir hata mesajı göster
-        operation.delete()
+        operation.is_delete = True
+        operation.ticket = f"{ticket}Silindi"
+        operation.save()
+         # İlgili gün ve itemları sil
+        Operationday.objects.filter(operation=operation).update(is_delete=True)
+        Operationitem.objects.filter(day__operation=operation).update(is_delete=True)
         return HttpResponse('Başarıyla Silindi.')  # Boş bir yanıt döndür
-    
+
 @login_required
 def delete_operationitem(request, operationitem_id):
     requestPersonel = Personel.objects.get(user=request.user)
@@ -1248,10 +1343,10 @@ def index(request):
         date = request.POST.get('date_job')
         if request.POST.get('date_finish_job') != "":
             finishdate = request.POST.get('date_finish_job')
-        else: 
+        else:
             finishdate=None
         if finishdate != None:
-            week_jobs = Operationitem.objects.filter(company=sirket, day__date__range=(date, finishdate))
+            week_jobs = Operationitem.objects.filter(company=sirket, is_delete=False, day__date__range=(date, finishdate))
             date_parts = date.split('-')
             date_finish_parts = finishdate.split('-')
 
@@ -1264,7 +1359,7 @@ def index(request):
             reversed_date2 = '.'.join(reversed_date_parts2)
             weektitle = f"{reversed_date} - {reversed_date2} Tarihli İşler"
         else:
-            week_jobs = Operationitem.objects.filter(company=sirket, day__date=date)
+            week_jobs = Operationitem.objects.filter(company=sirket, day__date=date, is_delete=False)
             date_parts = date.split('-')
 
             # Listenin sırasını tersine çevir
@@ -1284,9 +1379,9 @@ def index(request):
     totomorrow = today + timedelta(days=2)
 
     # Queries
-    today_jobs = Operationitem.objects.filter(company=sirket, day__date=today).order_by('pick_time')
-    tomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=tomorrow).order_by('pick_time')
-    totomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=totomorrow).order_by('pick_time')
+    today_jobs = Operationitem.objects.filter(company=sirket, day__date=today, is_delete=False).order_by('pick_time')
+    tomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=tomorrow, is_delete=False).order_by('pick_time')
+    totomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=totomorrow, is_delete=False).order_by('pick_time')
     # Python'da sıralama yapın
 
     # Context
@@ -1338,6 +1433,9 @@ def filtre(request):
 
 @login_required
 def indexim(request):
+    today = datetime.today()
+    tomorrow = today + timedelta(days=1)
+    totomorrow = today + timedelta(days=2)
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
     exchange_rates()
@@ -1346,10 +1444,10 @@ def indexim(request):
         date = request.POST.get('date_job')
         if request.POST.get('date_finish_job') != "":
             finishdate = request.POST.get('date_finish_job')
-        else: 
+        else:
             finishdate=None
         if finishdate != None:
-            week_jobs = Operationitem.objects.filter(company=sirket, day__date__range=(date, finishdate))
+            week_jobs = Operationitem.objects.filter(company=sirket, is_delete=False, day__operation__follow_staff=requestPersonel, day__date__range=(date, finishdate))
             date_parts = date.split('-')
             date_finish_parts = finishdate.split('-')
 
@@ -1362,7 +1460,7 @@ def indexim(request):
             reversed_date2 = '.'.join(reversed_date_parts2)
             weektitle = f"{reversed_date} - {reversed_date2} Tarihli İşler"
         else:
-            week_jobs = Operationitem.objects.filter(company=sirket, day__date=date)
+            week_jobs = Operationitem.objects.filter(company=sirket, day__date=date, is_delete=False, day__operation__follow_staff=requestPersonel)
             date_parts = date.split('-')
 
             # Listenin sırasını tersine çevir
@@ -1377,21 +1475,19 @@ def indexim(request):
         week_jobs = None
         weektitle = "Tarih Giriniz"
     # Dates
-    today = datetime.today()
-    tomorrow = today + timedelta(days=1)
-    totomorrow = today + timedelta(days=2)
+
 
     # Queries
-    today_jobs = Operationitem.objects.filter(company=sirket, day__date=today, day__operation__follow_staff=requestPersonel).order_by('pick_time')
-    tomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=tomorrow, day__operation__follow_staff=requestPersonel).order_by('pick_time')
-    totomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=totomorrow, day__operation__follow_staff=requestPersonel).order_by('pick_time')
+    today_jobs = Operationitem.objects.filter(company=sirket, day__date=today, day__operation__follow_staff=requestPersonel, is_delete=False).order_by('pick_time')
+    tomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=tomorrow, day__operation__follow_staff=requestPersonel, is_delete=False).order_by('pick_time')
+    totomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=totomorrow, day__operation__follow_staff=requestPersonel, is_delete=False).order_by('pick_time')
     # Python'da sıralama yapın
 
     # Context
     context = {
         'today_jobs': today_jobs,
         'tomorrow_jobs': tomorrow_jobs,
-        'tomorrow_jobs': totomorrow_jobs,
+        'totomorrow_jobs': totomorrow_jobs,
         'week_jobs': week_jobs,
         'todaytitle': today,
         'tomorrowtitle': tomorrow,
@@ -1414,7 +1510,7 @@ def create_notification(request):
     print(today)
     sirket = requestPersonel.company
     if request.method == 'POST':
-        
+
         form = NotificationForm(request.POST)
         if form.is_valid():
             notification = form.save(commit=False)
@@ -1518,7 +1614,10 @@ def mark_notification_as_read(request):
 
 
 def template_create(request, operation_id):
+    requestPersonel = Personel.objects.get(user= request.user)
+    sirket = requestPersonel.company
     operation = get_object_or_404(Operation, id=operation_id)
+    ticket_temp = operation.ticket
     if request.method == "POST":
         template_name = request.POST.get('template_name')
 
@@ -1569,6 +1668,11 @@ def template_create(request, operation_id):
                 # ManyToManyField ilişkileri için müzeleri ayarla
                 item_template.new_museum.set(item.new_museum.all())
 
+        try:
+            UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Operasyon Şablonu Oluşturuldu. Operasyon ID: {operation_id} Operasyon Etiket: {ticket_temp} Şablon Adı: {template_name}")
+        except Personel.DoesNotExist:
+            pass  # veya uygun bir hata mesajı göster
+
         return HttpResponse('Operasyon şablonu başarıyla oluşturuldu.')
     return HttpResponse('Operasyon şablonu oluşturulamadı.')
 
@@ -1592,7 +1696,7 @@ def template_list(request):
             new_ticket = f"{ticket_base}{i:02}" if i != 0 else ticket_base
             if not Operation.objects.filter(ticket=new_ticket).exists():
                 operation = Operation.objects.create(
-                    ticket=new_ticket, company=sirket, buyer_company=template.buyer_company,
+                    ticket=new_ticket, company=sirket, buyer_company=template.buyer_company, selling_staff=request_personel, follow_staff=request_personel,
                     tl_sales_price=template.tl_sales_price, usd_sales_price=template.usd_sales_price,
                     eur_sales_price=template.eur_sales_price, rbm_sales_price=template.rbm_sales_price,
                     start=start_date, finish=start_date + timedelta(days=template.day_numbers - 1)
@@ -1625,17 +1729,22 @@ def template_list(request):
                     )
                     operation_item.new_museum.set(item_template.new_museum.all())
 
+        try:
+            UserActivityLog.objects.create(staff=request_personel, company=sirket, action=f"Şablondan Operasyon Oluşturuldu. Operasyon ID: {operation.id} Operasyon Etiket: {new_ticket} Şablon Adı: {template.name}")
+        except Personel.DoesNotExist:
+            pass
+
         return render(request, 'tour/pages/template_list.html')
     else:
         templates = OperationTemplate.objects.filter(company=sirket)
         context = {'templates': templates}
         return render(request, 'tour/pages/template_list.html', context)
-    
+
 
 def cari(request):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
-    suppliers = Supplier.objects.filter(company=sirket)
+    suppliers = Supplier.objects.filter(company=sirket).order_by('name')
 
     context={
         'suppliers' : suppliers
@@ -1643,6 +1752,7 @@ def cari(request):
     return render(request, 'tour/pages/cari.html', context)
 
 def cari_category(request, tedarikci_id, month=None, field=None):
+    toplam_bakiye = 0
     field = unquote(field) if field else field
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
@@ -1650,6 +1760,10 @@ def cari_category(request, tedarikci_id, month=None, field=None):
     month = datetime.now().month
     cost = Cost.objects.filter(company=sirket, supplier=tedarikci)
     items = Operationitem.objects.filter(company=sirket, supplier=tedarikci, day__date__month=month)
+    if items:
+        for item in items:
+            if item.vehicle_price:
+                toplam_bakiye += item.vehicle_price
     if request.method == "POST":
         month_input = request.POST.get('month', '')
         field = request.POST.get('field', field)
@@ -1669,7 +1783,8 @@ def cari_category(request, tedarikci_id, month=None, field=None):
             'categories': cost,
             'tedarikci_id': tedarikci_id,
             'items': items,
-            'month' : month
+            'month' : month,
+            'toplam_bakiye' : toplam_bakiye,
         }
 
         if not items.exists():  # Öğeler yoksa mesajı güncelle
@@ -1680,9 +1795,10 @@ def cari_category(request, tedarikci_id, month=None, field=None):
         'categories': cost,
         'tedarikci_id': tedarikci_id,
         'items': items,
-        'month' : month
-    }      
-    
+        'month' : month,
+        'toplam_bakiye' : toplam_bakiye,
+    }
+
     return render(request, 'tour/partials/cost_categories.html', context)
 
 def check_cost_duplicate(request):
@@ -1690,11 +1806,11 @@ def check_cost_duplicate(request):
         requestPersonel = Personel.objects.get(user=request.user)
     except Personel.DoesNotExist:
         return JsonResponse({'error': 'Personel not found'}, status=404)
-    
+
     sirket = requestPersonel.company
     if not sirket:
         return JsonResponse({'error': 'Şirket not found'}, status=404)
-    
+
     tour = request.GET.get('tour')
     transfer = request.GET.get('transfer')
     supplier = request.GET.get('supplier')
@@ -1764,7 +1880,7 @@ def check_tour_duplicate(request):
     else:
         # Eğer name veya city boşsa, geçersiz parametre hatası dön
         return JsonResponse({'error': 'Missing parameters'}, status=400)
-    
+
 
 def activity_cari(request):
     requestPersonel = Personel.objects.get(user=request.user)
@@ -1814,8 +1930,187 @@ def activity_cari_category(request, tedarikci_id, month=None, field=None):
         'tedarikci_id': tedarikci_id,
         'items': items,
         'month' : month
-    }      
-    
+    }
+
     return render(request, 'tour/partials/cost_categories.html', context)
+
+
+
+
+def support_ticket_create(request):
+    request_personel = Personel.objects.get(user=request.user)
+    sirket = request_personel.company
+
+    if request.method == 'POST':
+        form = SupportTicketForm(request.POST)
+        if form.is_valid():
+            support_ticket = form.save(commit=False)
+            support_ticket.user = request_personel
+            support_ticket.company = sirket
+            support_ticket.status = "open"
+            support_ticket.save()
+            sms("destek", "olusturuldu", None, "Nurhak", "05054471953")
+            return redirect('support_ticket_create')
+    else:
+        form = SupportTicketForm()
+
+    if request_personel.job == "Sistem Geliştiricisi":
+        support_tickets = SupportTicket.objects.all().order_by("-created_at")
+    else:
+        support_tickets = SupportTicket.objects.filter(user=request_personel).order_by("-created_at")
+
+    return render(request, 'tour/pages/support_ticket_form.html', {
+        'form': form,
+        'support_tickets': support_tickets,
+        'title': 'Support'
+    })
+
+def support_cevap(request, sup_id):
+    sup = get_object_or_404(SupportTicket, id=sup_id)
+    request_personel = Personel.objects.get(user=request.user)
+    sirket = request_personel.company
+
+    if request.method == 'POST':
+        form = SupportTicketCevapForm(request.POST, instance=sup)
+        if form.is_valid():
+            support_ticket = form.save()
+            return redirect('support_ticket_create')
+    else:
+        form = SupportTicketCevapForm(instance=sup)
+
+    if request_personel.job == "Sistem Geliştiricisi":
+        support_tickets = SupportTicket.objects.all().order_by("-created_at")
+    else:
+        support_tickets = SupportTicket.objects.filter(user=request_personel).order_by("-created_at")
+
+    return render(request, 'tour/pages/support_ticket_form.html', {
+        'form': form,
+        'support_tickets': support_tickets,
+        'title': 'Support'
+    })
+def get_suppliers(request, item_id):
+    item = get_object_or_404(Operationitem, id=item_id)
+
+    if item.tour:
+        costs = Cost.objects.filter(tour=item.tour)
+    elif item.transfer:
+        costs = Cost.objects.filter(transfer=item.transfer)
+    else:
+        costs = Cost.objects.none()
+
+    suppliers = costs.values('supplier_id', 'supplier__name').distinct()
+    supplier_list = [{'id': supplier['supplier_id'], 'name': supplier['supplier__name']} for supplier in suppliers]
+
+    return JsonResponse(supplier_list, safe=False)
+
+def ortak_cost(request):
+    # Kullanıcının personel ve şirket bilgilerini al
+    request_personel = Personel.objects.get(user=request.user)
+    sirket = request_personel.company
+
+    # Şirkete ait olan tüm Operationitem kayıtlarını filtrele
+    items = Operationitem.objects.filter(company=sirket)
+
+    processed_items = 0  # İşlenen item sayısını takip etmek için
+
+    for item in items:
+        if item.tour and item.tour.id in [4, 5, 6]:
+            tour = item.tour
+            date = item.day.date
+            plaka = item.plaka
+            ucret = item.vehicle_price
+
+            # Aynı şirkete, tura, tarihe ve plakaya sahip ve henüz işlenmemiş Operation kayıtlarını bul
+            xitems = Operationitem.objects.filter(
+                company=sirket,
+                tour=tour,
+                day__date=date,
+                plaka=plaka,
+                is_processed=False
+            )
+
+            if xitems:
+                pax = 0
+                for x in xitems:
+                    pax += x.museum_person
+
+                if pax > 0:
+                    k_ucret = ucret / pax
+                    for x in xitems:
+                        total = k_ucret * x.museum_person
+                        x.vehicle_price = total
+                        x.is_processed = True  # İşlemi yapıldığını işaretle
+                        x.save()
+                        processed_items += 1  # İşlenen item sayısını artır
+                        print(f"Processed Operation: {x.id} with total vehicle price: {total}")
+
+    context = {}
+    return redirect("cari")
+import re
+def smsgonder(request):
+    request_personel = Personel.objects.get(user=request.user)
+    sirket = request_personel.company
+    url = "http://soap.netgsm.com.tr:8080/Sms_webservis/SMS?wsdl"
+    headers = {'content-type': 'text/xml'}
+    mesaj = ""
+
+    if request.method == 'POST':
+        form = SmsgonderForm(request.POST, request=request)
+        if form.is_valid():
+            smsgonder = form.save(commit=False)
+            smsgonder.company = sirket
+            smsgonder.user = request_personel
+            smsgonder.save()
+            form.save_m2m()  # Many-to-many ilişkileri kaydetmek için save_m2m() metodunu çağırın
+
+            mesaj = f"{smsgonder.message}\n{request_personel.user.first_name} {request_personel.user.last_name} - {request_personel.job}"
+            for alici in smsgonder.staff.all():
+                if alici.phone:
+                    phone = alici.phone.strip()
+                    if phone.startswith('('):
+                        match = re.match(r'\((\d{3})\)\s*(\d{3})-(\d{4})', phone)
+                        if match:
+                            formatted_phone = match.group(1) + match.group(2) + match.group(3)
+                        else:
+                            continue
+                    elif phone.startswith('5'):
+                        formatted_phone = '0' + phone
+                    else:
+                        formatted_phone = phone
+
+                    body = f"""<?xml version="1.0"?>
+                        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                                    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <SOAP-ENV:Body>
+                                <ns3:smsGonder1NV2 xmlns:ns3="http://sms/">
+                                    <username>8503081334</username>
+                                    <password>6D18AD8</password>
+                                    <header>MNC GROUP</header>
+                                    <msg>{mesaj}</msg>
+                                    <gsm>{formatted_phone}</gsm>
+                                    <encoding>TR</encoding>
+                                    <filter>0</filter>
+                                    <startdate></startdate>
+                                    <stopdate></stopdate>
+                                </ns3:smsGonder1NV2>
+                            </SOAP-ENV:Body>
+                        </SOAP-ENV:Envelope>"""
+                    response = requests.post(url, data=body, headers=headers)
+
+            return redirect('smsgonder')  # Smsgonder detay sayfasına yönlendirme
+    else:
+        form = SmsgonderForm(request=request)
+        if request_personel.job == "Sistem Geliştiricisi":
+            smsgonder = Smsgonder.objects.all()
+        else:
+            smsgonder = Smsgonder.objects.filter(company=sirket, user=request_personel)
+
+    context = {
+        'form': form,
+        'smsgonder': smsgonder,
+        'title': 'SMS Gönder'
+    }
+    return render(request, 'tour/pages/smsgonder.html', context)
 
 

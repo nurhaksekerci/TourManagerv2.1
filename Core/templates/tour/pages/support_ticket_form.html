@@ -1,0 +1,47 @@
+{% extends 'tour/base/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+      <h2 class="text-center my-4">Yeni Destek Kaydı Oluştur</h2>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+      </form>
+    </div>
+    <div class="col-md-6">
+    <h2 class="text-center my-4">Destek Kayıtlarım</h2>
+        <div class="accordion" id="supportTicketAccordion">
+            {% for ticket in support_tickets %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                            {{ ticket.user.user.first_name }} {{ ticket.user.user.last_name }} - {{ ticket.get_title_display }} - {{ ticket.get_status_display }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#supportTicketAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Açıklama:</strong> {{ ticket.description }}</p>
+                            <p><strong>Durum:</strong> {{ ticket.get_status_display }}</p>
+                            <p><strong>Oluşturulma Zamanı:</strong> {{ ticket.created_at }}</p>
+                            <p><strong>Güncellenme Zamanı:</strong> {{ ticket.updated_at }}</p>
+                            {% if ticket.cevap %}
+                                <hr>
+                                <pre><strong>Çözüm:</strong><br>{{ ticket.cevap }}</pre>
+                            {% else %}
+                                {% if request.user.personel.first.job == "Sistem Geliştiricisi" %}
+                                    <a href="{% url 'support_cevap' ticket.id %}" class="btn btn-success">Cevapla</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center">Henüz destek kaydınız yok.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -21,7 +21,7 @@
                     <div class="accordion" id="accordionExample">
                         <div  id="form_item_add-{{ day_form.instance.id }}">
                         {% for formitem in item_forms %}
-                            <div class=" mb-2">                       
+                            <div class=" mb-2">
                                     {% include 'tour/partials/update_formitem_add.html' %}
                             </div>
                         {% endfor %}
@@ -44,7 +44,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var submitButton = document.getElementById('submit-item-all');
-        
+
         if (submitButton) {
             submitButton.addEventListener('click', function() {
                 // Butona tıklanınca 1 saniye bekleyip başka bir sayfaya yönlendir
@@ -55,5 +55,77 @@
         }
     });
 </script>
-    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetCollapse = this.getAttribute('data-bs-target'); // Collapse div id
+                const collapseElement = document.querySelector(targetCollapse);
+                const formElement = collapseElement.querySelector('form');
+
+                if (formElement) {
+                    const supplierSelect = formElement.querySelector("select[name='supplier']");
+
+                    if (supplierSelect) {
+                        // Daha önceden seçilmiş ve kaydedilmiş bilgi varsa onu göster
+                        if (supplierSelect.value !== "") {
+                            console.log('Supplier select already has a value:', supplierSelect.value);
+                            fetchSupplierName(supplierSelect.value, supplierSelect);
+                        } else {
+                            const formId = formElement.getAttribute('id'); // Formun ID'sini al
+                            updateSupplierSelect(supplierSelect, formId);
+                        }
+                    } else {
+                        console.error('Supplier select element not found inside the form.');
+                    }
+                } else {
+                    console.error('Form element not found inside the collapse element.');
+                }
+            });
+        });
+
+        function fetchSupplierName(supplierId, supplierSelect) {
+            fetch(`/TourManagerV2/get-supplier/${supplierId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const selectedOption = document.createElement("option");
+                    selectedOption.value = data.id;
+                    selectedOption.text = data.name;
+                    selectedOption.selected = true;
+                    supplierSelect.innerHTML = ''; // Temizle ve sadece seçili olanı ekle
+                    supplierSelect.appendChild(selectedOption);
+                })
+                .catch(error => {
+                    console.error('Error fetching supplier name:', error);
+                });
+        }
+
+        function updateSupplierSelect(supplierSelect, formId) {
+            console.log('Fetching suppliers for Form ID:', formId);
+
+            fetch(`/TourManagerV2/get-suppliers/${formId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Suppliers:', data); // Konsola tedarikçi verilerini yazdır
+
+                    // Temizleme işlemi
+                    supplierSelect.innerHTML = '<option value="">Seçiniz</option>';
+
+                    data.forEach(supplier => {
+                        let option = document.createElement("option");
+                        option.value = supplier.id;
+                        option.text = supplier.name;
+                        supplierSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching suppliers:', error);
+                });
+        }
+    });
+</script>
+
+
 {% endblock js %}

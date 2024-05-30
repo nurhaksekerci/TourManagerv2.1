@@ -76,28 +76,18 @@ class VehicleForm(forms.ModelForm):
 class TransferForm(forms.ModelForm):
     class Meta:
         model = Transfer
-        fields = ['route', 'sellcar', 'sellminivan', 'sellminibus', 'sellmidibus', 'sellbus']
+        fields = ['route']
         widgets = {
-            'route': forms.TextInput(attrs={'class': 'form-control'}),
-            'sellcar': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellminivan': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellminibus': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellmidibus': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellbus': forms.NumberInput(attrs={'class': 'form-control'}),
+            'route': forms.TextInput(attrs={'class': 'form-control'})
         }
 
 
 class TourForm(forms.ModelForm):
     class Meta:
         model = Tour
-        fields = ['route', 'sellcar', 'sellminivan', 'sellminibus', 'sellmidibus', 'sellbus']
+        fields = ['route']
         widgets = {
-            'route': forms.TextInput(attrs={'class': 'form-control'}),
-            'sellcar': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellminivan': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellminibus': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellmidibus': forms.NumberInput(attrs={'class': 'form-control'}),
-            'sellbus': forms.NumberInput(attrs={'class': 'form-control'}),
+            'route': forms.TextInput(attrs={'class': 'form-control'})
         }
 
 
@@ -208,7 +198,7 @@ class ActivitycostForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'currency': forms.Select(attrs={'class': 'form-control'}),
         }
-        
+
 
 
 
@@ -216,7 +206,7 @@ class ActivitycostForm(forms.ModelForm):
 class OperationForm(forms.ModelForm):
     class Meta:
         model = Operation
-        fields = ['follow_staff', 'buyer_company', 'ticket', 'start', 'finish', 'usd_sales_price', 'eur_sales_price', 'tl_sales_price', 'rbm_sales_price', 'passenger_info', 'number_passengers', 'payment_channel', 'payment_type']
+        fields = ['follow_staff', 'buyer_company', 'ticket', 'start', 'finish', 'usd_sales_price', 'eur_sales_price', 'tl_sales_price', 'rbm_sales_price', 'passenger_info', 'number_passengers', 'payment_channel', 'payment_type', 'usd_activity_price', 'eur_activity_price', 'tl_activity_price', 'rbm_activity_price']
         widgets = {
             'follow_staff': forms.Select(attrs={'class': 'form-control'}),
             'buyer_company': forms.Select(attrs={'class': 'form-control'}),
@@ -230,21 +220,25 @@ class OperationForm(forms.ModelForm):
             'eur_sales_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'tl_sales_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'rbm_sales_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'usd_activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'eur_activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'tl_activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'rbm_activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
 
             'number_passengers': forms.NumberInput(attrs={'class': 'form-control'}),
         }
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(OperationForm, self).__init__(*args, **kwargs)
+        if self.request:
+            # Burada `request` kullanarak çeşitli işlemler yapabilirsiniz, örneğin:
+            personel_instance = self.request.user.personel.first()
+            if personel_instance:
+                self.fields['follow_staff'].queryset = Personel.objects.filter(company=personel_instance.company)
+            else:
+                # Uygun bir alternatif veya hata yönetimi
+                self.fields['follow_staff'].queryset = Personel.objects.none()
 
-        # Burada `request` kullanarak çeşitli işlemler yapabilirsiniz, örneğin:
-        personel_instance = self.request.user.personel.first()
-        if personel_instance:
-            self.fields['follow_staff'].queryset = Personel.objects.filter(company=personel_instance.company)
-        else:
-            # Uygun bir alternatif veya hata yönetimi
-            self.fields['follow_staff'].queryset = Personel.objects.none()
-        
 
 class OperationdayForm(forms.ModelForm):
     class Meta:
@@ -257,7 +251,7 @@ class OperationdayForm(forms.ModelForm):
 from django.utils.crypto import get_random_string
 
 class OperationitemForm(forms.ModelForm):
-    
+
 
     class Meta:
         model = Operationitem
@@ -276,7 +270,7 @@ class OperationitemForm(forms.ModelForm):
             'release_time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
             'release_location': forms.TextInput(attrs={'class': 'form-control'}),
             'pick_location': forms.TextInput(attrs={'class': 'form-control'}),
-            
+
 
             'tour': forms.Select(attrs={'class': 'form-control select'}),
             'transfer': forms.Select(attrs={'class': 'form-control select'}),
@@ -284,13 +278,13 @@ class OperationitemForm(forms.ModelForm):
             'supplier': forms.Select(attrs={'class': 'form-control select'}),
             'vehicle_currency': forms.Select(attrs={'class': 'form-control select'}),
             'vehicle_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            
+
             'hotel': forms.Select(attrs={'class': 'form-control select'}),
             'room_type': forms.Select(attrs={'class': 'form-control select'}),
             'hotel_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'hotel_currency': forms.Select(attrs={'class': 'form-control'}),
             'hotel_payment' : forms.Select(attrs={'class': 'form-control'}),
-            
+
             'activity': forms.Select(attrs={'class': 'form-control select'}),
             'activity_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'activity_currency': forms.Select(attrs={'class': 'form-control'}),
@@ -302,7 +296,7 @@ class OperationitemForm(forms.ModelForm):
             'museum_person': forms.NumberInput(attrs={'class': 'form-control'}),
             'museum_currency': forms.Select(attrs={'class': 'form-control'}),
             'museum_payment' : forms.Select(attrs={'class': 'form-control'}),
-            
+
             'driver': forms.TextInput(attrs={'class': 'form-control'}),
             'driver_phone': forms.TextInput(attrs={'class': 'form-control'}),
             'plaka': forms.TextInput(attrs={'class': 'form-control'}),
@@ -312,7 +306,7 @@ class OperationitemForm(forms.ModelForm):
             'guide_currency': forms.Select(attrs={'class': 'form-control'}),
             'other_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'other_currency': forms.Select(attrs={'class': 'form-control'}),
-            
+
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': '1'}),
         }
 
@@ -361,3 +355,78 @@ class NotificationForm(forms.ModelForm):
         }
 
 
+
+class SupportTicketForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicket
+        fields = ['title', 'description']
+        widgets = {
+            'title': forms.Select(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'title': 'Başlık',
+            'description': 'Açıklama',
+        }
+
+
+class SupportTicketCevapForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicket
+        fields = ['cevap', 'status']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'cevap': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'status': 'Durum',
+            'cevap': 'Cevap',
+        }
+
+
+class SellForm(forms.ModelForm):
+    class Meta:
+        model = Sell
+        fields = ['buyer', 'tour', 'transfer', 'car', 'minivan', 'minibus', 'midibus', 'bus', 'currency']
+        widgets = {
+            'buyer': forms.Select(attrs={'class': 'form-control'}),
+            'tour': forms.Select(attrs={'class': 'form-control'}),
+            'transfer': forms.Select(attrs={'class': 'form-control'}),
+            'car': forms.NumberInput(attrs={'class': 'form-control'}),
+            'minivan': forms.NumberInput(attrs={'class': 'form-control'}),
+            'minibus': forms.NumberInput(attrs={'class': 'form-control'}),
+            'midibus': forms.NumberInput(attrs={'class': 'form-control'}),
+            'bus': forms.NumberInput(attrs={'class': 'form-control'}),
+            'currency': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+class ActivitysellForm(forms.ModelForm):
+    class Meta:
+        model = Activitysell
+        fields = ['buyer', 'activity', 'price', 'currency']
+        widgets = {
+            'buyer': forms.Select(attrs={'class': 'form-control'}),
+            'activity': forms.Select(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'currency': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class SmsgonderForm(forms.ModelForm):
+    class Meta:
+        model = Smsgonder
+        fields = ['staff', 'message']
+        widgets = {
+            'staff': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(SmsgonderForm, self).__init__(*args, **kwargs)
+        if self.request:
+            personel_instance = self.request.user.personel.first()
+            if personel_instance:
+                self.fields['staff'].queryset = Personel.objects.filter(company=personel_instance.company)
+            else:
+                self.fields['staff'].queryset = Personel.objects.none()

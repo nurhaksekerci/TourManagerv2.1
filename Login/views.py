@@ -8,6 +8,14 @@ from django.db.models import Q
 from Core.models import *
 # Create your views here.
 def login(request):
+    if request.user.is_authenticated:
+        requestPersonel=Personel.objects.get(user=request.user)
+        sirket = requestPersonel.company
+        try:
+            UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Giriş Yaptı.")
+        except Personel.DoesNotExist:
+            pass
+        return redirect('index')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -20,11 +28,17 @@ def login(request):
                 company = personel.company
             except Personel.DoesNotExist:
                 return render(request, 'login/login.html', {'error': 'Kullanıcı geçerli bir personel değil.'})
-            
+
             # Şirketin bitiş tarihi kontrolü
             if company.finish >= datetime.today().date():
                 # Şirketin bitiş tarihi bugün veya ilerideyse, kullanıcıya giriş izni ver
                 user_login(request, user)
+                requestPersonel = Personel.objects.get(user = user)
+                sirket = requestPersonel.company
+                try:
+                    UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Giriş Yaptı.")
+                except Personel.DoesNotExist:
+                    pass
                 return redirect('index')  # Giriş başarılı
             else:
                 # Şirketin bitiş tarihi geçmişse, şirketi ve tüm personelleri pasifleştir
@@ -72,7 +86,7 @@ def logout(request):
 @login_required
 def pricing(request):
 
-    
+
     return render(request, 'login/pricing.html')
 from django.contrib import messages  # Kullanıcıya bilgi mesajı göstermek için
 

@@ -1,0 +1,58 @@
+{% extends 'tour/base/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+      <h2 class="text-center my-4">SMS Gönder</h2>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+      </form>
+    </div>
+    <div class="col-md-6">
+    <h2 class="text-center my-4">Smslerim</h2>
+        <div class="accordion" id="supportTicketAccordion">
+            {% for sms in smsgonder %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                            {{ sms.user.user.first_name }} {{ sms.user.user.last_name }} - {{ sms.user.job }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#supportTicketAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Mesaj:</strong> {{ sms.message }}</p>
+                            <p><strong>Alıcılar:</strong>
+                            <ul>
+                                {% for staff_member in sms.staff.all %}
+                                    <li>{{ staff_member.user.first_name }} {{ staff_member.user.last_name }} - {{ staff_member.job }}</li>
+                                {% endfor %}
+                            </ul>
+                    </p>
+                            <p><strong>Oluşturulma Zamanı:</strong> {{ sms.created_at|date:"d M Y H:i" }}</p>
+
+                        </div>
+
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center">Henüz destek kaydınız yok.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Select2'u uygulamak için
+            $('#id_staff').select2({
+                multiple: true
+            });
+        });
+    </script>
+{% endblock js %}

@@ -4,6 +4,7 @@
 <div>
     <button class="btn btn-secondary my-2" onclick="printDiv('cari-item')">Yazdır</button>
     <button class="btn btn-secondary my-2" onclick="saveToExcel('cari-item', 'Cari-Listesi')">Excel'e Kaydet</button>
+    <a class="btn btn-success my-2" href="{% url 'ortak_cost' %}">Ortak işleri Hesapla</a>
 </div>
 <div class="row">
     <div  class="container-fluid">
@@ -11,8 +12,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <strong class="m-2">Önceki Aydan Devreden Bakiye :</strong><p>{{ devreden_toplam_bakiye }}</p>
-                    <strong class="m-2">Aylık Toplam Bakiye :</strong><p>{{ activity_total_price }}</p>
-                    <strong class="m-2">Toplam Bakiye :</strong><p>{{ toplam_bakiye }}</p>
+                    <strong class="m-2">Toplam Bakiye :</strong><p>{{ toplam_bakiye|currency }} ₺</p>
                     <strong class="m-2">Ödenen Toplam Bakiye :</strong><p>{{ total_payment_price }}</p>
                     <strong class="m-2">Kalan Toplam Bakiye :</strong><p>{{ kalan_toplam_bakiye }}</p>
                 </div>

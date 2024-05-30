@@ -1,4 +1,5 @@
 <!doctype html>
+{% load static %}
 <html lang="en">
     <head>
         <title>{{ title }} | Tour Manager</title>
@@ -21,17 +22,18 @@
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-        <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+        <!-- Font Awesome -->
         <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
-        
+
 
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
 
         <style>
@@ -53,11 +55,9 @@
                 justify-content: flex-end; /* Labelleri altta tutmak için */
                 height: 100%; /* İçindeki elemanları tam boyuta uzat */
             }
-            
-            
-            .dark-mode-active {
-                color: white !important;
-            }
+
+
+
 
             @media (min-width: 768px) {
                 .mobile-only {
@@ -67,7 +67,7 @@
                     display: block;
                 }
             }
-            
+
             @media (max-width: 767px) {
                 .mobile-only {
                     display: block;
@@ -84,16 +84,16 @@
                 z-index: 1050;
                 padding: 3rem;
             }
-        
+
             .toast {
                 background-color: #343a40; /* Koyu gri arka plan */
                 color: white; /* Beyaz metin renk */
             }
-        
+
             .btn-close {
                 filter: invert(1); /* Çarpı işaretini beyaz yap */
             }
-        
+
             .toast-header {
                 background-color: #212529; /* Daha koyu gri başlık */
                 color: white;
@@ -102,22 +102,16 @@
             .red_tr td{
                 color: red;
             }
+
+            @media (max-width: 992px) {
+            .responsive-table {
+              overflow-x: auto;
+            }
+            }
+
+
         </style>
-        {% if request.user.personel.first.dark_mode %}
-            <style>    
-                body, .navbar, .navbar a, .dropdown, textarea, label .dropdown-menu, input, select, table th, table tr, table, li .dropdown-item span, li .dropdown-item button {
-                    background-color: #333 !important;
-                    color: white !important;
-                }
-                .dark-mode-active {
-                    color: white !important;
-                }
-                .dropdown-item:hover {
-                    color: white !important;
-                }
-                
-            </style>
-        {% endif %}
+
         {% block css %}{% endblock css %}
     </head>
 
@@ -127,7 +121,7 @@
         </header>
         <main>
             <div class="container-fluid">
-                {% block content %}{% endblock content %}                
+                {% block content %}{% endblock content %}
                 <div class="toast-container position-fixed bottom-0 end-0 p-3">
                     {% for notification in notifications %}
                         <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-notification-id="${notification.id}" data-bs-autohide="false" data-bs-delay="1000000000">
@@ -137,18 +131,22 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                             <div class="toast-body">
-                                {{ notification.message }}
+                                <pre style="color:white;"><br>{{ notification.message }}<br></pre>
                             </div>
                             <div class="toast-footer">
                                 <small class="mx-5 my-2">${notification.sender}</small>
                             </div>
                         </div>
                     {% endfor %}
-                </div>            
+                </div>
             </div>
         </main>
+
         <!-- Bootstrap JavaScript Libraries -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -162,7 +160,7 @@
                 document.getElementById('id_username').addEventListener('input', function() {
                     var username = this.value;
                     var inputField = document.getElementById('id_username');
-                
+
                     if (username === '') {
                         // Kullanıcı adı alanı boşsa, çerçeve rengini direkt kırmızı yap
                         inputField.style.borderColor = 'red';
@@ -181,18 +179,18 @@
                 });
             </script>
         {% endif %}
-        
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 console.log("Document is ready, fetching notifications.");
                 const personelId = document.body.getAttribute('data-personel-id');
                 fetchNotifications(personelId);
-        
+
                 function getCurrentPersonelId() {
                     // Bu örnekte statik bir ID kullanılmıştır. Gerçek uygulamada bu bilgi dinamik olarak elde edilmelidir.
                     return 123; // Örnek personel ID'si
                 }
-            
+
                 function fetchNotifications(personelId) {
                     console.log("Sending request to fetch notifications.");
                     fetch('/TourManagerV2/api/notifications/')
@@ -213,7 +211,7 @@
                     })
                     .catch(error => console.error('Error fetching notifications:', error));
                 }
-            
+
                 function showNotification(notification) {
                     console.log("Creating HTML for notification:", notification);
                     const toastHTML = `
@@ -224,7 +222,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="markAsRead(${notification.id}, ${personelId})"></button>
                             </div>
                             <div class="toast-body">
-                                ${notification.message}
+                                <pre style="color:white;"><br>${notification.message}<br></pre>
                             </div>
                             <div class="toast-footer">
                                 <small class="mx-5 my-2">${notification.sender}</small>
@@ -238,7 +236,7 @@
                     toastElement.show();
                     console.log("Toast is now being shown.");
                 }
-            
+
                 window.markAsRead = function(notificationId, personelId) {
                     console.log("Marking notification as read:", notificationId);
                     fetch('/TourManagerV2/api/notifications/', {
@@ -268,22 +266,22 @@
                 console.log(target)
                 $(target).find('select').select2();
               }
-          
+
               // Initial Select2 setup on page load
               applySelect2ToTarget('.accordion-content'); // Assuming a common class for all accordion contents
-          
+
               // Select2 initialization on accordion button click
               $(document).on('click', '.accordion-button', function() {
                 // Check if there are any changes in the page content
                 var pageChanged = checkPageContentChanges();
-          
+
                 if (pageChanged) {
                   // If there are changes, update Select2 in the accordion content
                   var target = $(this).attr('data-bs-target');
                   applySelect2ToTarget(target);
                 }
               });
-          
+
               // Function to check for changes in page content
               function checkPageContentChanges() {
                 // You can implement your logic here to check for any changes in page content
@@ -292,14 +290,14 @@
                 // Example logic:
                 // var pageChanged = ...; // Implement your logic here
                 // return pageChanged;
-                
+
                 // For demonstration purposes, always return true (indicating changes)
                 return true;
               }
             });
           </script>
-        
-            
+
+
         {% block js %}{% endblock js %}
     </body>
 </html>

@@ -42,19 +42,24 @@
                     </ul>
                 </li>
             </ul>
-            <ul class="navbar-nav mb-2 mb-lg-0">
-                <!-- Dropdown for Kayıtlar -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Yönetim
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
-                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Cost' %}">Araç Maliyet</a></li>
-                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Activitycost' %}">Aktivite Maliyet</a></li>
-                        <li><a class="dropdown-item" href="{% url 'generic_view' 'Personel' %}">Personeller</a></li>
-                    </ul>
-                </li>
-            </ul>
+            {% if request.user.personel.first.job == "Sistem Geliştiricisi" or request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" %}
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <!-- Dropdown for Kayıtlar -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Yönetim
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                            <li><a class="dropdown-item" href="{% url 'generic_view' 'Cost' %}">Araç Maliyet</a></li>
+                            <li><a class="dropdown-item" href="{% url 'generic_view' 'Activitycost' %}">Aktivite Maliyet</a></li>
+                            <li><a class="dropdown-item" href="{% url 'generic_view' 'Sell' %}">Araç Satış</a></li>
+                            <li><a class="dropdown-item" href="{% url 'generic_view' 'Activitysell' %}">Aktivite Satış</a></li>
+                            <li><a class="dropdown-item" href="{% url 'generic_view' 'Personel' %}">Personeller</a></li>
+                            <li><a class="dropdown-item" href="#">Personel Puantaj</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            {% endif %}
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <!-- Dropdown for Kayıtlar -->
                 <li class="nav-item dropdown">
@@ -80,20 +85,22 @@
                     </ul>
                 </li>
             </ul>
-            <ul class="navbar-nav mb-2 mb-lg-0">
-                <!-- Dropdown for Kayıtlar -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Cariler
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
-                        <li><a class="dropdown-item" href="{% url 'cari' %}">Araç Carileri</a></li>
-                        <li><a class="dropdown-item" href="{% url 'activity_cari' %}">Aktivite Carileri</a></li>
-                        <li><a class="dropdown-item" href="#">Grafikler</a></li>
-                        <li><a class="dropdown-item" href="#">Karlılık</a></li>
-                    </ul>
-                </li>
-            </ul>
+            {% if request.user.personel.first.job == "Sistem Geliştiricisi" or request.user.personel.first.job == "Yönetim" %}
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <!-- Dropdown for Kayıtlar -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKayitlar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Cariler
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
+                            <li><a class="dropdown-item" href="{% url 'cari' %}">Araç Carileri</a></li>
+                            <li><a class="dropdown-item" href="{% url 'activity_cari' %}">Aktivite Carileri</a></li>
+                            <li><a class="dropdown-item" href="#">Grafikler</a></li>
+                            <li><a class="dropdown-item" href="#">Karlılık</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            {% endif %}
             <ul class="navbar-nav mb-2 mb-lg-0">
             {% if request.user.personel.first.company.name == "CARGA TOUR" %}
 
@@ -109,6 +116,7 @@
                     </a>
                 </li>
             {% endif %}
+            {% if request.user.personel.first.job == "Sistem Geliştiricisi" or request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" %}
                 <li class="nav-item ">
                     <a class="nav-link" href="{% url 'logs' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
                         Loglar
@@ -119,27 +127,58 @@
                         Bildirim
                     </a>
                 </li>
+            {% endif %}
+            <li class="nav-item ">
+                <a class="nav-link" href="{% url 'support_ticket_create' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                    Destek Kaydı
+                </a>
+            </li>
+            {% if request.user.personel.first.job == "Sistem Geliştiricisi" or request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" %}
+            <li class="nav-item ">
+                <a class="nav-link" href="{% url 'smsgonder' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                    Sms
+                </a>
+            </li>
+            {% endif %}
+            {% if request.user.username == "nurhak" %}
+                <li class="nav-item ">
+                    <a class="nav-link" target="_blank" href="https://defnesera.pythonanywhere.com/admin/" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                        Admin
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'login_logs' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                        Login
+                    </a>
+                </li>
+            {% endif %}
             </ul>
             <div class="ms-auto navbar-text">
                 {% if request.user.is_authenticated %}
                     <ul class="navbar-nav">
                         <li style="font-size: 0.7rem;" class="align-self-center">
-                            <span id="usd_to_try"></span> TRY <br>
-                            <span id="usd_to_eur"></span> EUR <br>
-                            <span id="usd_to_rmb"></span> RMB <br>
+                            <span id="usd_to_try"></span><br>
+                            <span id="usd_to_eur"></span><br>
+                            <span id="usd_to_rmb"></span><br>
+                            <span id="eleman">Şampiyon: Kami NEZER</span>
+                            <svg style="margin-top:-5px !important;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="red">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+
+                             <br>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span>{{ request.user.get_full_name }}</span><br><span>{{ user.personel.first.job }}</span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownUser">
-                                <li><span class="dropdown-item {% if request.user.personel.first.dark_mode == True %}dark-mode-active{% endif %}" {% if request.user.personel.first.dark_mode == True %}style="color: white !important;"{% endif %}>{{ request.user.personel.first.company }}</span></li>
+                                <li><span class="dropdown-item">{{ request.user.personel.first.company }}</span></li>
                                 <form method="POST" action="{% url 'dark_mode' %}">
                                     {% csrf_token %}
                                     {% if request.user.personel.first.dark_mode == True %}
-                                        <li><button type="submit" class="dropdown-item {% if request.user.personel.first.dark_mode == True %}dark-mode-active{% endif %}" style="color: white !important;">Light Mode</button></li>
+                                        <li><button type="submit" class="dropdown-item disable" style="color: white !important;">Light Mode</button></li>
                                     {% else %}
-                                        <li><button type="submit" class="dropdown-item">Dark Mode</button></li>
+                                        <li><button type="submit" class="dropdown-item disable">Dark Mode</button></li>
                                     {% endif %}
                                 </form>
                                 <li><a class="dropdown-item" href="{% url 'logout' %}">Çıkış Yap</a></li>
@@ -157,9 +196,9 @@
         fetch('/TourManagerV2/get_exchange_rates/') // Django'da uygun URL'yi belirtin
             .then(response => response.json())
             .then(data => {
-                document.getElementById('usd_to_try').textContent = "1 USD: " + data.usd_to_try;
-                document.getElementById('usd_to_eur').textContent = "1 USD: " + data.usd_to_eur;
-                document.getElementById('usd_to_rmb').textContent = "1 USD: " + data.usd_to_rmb;
+                document.getElementById('usd_to_try').textContent = "1 USD: " + data.usd_to_try + "  TRY";
+                document.getElementById('usd_to_eur').textContent = "1 USD: " + data.usd_to_eur + " EUR";
+                document.getElementById('usd_to_rmb').textContent = "1 USD: " + data.usd_to_rmb + " RMB";
             })
             .catch(error => console.error('Döviz kurları alınırken hata oluştu:', error));
     }
