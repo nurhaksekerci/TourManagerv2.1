@@ -220,7 +220,7 @@ class Buyercompany(models.Model):
 class UserActivityLog(models.Model):
     company = models.ForeignKey(Sirket, verbose_name="Şirket (公司)", on_delete=models.CASCADE, blank=True, null=True)
     staff = models.ForeignKey(Personel, verbose_name="Personel", on_delete=models.SET_NULL, blank=True, null=True)
-    action = models.CharField(max_length=255)
+    action = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -241,6 +241,10 @@ class Operation(models.Model):
         ('Havale', 'Havale'),
         ('Xctrip', 'Xctrip'),
     )
+    SOLD_CHOICES = (
+        ('Istendi', 'Istendi'),
+        ('Alındı', 'Alındı'),
+    )
     company = models.ForeignKey(Sirket, verbose_name="Şirket", on_delete=models.CASCADE)
 
 
@@ -257,8 +261,8 @@ class Operation(models.Model):
 
     passenger_info = models.TextField(verbose_name="Yolcu Bilgileri")
     number_passengers = models.PositiveIntegerField(verbose_name="Yolcu Sayısı", default=1)
-    payment_type = models.CharField(max_length=20, choices=PAYMENT_TYPE_CHOICES,  blank=True, null=True, verbose_name="Ödeme Türü")
-    payment_channel = models.CharField(max_length=20, choices=PAYMENT_CHANNEL_CHOICES,  blank=True, null=True, verbose_name="Ödeme Kanalı")
+    payment_type = models.CharField(max_length=20, choices=PAYMENT_TYPE_CHOICES,  blank=True, null=True, verbose_name="Ödeme Türü", default=None)
+    payment_channel = models.CharField(max_length=20, choices=PAYMENT_CHANNEL_CHOICES,  blank=True, null=True, verbose_name="Ödeme Kanalı", default=None)
     remaining_payment = models.DecimalField(verbose_name="Kalan Ödeme", max_digits=10, decimal_places=2, default=0)
 
     tl_sales_price = models.DecimalField(verbose_name="TL Satış Fiyatı", max_digits=10, decimal_places=2, default=0)
@@ -266,10 +270,17 @@ class Operation(models.Model):
     eur_sales_price = models.DecimalField(verbose_name="EUR Satış Fiyatı", max_digits=10, decimal_places=2, default=0)
     rbm_sales_price = models.DecimalField(verbose_name="RBM Satış Fiyatı", max_digits=10, decimal_places=2, default=0)
 
+    total_sales_price = models.DecimalField(verbose_name="Toplam Satış Fiyatı", max_digits=10, decimal_places=2, default=0)
+
     tl_cost_price = models.DecimalField(verbose_name="TL Maliyet Fiyatı", max_digits=10, decimal_places=2, default=0)
     usd_cost_price = models.DecimalField(verbose_name="USD Maliyet Fiyatı", max_digits=10, decimal_places=2, default=0)
     eur_cost_price = models.DecimalField(verbose_name="EUR Maliyet Fiyatı", max_digits=10, decimal_places=2, default=0)
     rbm_cost_price = models.DecimalField(verbose_name="RBM Maliyet Fiyatı", max_digits=10, decimal_places=2, default=0)
+
+    total_cost_price = models.DecimalField(verbose_name="Toplam Maliyet Fiyatı", max_digits=10, decimal_places=2, default=0)
+
+    sold = models.CharField(max_length=20, choices=SOLD_CHOICES, blank=True, null=True, verbose_name='Ödeme Durumu')
+
 
     tl_activity_price = models.DecimalField(verbose_name="TL Aktivite Fiyatı", max_digits=10, decimal_places=2, default=0)
     usd_activity_price = models.DecimalField(verbose_name="USD Aktivite Fiyatı", max_digits=10, decimal_places=2, default=0)
@@ -355,19 +366,29 @@ class Operationitem(models.Model):
     transfer = models.ForeignKey(Transfer, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Transfer")
     vehicle = models.ForeignKey(Vehicle, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Araç")
     supplier = models.ForeignKey(Supplier, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Araç Tedarikçi")
+    manuel_vehicle_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Manuel Araç Ücreti")
+    auto_vehicle_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Hesaplanan Araç Ücreti")
     vehicle_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Araç Ücreti")
-    vehicle_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Araç Para Birimi", default="USD")
+    vehicle_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Araç Satış Ücreti")
+    vehicle_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Araç Satış Birimi", default="TL")
+    vehicle_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Araç Para Birimi", default="TL")
     cost = models.ForeignKey(Cost, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Araç Maaliyet")
 
     hotel = models.ForeignKey(Hotel, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Otel")
     room_type = models.CharField(max_length=20, choices=ROOMTYPE_CHOICES, blank=True, null=True, verbose_name="Oda Türü")
     hotel_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Otel Ücreti")
+    hotel_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Otel Satış Ücreti")
+    hotel_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Otel Satış Birimi", default="USD")
     hotel_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Otel Para Birimi", default="USD")
     hotel_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Otel Ödemesi Bizde", default="Hayır")
 
     activity = models.ForeignKey(Activity, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Aktivite")
-    activity_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Aktivite Ücreti")
+    activity_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Kayıtlı Aktivite Ücreti")
+    activity_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Aktivite Satış Ücreti")
+    manuel_activity_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Manuel Aktivite Ücreti")
+    auto_activity_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Hesaplanan Aktivite Ücreti")
     activity_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Aktivite Para Birimi", default="USD")
+    activity_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Aktivite Satış Birimi", default="USD")
     activity_supplier = models.ForeignKey(Activitysupplier, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Aktivite Tedarikçi")
     activity_cost = models.ForeignKey(Activitycost, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Aktivite Maliyet")
     activity_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Activite Ödemesi Bizde", default="Hayır")
@@ -375,6 +396,8 @@ class Operationitem(models.Model):
     new_museum = models.ManyToManyField(Museum, blank=True, verbose_name="Müzeler", related_name="new_operation_items")
     museum_person = models.IntegerField(verbose_name="Kişi Sayısı", default=0)
     museum_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Müze Ücreti")
+    museum_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Müze Satış Ücreti")
+    museum_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Müze Satış Birimi", default="USD")
     museum_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Müze Para Birimi", default="USD")
     museum_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Müze Ödemesi Bizde", default="Hayır")
 
@@ -383,10 +406,15 @@ class Operationitem(models.Model):
     plaka = models.CharField(max_length=255, blank=True, null=True, verbose_name="Plaka")
     guide = models.ForeignKey(Guide, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Rehber")
     guide_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Rehber Ücreti")
+    guide_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Rehber Satış Ücreti")
+    guide_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Rehber Satış Birimi", default="USD")
     guide_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Rehber Para Birimi", default="USD")
     guide_var = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Rehber var mı?", default="Hayır")
-    other_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Diğer Ücretler")
-    other_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Diğer Ücretler Para Birimi", default="USD")
+    other_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Diğer")
+    other_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Diğer Para Birimi", default="USD")
+    guide_var = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Rehber var mı?", default="Hayır")
+    other_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Diğer Satış")
+    other_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Diğer Satış Birimi", default="USD")
 
 
     tl_cost_price = models.DecimalField(verbose_name="TL Maliyet Fiyatı", max_digits=10, decimal_places=2, default=0)
@@ -598,7 +626,7 @@ class Activitysell(models.Model):
         ('TL', 'TL'),
         ('USD', 'USD'),
         ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
+        ('RMB', 'RMB'),
     )
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     buyer = models.ForeignKey(Buyercompany, verbose_name="Firma", on_delete=models.SET_NULL, blank=True, null=True)
@@ -631,3 +659,88 @@ class Smsgonder(models.Model):
     class Meta:
         verbose_name = "Mesaj Logu"
         verbose_name_plural = "Mesaj Logları"
+
+
+
+class ChatRoom(models.Model):
+    participant1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_rooms_as_participant1', verbose_name="Katılımcı 1")
+    participant2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_rooms_as_participant2', verbose_name="Katılımcı 2")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Oluşturulma Tarihi')
+
+    def __str__(self):
+        return f"Chat between {self.participant1.username} and {self.participant2.username}"
+
+    class Meta:
+        verbose_name = 'Sohbet Odası'
+        verbose_name_plural = 'Sohbet Odaları'
+        unique_together = ('participant1', 'participant2')
+
+    @staticmethod
+    def get_or_create_room(user1, user2):
+        room, created = ChatRoom.objects.get_or_create(
+            participant1=min(user1, user2, key=lambda x: x.id),
+            participant2=max(user1, user2, key=lambda x: x.id)
+        )
+        return room
+
+class Message(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Kullanıcı')
+    room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, verbose_name='Sohbet Odası')
+    content = models.TextField(verbose_name='Mesaj İçeriği')
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name='Gönderim Zamanı')
+
+    def __str__(self):
+        return f"{self.user.username}: {self.content[:20]}"
+
+    class Meta:
+        verbose_name = 'Mesaj'
+        verbose_name_plural = 'Mesajlar'
+        ordering = ['timestamp']
+
+
+class Cari(models.Model):
+    TRANSACTION_TYPES = (
+        ('income', 'Gelir'),
+        ('expense', 'Gider'),
+    )
+    CURRENCY_CHOICES = (
+        ('TL', 'TL'),
+        ('USD', 'USD'),
+        ('EUR', 'EUR'),
+        ('RMB', 'RMB'),
+    )
+    GELIR_KAYNAK = (
+        ('Truzim', 'Truzim'),
+
+    )
+    GIDER_KAYNAK = (
+        ('Arac', 'Araç Ödemesi'),
+        ('Aktivite', 'Aktivite Ödemesi'),
+        ('Rehber', 'Rehber Ödemesi'),
+        ('Otel', 'Otel Ödemesi'),
+        ('Müze', 'Müze Ödemeleri'),
+        ('Maas', 'Maaş Ödemesi'),
+        ('Fatura', 'Fatura Ödemeleri'),
+        ('Vergi', 'Vergi Ödemeleri'),
+        ('Diğer', 'Diğer Ödemeler'),
+    )
+    company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
+    description = models.TextField(verbose_name="Açıklama", blank=True, null=True)
+    transaction_type = models.CharField(max_length=7, choices=TRANSACTION_TYPES)
+    income = models.CharField(max_length=30, choices=GELIR_KAYNAK, verbose_name="Gelir Kaynağı", blank=True, null=True)
+    expense = models.CharField(max_length=30, choices=GIDER_KAYNAK, verbose_name="Gider Kaynağı", blank=True, null=True)
+    receipt = models.FileField(upload_to='receipts/', blank=True, null=True)
+    price = models.DecimalField(verbose_name="Tutar", max_digits=10, decimal_places=2, default=0)
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Para Birimi", default="TL")
+    buyer_company = models.ForeignKey(Buyercompany, verbose_name="Firmalar", related_name="gelir_firma", on_delete=models.SET_NULL, blank=True, null=True)
+    supplier = models.ForeignKey(Supplier, verbose_name="Araç Tedarikçisi", related_name="arac_gider", on_delete=models.SET_NULL, blank=True, null=True)
+    hotel = models.ForeignKey(Hotel, verbose_name="Oteller", related_name="otel_gider", on_delete=models.SET_NULL, blank=True, null=True)
+    guide = models.ForeignKey(Guide, verbose_name="Rehberler", related_name="rehber_gider", on_delete=models.SET_NULL, blank=True, null=True)
+    activity_supplier = models.ForeignKey(Activitysupplier, verbose_name="Aktivite Tedarikçisi", related_name="aktivite_gider", on_delete=models.SET_NULL, blank=True, null=True)
+    created_staff = models.ForeignKey(Personel, verbose_name="Oluşturan Personel", related_name="olusturan", on_delete=models.SET_NULL, blank=True, null=True)
+    create_date = models.DateTimeField(verbose_name="Oluşturulma Tarihi", auto_now=False, auto_now_add=True)
+    update_date = models.DateTimeField(verbose_name="Güncelleme Tarihi", auto_now=True, auto_now_add=False)
+    is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
+
+
+

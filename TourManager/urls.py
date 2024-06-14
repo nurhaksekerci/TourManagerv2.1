@@ -18,10 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 from Login.views import *
 from Core.views import check_username
+from rest_framework.routers import DefaultRouter
+from Core.views import OperationItemViewSet
+
+router = DefaultRouter()
+router.register(r'operationitems', OperationItemViewSet)
 
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('account/', include('Login.urls')),
+    path('chat/', include('chat.urls')),
     path('', login, name="login"),
     path('TourManagerV2/', include('Core.urls')),
     path('check_username/', check_username, name='check_username'),
@@ -33,4 +40,5 @@ from django.conf.urls.static import static
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

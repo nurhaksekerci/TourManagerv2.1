@@ -111,6 +111,66 @@
 
 
         </style>
+<style>
+    .chat-container {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+    .chat-box {
+        display: none;
+        width: 300px;
+        height: 400px;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+        position: absolute;
+        bottom: 50px;
+        left: 0px;
+        z-index: 1000; /* Ensure chat box is above other elements */
+    }
+    .chat-header {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        cursor: pointer;
+    }
+    .chat-body {
+        height: calc(100% - 80px); /* Adjusted to accommodate chat footer */
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .chat-footer {
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: none; /* Initially hidden */
+        z-index: 1000; /* Same z-index as chat box */
+        display: none;
+    }
+    .chat-toggle {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        z-index: 1000;
+    }
+    .chat-toggle i {
+        font-size: 24px;
+    }
+</style>
 
         {% block css %}{% endblock css %}
     </head>
@@ -140,6 +200,35 @@
                     {% endfor %}
                 </div>
             </div>
+            <div class="chat-container">
+    <div class="chat-toggle" id="chatToggle">
+        <i class="fa fa-comments"></i>
+    </div>
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header row align-items-center" id="chatHeader">
+            <div class="col-6">
+                <button class="btn btn-link text-decoration-none text-white" id="backToPersonnelPage"><i class="bi bi-arrow-left"></i></button>
+            </div>
+            <div class="col-6" style="margin-top: auto;">
+                <p class="text-end">Sohbet Kutusu</p>
+            </div>
+        </div>
+
+
+        <div class="chat-body" id="chatBody">
+            <div id="personnelList" style="display: none;">
+                <!-- Personnel list will be populated here -->
+            </div>
+            <div id="chatMessages" style="display: none;">
+                <!-- Chat messages will be populated here -->
+            </div>
+        </div>
+        <div class="chat-footer" id="chatFooter">
+            <input type="text" id="messageInput" placeholder="Mesajınızı girin...">
+            <button onclick="sendMessage()">Gönder</button>
+        </div>
+    </div>
+</div>
         </main>
 
         <!-- Bootstrap JavaScript Libraries -->
@@ -215,7 +304,7 @@
                 function showNotification(notification) {
                     console.log("Creating HTML for notification:", notification);
                     const toastHTML = `
-                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-notification-id="${notification.id}" data-bs-autohide="false" data-bs-delay="1000000000">
+                        <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-notification-id="${notification.id}" data-bs-autohide="false" data-bs-delay="1000000000">
                             <div class="toast-header">
                                 <strong class="me-auto">${notification.title}</strong>
                                 <small>${notification.timestamp}</small>
@@ -229,14 +318,22 @@
                             </div>
                         </div>
                     `;
-                    const toastContainer = document.querySelector('.toast-container');
-                    toastContainer.innerHTML += toastHTML;
-                    console.log("Toast HTML added to the container.");
-                    const toastElement = new bootstrap.Toast(toastContainer.lastElementChild);
-                    toastElement.show();
-                    console.log("Toast is now being shown.");
-                }
 
+                    const tempElement = document.createElement('div');
+                    tempElement.innerHTML = toastHTML.trim();
+
+                    // Append the new toast to the toast container
+                    const toastContainer = document.querySelector('.toast-container');
+                    toastContainer.appendChild(tempElement.firstChild);
+
+                    const toastElements = toastContainer.querySelectorAll('.toast');
+                    toastElements.forEach(toast => {
+                        const toastElement = new bootstrap.Toast(toast);
+                        toastElement.show();
+                    });
+
+                    console.log("Toast HTML added to the container and shown.");
+                }
                 window.markAsRead = function(notificationId, personelId) {
                     console.log("Marking notification as read:", notificationId);
                     fetch('/TourManagerV2/api/notifications/', {
@@ -296,6 +393,166 @@
               }
             });
           </script>
+<script>
+    const chatToggle = document.getElementById('chatToggle');
+    const chatBox = document.getElementById('chatBox');
+    const chatFooter = document.getElementById('chatFooter');
+    const personnelListDiv = document.getElementById('personnelList');
+    const chatMessagesDiv = document.getElementById('chatMessages');
+    const currentUserId = {{ request.user.id }}; // Django template tag to pass the current user ID
+    let activePersonnelId = null; // Keep track of the active chat
+
+    chatToggle.addEventListener('click', function() {
+        if (chatBox.style.display === 'none') {
+            openChatBox();
+        } else {
+            chatBox.style.display = 'none';
+            chatFooter.style.display = 'none'; // Hide chat footer when chat box is closed
+        }
+    });
+
+    function openChatBox() {
+        // Fetch personnel list using AJAX
+        fetch('/TourManagerV2/fetch_personnel_list/')
+            .then(response => response.json())
+            .then(data => {
+                personnelListDiv.innerHTML = ''; // Clear previous list
+                data.forEach(person => {
+                    const personButton = document.createElement('button');
+                    personButton.textContent = person.user__first_name; // Replace with actual field
+                    personButton.classList.add('list-group-item', 'list-group-item-action');
+                    personButton.dataset.personnelId = person.id;
+                    personButton.addEventListener('click', function() {
+                        activePersonnelId = person.id; // Set active chat
+                        openChatWithPersonnel(person.id);
+                        // Highlight selected personnel
+                        const selectedPersonnel = document.querySelector('.list-group-item.active');
+                        if (selectedPersonnel) {
+                            selectedPersonnel.classList.remove('active');
+                        }
+                        personButton.classList.add('active');
+                    });
+                    personnelListDiv.appendChild(personButton);
+                });
+                personnelListDiv.style.display = 'block';
+                chatMessagesDiv.style.display = 'none';
+                chatBox.style.display = 'block';
+                chatFooter.style.display = 'block'; // Display chat footer when chat box is opened
+            })
+            .catch(error => console.error('Error fetching personnel list:', error));
+    }
+
+    function openChatWithPersonnel(personnelId) {
+        fetch(`/TourManagerV2/fetch_chat_messages/${personnelId}/`)
+            .then(response => response.json())
+            .then(data => {
+                chatMessagesDiv.innerHTML = ''; // Clear previous messages
+                if (Array.isArray(data)) {
+                    data.forEach(message => {
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('message');
+
+                        const messageContent = document.createElement('p');
+                        if (message.user__id && message.user__first_name) {
+                            messageContent.textContent = `${message.user__first_name}: ${message.content}`;
+                        } else {
+                            messageContent.textContent = `Unknown: ${message.content}`;
+                        }
+
+                        // Add text-right class if the message was sent by the current user
+                        if (message.user__id && message.user__id === currentUserId) {
+                            messageContent.classList.add('text-end');
+                        }
+
+                        messageElement.appendChild(messageContent);
+                        chatMessagesDiv.appendChild(messageElement);
+                    });
+                } else {
+                    console.error('Unexpected data format or empty response:', data);
+                }
+                personnelListDiv.style.display = 'none';
+                chatMessagesDiv.style.display = 'block';
+                chatFooter.style.display = 'block';
+            })
+            .catch(error => console.error('Error fetching chat messages:', error));
+    }
+
+    document.getElementById("messageInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent default action (form submission)
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value.trim();
+        const selectedPersonnelElement = document.querySelector('.list-group-item.active');
+
+        if (message !== '' && selectedPersonnelElement) {
+            const selectedPersonnelId = selectedPersonnelElement.dataset.personnelId;
+
+            fetch('/TourManagerV2/send_message/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ personnel_id: selectedPersonnelId, content: message })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Message sent:', data);
+
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+
+                const messageContent = document.createElement('p');
+                if (data.user && data.user.first_name) {
+                    messageContent.textContent = `${data.user.first_name}: ${data.content}`;
+                } else {
+                    messageContent.textContent = `Unknown: ${data.content}`;
+                }
+
+                if (data.user && data.user.id === currentUserId) {
+                    messageContent.classList.add('text-end');
+                }
+
+                messageElement.appendChild(messageContent);
+                chatMessagesDiv.appendChild(messageElement);
+                messageInput.value = '';
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+            });
+        }
+    }
+
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Periodically check for new messages
+    setInterval(function() {
+        if (activePersonnelId !== null) {
+            openChatWithPersonnel(activePersonnelId);
+        }
+    }, 5000); // Check every 5 seconds
+
+
+    document.getElementById('backToPersonnelPage').addEventListener('click', function() {
+        openChatBox();
+        activePersonnelId = null
+    });
+</script>
 
 
         {% block js %}{% endblock js %}

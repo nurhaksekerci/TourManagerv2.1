@@ -8,20 +8,30 @@ from django.db.models import Q
 from Core.models import *
 # Create your views here.
 def login(request):
+    # Sistemin bakımda olup olmadığını kontrol edin
+    system_maintenance = False  # Bakım durumunu belirleyen değişken (bunu gerçek bir kontrolle değiştirin)
+
     if request.user.is_authenticated:
-        requestPersonel=Personel.objects.get(user=request.user)
+        if system_maintenance and request.user.username != 'nurhak':
+            return render(request, 'login/login.html', {'error': 'Sistem bakımda, Lüften daha sonra tekrar deneyiniz.'})
+
+        requestPersonel = Personel.objects.get(user=request.user)
         sirket = requestPersonel.company
         try:
             UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Giriş Yaptı.")
         except Personel.DoesNotExist:
             pass
         return redirect('index')
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+            if system_maintenance and user.username != 'nurhak':
+                return render(request, 'login/login.html', {'error': 'Sistem bakımda, Lüften daha sonra tekrar deneyiniz.'})
+
             # Kullanıcının bağlı olduğu şirketi bul
             try:
                 personel = Personel.objects.get(user=user)
@@ -33,7 +43,7 @@ def login(request):
             if company.finish >= datetime.today().date():
                 # Şirketin bitiş tarihi bugün veya ilerideyse, kullanıcıya giriş izni ver
                 user_login(request, user)
-                requestPersonel = Personel.objects.get(user = user)
+                requestPersonel = Personel.objects.get(user=user)
                 sirket = requestPersonel.company
                 try:
                     UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Giriş Yaptı.")

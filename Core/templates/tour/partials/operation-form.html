@@ -41,13 +41,17 @@
             <label for="{{ form.rbm_sales_price.id_for_label }}">{{ form.rbm_sales_price.label }}</label>
             {{ form.rbm_sales_price }}
         </div>
-        <div class="col-md-2 align-self-end">
+        <div class="col-md-2 d-none align-self-end">
             <label for="{{ form.payment_type.id_for_label }}">{{ form.payment_type.label }}</label>
             {{ form.payment_type }}
         </div>
-        <div class="col-md-2 align-self-end">
+        <div class="col-md-2 d-none align-self-end">
             <label for="{{ form.payment_channel.id_for_label }}">{{ form.payment_channel.label }}</label>
             {{ form.payment_channel }}
+        </div>
+        <div class="col-md-2 d-none align-self-end">
+            <label for="{{ form.sold.id_for_label }}">{{ form.sold.label }}</label>
+            {{ form.sold }}
         </div>
         <div class="col-md-2 align-self-end">
             <label for="{{ form.usd_sales_price.id_for_label }}">{{ form.usd_activity_price.label }}</label>
@@ -65,9 +69,11 @@
             <label for="{{ form.rbm_sales_price.id_for_label }}">{{ form.rbm_activity_price.label }}</label>
             {{ form.rbm_activity_price }}
         </div>
-        <div class="col-md-8 align-self-end">
-            <label for="{{ form.passenger_info.id_for_label }}">{{ form.passenger_info.label }}</label>
-            {{ form.passenger_info }}
+        <div class="row">
+            <div class="col-md-6 align-self-end">
+                <label for="{{ form.passenger_info.id_for_label }}">{{ form.passenger_info.label }}</label>
+                {{ form.passenger_info }}
+            </div>
         </div>
     </div>
 </form>

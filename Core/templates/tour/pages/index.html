@@ -54,9 +54,7 @@
             <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
-                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
-                            <th>Takip Eden</th>
-                        {% endif %}
+                        <th>Takip Eden</th>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
@@ -69,6 +67,7 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
+                        <th>Otel Ücreti</th>
 
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
@@ -87,12 +86,13 @@
                         {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
                             <th>Whatsapp</th>
                         {% endif %}
+                        <th>Hata Bildir</th>
 
 
                     </tr>
                 </thead>
                 <tbody>
-                    {% for today in today_jobs %}
+                    {% for job in today_jobs %}
                         {% include 'tour/partials/jobs.html' %}
                     {% empty %}
                     <tr>
@@ -135,9 +135,7 @@
             <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
-                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
-                            <th>Takip Eden</th>
-                        {% endif %}
+                        <th>Takip Eden</th>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
@@ -150,6 +148,7 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
+                        <th>Otel Ücreti</th>
 
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
@@ -168,11 +167,12 @@
                         {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
                             <th>Whatsapp</th>
                         {% endif %}
+                        <th>Hata Bildir</th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    {% for today in tomorrow_jobs %}
+                    {% for job in tomorrow_jobs %}
                         {% include 'tour/partials/jobs.html' %}
                     {% empty %}
                         <div class="alert alert-warning" role="alert">
@@ -213,9 +213,7 @@
             <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
-                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
-                            <th>Takip Eden</th>
-                        {% endif %}
+                        <th>Takip Eden</th>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
@@ -228,6 +226,7 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
+                        <th>Otel Ücreti</th>
 
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
@@ -246,11 +245,11 @@
                         {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
                             <th>Whatsapp</th>
                         {% endif %}
-
+                        <th>Hata Bildir</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for today in totomorrow_jobs %}
+                    {% for job in totomorrow_jobs %}
                         {% include 'tour/partials/jobs.html' %}
                     {% empty %}
                         <div class="alert alert-warning" role="alert">
@@ -309,9 +308,7 @@
             <table class="table table-striped table-hover table_font">
                 <thead class="thead-dark">
                     <tr>
-                        {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
-                            <th>Takip Eden</th>
-                        {% endif %}
+                        <th>Takip Eden</th>
                         <th>Etiket</th>
                         <th>İşlem Türü</th>
                         <th>Açıklama</th>
@@ -324,6 +321,7 @@
                         <th>Araç Tedarikçi</th>
 
                         <th>Otel</th>
+                        <th>Otel Ücreti</th>
 
                         <th>Aktivite</th>
                         <th>Aktivite Tedarikçi</th>
@@ -342,11 +340,11 @@
                         {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
                             <th>Whatsapp</th>
                         {% endif %}
-
+                        <th>Hata Bildir</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for today in week_jobs %}
+                    {% for job in week_jobs %}
                         {% include 'tour/partials/jobs.html' %}
                     {% empty %}
                         <div class="alert alert-warning" role="alert">

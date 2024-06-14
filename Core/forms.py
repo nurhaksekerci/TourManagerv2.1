@@ -142,6 +142,23 @@ class MuseumForm(forms.ModelForm):
             'currency': forms.Select(attrs={'class': 'form-control'}),
         }
 
+class ActivitycostForm(forms.ModelForm):
+    class Meta:
+        model = Activitycost
+        fields = ['supplier', 'activity', 'price', 'currency']
+        widgets = {
+            'supplier': forms.Select(attrs={'class': 'form-control'}),
+            'activity': forms.Select(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'currency': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ActivitycostForm, self).__init__(*args, **kwargs)
+        self.fields['supplier'].queryset = Activitysupplier.objects.filter(is_delete=False)
+        self.fields['activity'].queryset = Activity.objects.filter(is_delete=False)
+
+
 class CostForm(forms.ModelForm):
     class Meta:
         model = Cost
@@ -157,6 +174,12 @@ class CostForm(forms.ModelForm):
             'bus': forms.NumberInput(attrs={'class': 'form-control'}),
             'currency': forms.Select(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(CostForm, self).__init__(*args, **kwargs)
+        self.fields['supplier'].queryset = Supplier.objects.filter(is_delete=False)
+        self.fields['tour'].queryset = Tour.objects.filter(is_delete=False)
+        self.fields['transfer'].queryset = Transfer.objects.filter(is_delete=False)
 
 
 class SupplierForm(forms.ModelForm):
@@ -178,6 +201,7 @@ class ActivitysupplierForm(forms.ModelForm):
             'contact': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+
 class BuyercompanyForm(forms.ModelForm):
     class Meta:
         model = Buyercompany
@@ -188,25 +212,18 @@ class BuyercompanyForm(forms.ModelForm):
             'contact': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-class ActivitycostForm(forms.ModelForm):
-    class Meta:
-        model = Activitycost
-        fields = ['supplier', 'activity', 'price', 'currency']
-        widgets = {
-            'supplier': forms.Select(attrs={'class': 'form-control'}),
-            'activity': forms.Select(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'currency': forms.Select(attrs={'class': 'form-control'}),
-        }
 
-
-
-
+SOLD_CHOICES = (
+    ('Istendi', 'Istendi'),
+    ('Alındı', 'Alındı'),
+)
 
 class OperationForm(forms.ModelForm):
+    sold = forms.ChoiceField(choices=SOLD_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+
     class Meta:
         model = Operation
-        fields = ['follow_staff', 'buyer_company', 'ticket', 'start', 'finish', 'usd_sales_price', 'eur_sales_price', 'tl_sales_price', 'rbm_sales_price', 'passenger_info', 'number_passengers', 'payment_channel', 'payment_type', 'usd_activity_price', 'eur_activity_price', 'tl_activity_price', 'rbm_activity_price']
+        fields = ['follow_staff', 'buyer_company', 'sold', 'ticket', 'start', 'finish', 'usd_sales_price', 'eur_sales_price', 'tl_sales_price', 'rbm_sales_price', 'passenger_info', 'number_passengers', 'payment_channel', 'payment_type', 'usd_activity_price', 'eur_activity_price', 'tl_activity_price', 'rbm_activity_price']
         widgets = {
             'follow_staff': forms.Select(attrs={'class': 'form-control'}),
             'buyer_company': forms.Select(attrs={'class': 'form-control'}),
@@ -224,20 +241,24 @@ class OperationForm(forms.ModelForm):
             'eur_activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'tl_activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'rbm_activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-
             'number_passengers': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+        labels = {
+            'sold': 'Ödeme Durumu'
+        }
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(OperationForm, self).__init__(*args, **kwargs)
         if self.request:
-            # Burada `request` kullanarak çeşitli işlemler yapabilirsiniz, örneğin:
             personel_instance = self.request.user.personel.first()
             if personel_instance:
                 self.fields['follow_staff'].queryset = Personel.objects.filter(company=personel_instance.company)
             else:
-                # Uygun bir alternatif veya hata yönetimi
                 self.fields['follow_staff'].queryset = Personel.objects.none()
+
+            self.fields['buyer_company'].queryset = Buyercompany.objects.filter(company=personel_instance.company, is_delete=False)
+
 
 
 class OperationdayForm(forms.ModelForm):
@@ -256,13 +277,13 @@ class OperationitemForm(forms.ModelForm):
     class Meta:
         model = Operationitem
         fields = [
-            'operation_type', 'pick_time', 'release_time', 'release_location', 'pick_location',
-            'tour', 'transfer', 'vehicle', 'supplier', 'vehicle_price', 'vehicle_currency', 'museum_person',
-            'hotel', 'room_type', 'hotel_price', 'hotel_currency',
-            'activity', 'activity_price', 'activity_currency', 'activity_supplier',
-            'new_museum', 'museum_price', 'museum_currency',
-            'driver', 'driver_phone', 'plaka', 'guide', 'guide_price', 'guide_currency', 'guide_var',
-            'other_price', 'other_currency', 'description', 'activity_payment', 'museum_payment', 'hotel_payment'
+            'operation_type', 'pick_time', 'release_time', 'release_location', 'pick_location', 'vehicle_price', 'vehicle_sell_price',
+            'tour', 'transfer', 'vehicle', 'supplier', 'manuel_vehicle_price', 'vehicle_currency', 'vehicle_sell_currency', 'museum_person',
+            'hotel', 'room_type', 'hotel_price', 'hotel_currency', 'hotel_sell_price', 'hotel_sell_currency',
+            'activity', 'activity_price', 'activity_currency', 'activity_supplier', 'manuel_activity_price', 'activity_sell_price', 'activity_sell_currency',
+            'new_museum', 'museum_price', 'museum_currency', 'museum_sell_price', 'museum_sell_currency',
+            'driver', 'driver_phone', 'plaka', 'guide', 'guide_price', 'guide_currency', 'guide_var', 'guide_sell_price', 'guide_sell_currency',
+            'other_price', 'other_currency', 'description', 'activity_payment', 'museum_payment', 'hotel_payment', 'other_sell_price', 'other_sell_currency'
         ]
         widgets = {
             'operation_type': forms.Select(attrs={'class': 'form-control'}),
@@ -277,24 +298,34 @@ class OperationitemForm(forms.ModelForm):
             'vehicle': forms.Select(attrs={'class': 'form-control select'}),
             'supplier': forms.Select(attrs={'class': 'form-control select'}),
             'vehicle_currency': forms.Select(attrs={'class': 'form-control select'}),
-            'vehicle_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'vehicle_sell_currency': forms.Select(attrs={'class': 'form-control select'}),
+            'manuel_vehicle_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'vehicle_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'readonly': 'readonly'}),
+            'vehicle_sell_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
 
             'hotel': forms.Select(attrs={'class': 'form-control select'}),
             'room_type': forms.Select(attrs={'class': 'form-control select'}),
             'hotel_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'hotel_currency': forms.Select(attrs={'class': 'form-control'}),
+            'hotel_sell_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'hotel_sell_currency': forms.Select(attrs={'class': 'form-control'}),
             'hotel_payment' : forms.Select(attrs={'class': 'form-control'}),
 
             'activity': forms.Select(attrs={'class': 'form-control select'}),
-            'activity_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'activity_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'readonly': 'readonly'}),
+            'activity_sell_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'manuel_activity_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'activity_currency': forms.Select(attrs={'class': 'form-control'}),
+            'activity_sell_currency': forms.Select(attrs={'class': 'form-control'}),
             'activity_supplier': forms.Select(attrs={'class': 'form-control select'}),
             'activity_payment' : forms.Select(attrs={'class': 'form-control'}),
 
             'new_museum': forms.SelectMultiple(attrs={'class': 'form-control selectmulti'}),
             'museum_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'museum_sell_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'museum_person': forms.NumberInput(attrs={'class': 'form-control'}),
             'museum_currency': forms.Select(attrs={'class': 'form-control'}),
+            'museum_sell_currency': forms.Select(attrs={'class': 'form-control'}),
             'museum_payment' : forms.Select(attrs={'class': 'form-control'}),
 
             'driver': forms.TextInput(attrs={'class': 'form-control'}),
@@ -306,6 +337,10 @@ class OperationitemForm(forms.ModelForm):
             'guide_currency': forms.Select(attrs={'class': 'form-control'}),
             'other_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'other_currency': forms.Select(attrs={'class': 'form-control'}),
+            'guide_sell_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'guide_sell_currency': forms.Select(attrs={'class': 'form-control'}),
+            'other_sell_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'other_sell_currency': forms.Select(attrs={'class': 'form-control'}),
 
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': '1'}),
         }
@@ -329,7 +364,14 @@ class OperationitemForm(forms.ModelForm):
         super(OperationitemForm, self).__init__(*args, **kwargs)
         if request and 'new_museum' in self.fields:
             user_company = request.user.personel.first().company
-            self.fields['new_museum'].queryset = Museum.objects.filter(company=user_company)
+            self.fields['new_museum'].queryset = Museum.objects.filter(company=user_company, is_delete=False)
+            self.fields['activity'].queryset = Activity.objects.filter(company=user_company, is_delete=False)
+            self.fields['guide'].queryset = Guide.objects.filter(company=user_company, is_delete=False)
+            self.fields['tour'].queryset = Tour.objects.filter(company=user_company, is_delete=False)
+            self.fields['transfer'].queryset = Transfer.objects.filter(company=user_company, is_delete=False)
+            self.fields['supplier'].queryset = Supplier.objects.filter(company=user_company, is_delete=False)
+            self.fields['activity_supplier'].queryset = Activitysupplier.objects.filter(company=user_company, is_delete=False)
+
 
 
 
@@ -430,3 +472,49 @@ class SmsgonderForm(forms.ModelForm):
                 self.fields['staff'].queryset = Personel.objects.filter(company=personel_instance.company)
             else:
                 self.fields['staff'].queryset = Personel.objects.none()
+
+
+class CariForm(forms.ModelForm):
+    class Meta:
+        model = Cari
+        fields = [
+            'transaction_type',
+            'income',
+            'expense',
+            'receipt',
+            'price',
+            'description',
+            'currency',
+            'buyer_company',
+            'supplier',
+            'activity_supplier',
+            'hotel',
+            'guide',
+        ]
+        widgets = {
+            'transaction_type': forms.Select(attrs={'class': 'form-control'}),
+            'buyer_company': forms.Select(attrs={'class': 'form-control'}),
+            'supplier': forms.Select(attrs={'class': 'form-control'}),
+            'activity_supplier': forms.Select(attrs={'class': 'form-control'}),
+            'hotel': forms.Select(attrs={'class': 'form-control'}),
+            'guide': forms.Select(attrs={'class': 'form-control'}),
+            'income': forms.Select(attrs={'class': 'form-control'}),
+            'expense': forms.Select(attrs={'class': 'form-control'}),
+            'receipt': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'currency': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        transaction_type = cleaned_data.get('transaction_type')
+        income = cleaned_data.get('income')
+        expense = cleaned_data.get('expense')
+
+        if transaction_type == 'income' and not income:
+            self.add_error('income', 'Gelir kaynağını belirtmelisiniz.')
+        elif transaction_type == 'expense' and not expense:
+            self.add_error('expense', 'Gider kaynağını belirtmelisiniz.')
+
+        return cleaned_data

@@ -13,3 +13,17 @@ def currency(value):
         return f"{value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
     except ValueError:
         return value
+
+
+
+@register.filter
+def custom_currency(value):
+    if value == 0:
+        return '----'
+    return f"{value:,.2f}"
+
+@register.filter
+def custom_currency_with_unit(value, currency_unit):
+    if value == 0:
+        return '----'
+    return f"{value:,.2f} {currency_unit}"

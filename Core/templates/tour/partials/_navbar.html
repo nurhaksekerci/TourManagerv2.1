@@ -95,8 +95,9 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownKayitlar">
                             <li><a class="dropdown-item" href="{% url 'cari' %}">Araç Carileri</a></li>
                             <li><a class="dropdown-item" href="{% url 'activity_cari' %}">Aktivite Carileri</a></li>
-                            <li><a class="dropdown-item" href="#">Grafikler</a></li>
-                            <li><a class="dropdown-item" href="#">Karlılık</a></li>
+                            <li><a class="dropdown-item" href="{% url 'odeme_create' %}">Ödeme İşlemleri</a></a></li>
+                            <li><a class="dropdown-item" href="{% url 'gelir' %}">Gelir Gider</a></li>
+                            <li><a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -141,6 +142,7 @@
             </li>
             {% endif %}
             {% if request.user.username == "nurhak" %}
+
                 <li class="nav-item ">
                     <a class="nav-link" target="_blank" href="https://defnesera.pythonanywhere.com/admin/" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
                         Admin
@@ -152,6 +154,11 @@
                     </a>
                 </li>
             {% endif %}
+                <li class="nav-item ">
+                    <a class="nav-link" target="_blank" href="{% url 'chat' %}" id="navbarDropdownKayitlar" role="button" aria-expanded="false">
+                        Chat (Henüz Bitmedi!)
+                    </a>
+                </li>
             </ul>
             <div class="ms-auto navbar-text">
                 {% if request.user.is_authenticated %}
@@ -187,6 +194,7 @@
                     </ul>
                 {% endif %}
             </div>
+
         </div>
     </div>
 </nav>

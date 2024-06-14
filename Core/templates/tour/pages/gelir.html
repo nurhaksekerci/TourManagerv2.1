@@ -1,0 +1,90 @@
+{% extends "tour/base/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="text-center my-4">Gelir Gider</h1>
+    <div class="row">
+        <div class="col-md-2">
+
+            <div class="my-2">
+                <div class="border" style="min-height:56px; padding-top:9px;">
+                    <h3 class="text-center">Aylar</h3>
+                </div>
+                <div class="list-group my-2">
+                    <a href="{% url 'gelirmonth' 1 %}" class="list-group-item list-group-item-action">Ocak</a>
+                    <a href="{% url 'gelirmonth' 2 %}" class="list-group-item list-group-item-action">Şubat</a>
+                    <a href="{% url 'gelirmonth' 3 %}" class="list-group-item list-group-item-action">Mart</a>
+                    <a href="{% url 'gelirmonth' 4 %}" class="list-group-item list-group-item-action">Nisan</a>
+                    <a href="{% url 'gelirmonth' 5 %}" class="list-group-item list-group-item-action">Mayıs</a>
+                    <a href="{% url 'gelirmonth' 6 %}" class="list-group-item list-group-item-action">Haziran</a>
+                    <a href="{% url 'gelirmonth' 7 %}" class="list-group-item list-group-item-action">Temmuz</a>
+                    <a href="{% url 'gelirmonth' 8 %}" class="list-group-item list-group-item-action">Ağustos</a>
+                    <a href="{% url 'gelirmonth' 9 %}" class="list-group-item list-group-item-action">Eylül</a>
+                    <a href="{% url 'gelirmonth' 10 %}" class="list-group-item list-group-item-action">Ekim</a>
+                    <a href="{% url 'gelirmonth' 11 %}" class="list-group-item list-group-item-action">Kasım</a>
+                    <a href="{% url 'gelirmonth' 12 %}" class="list-group-item list-group-item-action">Aralık</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="row my-2 border" id="cat" style="min-height:56px;">
+                {% include 'tour/partials/odeme-list.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script>
+    function saveToExcel() {
+        // Table element
+        let table = document.querySelector('.table');
+
+        // HTML table to XLSX workbook object
+        let wb = XLSX.utils.table_to_book(table);
+
+        // Convert to binary XLSX file and save
+        let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+        function s2ab(s) {
+            let buf = new ArrayBuffer(s.length);
+            let view = new Uint8Array(buf);
+            for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+
+        // Save file using FileSaver.js
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'gelir-gider.xlsx');
+    }
+</script>
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var select = document.getElementById("select_month");
+            var currentMonth = new Date().getMonth() + 1; // Aylar 0-11 arası olduğu için +1 ekliyoruz
+
+            // URL'den seçili ayı almak
+            var pathParts = window.location.pathname.split('/');
+            var lastPart = pathParts[pathParts.length - 1];
+            var selectedMonth = parseInt(lastPart, 10);
+
+            // Seçili ay varsa onu seç, yoksa mevcut ayı seç
+            if (!isNaN(selectedMonth) && selectedMonth >= 1 && selectedMonth <= 12) {
+                select.value = selectedMonth;
+            } else {
+                select.value = currentMonth;
+            }
+
+            // Değişiklik olduğunda URL'yi güncelle
+            select.addEventListener("change", function() {
+                var value = this.value;
+                var baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+                var newUrl = baseUrl + '/' + value;
+                window.location.href = newUrl;
+            });
+        });
+    </script>
+
+{% endblock js %}
+

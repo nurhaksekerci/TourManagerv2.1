@@ -26,7 +26,7 @@
                             <p><strong>Durum:</strong> {{ ticket.get_status_display }}</p>
                             <p><strong>Oluşturulma Zamanı:</strong> {{ ticket.created_at }}</p>
                             <p><strong>Güncellenme Zamanı:</strong> {{ ticket.updated_at }}</p>
-                            {% if ticket.cevap %}
+                            {% if ticket.status == "closed" %}
                                 <hr>
                                 <pre><strong>Çözüm:</strong><br>{{ ticket.cevap }}</pre>
                             {% else %}

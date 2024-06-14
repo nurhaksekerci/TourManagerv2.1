@@ -62,6 +62,10 @@
                     {{ formitem.vehicle }}
                 </div>
                 <div class="col align-self-end">
+                    <label for="{{ formitem.manuel_vehicle_price.id_for_label }}">{{ formitem.manuel_vehicle_price.label }}</label>
+                    {{ formitem.manuel_vehicle_price }}
+                </div>
+                <div class="col align-self-end">
                     <label for="{{ formitem.vehicle_price.id_for_label }}">{{ formitem.vehicle_price.label }}</label>
                     {{ formitem.vehicle_price }}
                 </div>
@@ -107,6 +111,10 @@
                 <div class="col-md-3 align-self-end">
                     <label for="{{ formitem.activity_supplier.id_for_label }}">{{ formitem.activity_supplier.label }}</label>
                     {{ formitem.activity_supplier }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.manuel_activity_price.id_for_label }}">{{ formitem.manuel_activity_price.label }}</label>
+                    {{ formitem.manuel_activity_price }}
                 </div>
                 <div class="col align-self-end">
                     <label for="{{ formitem.activity_price.id_for_label }}">{{ formitem.activity_price.label }}</label>
@@ -183,6 +191,57 @@
                     {{ formitem.other_currency }}
                 </div>
                 </div>
+            <div class="row {% if request.user.personel.first.company.statu == basic %}d-none{% endif %}" id="satis_islemleri">
+                <h6 class="text-center mt-2 text-danger">Satış İşlemleri</h6>
+                <div class="col align-self-end">
+                  <label for="{{ formitem.vehicle_sell_price.id_for_label }}" class="text-dark">{{ formitem.vehicle_sell_price.label }}</label>
+                  {{ formitem.vehicle_sell_price }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.vehicle_sell_currency.id_for_label }}" class="text-dark">{{ formitem.vehicle_sell_currency.label }}</label>
+                    {{ formitem.vehicle_sell_currency }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.activity_sell_price.id_for_label }}" class="text-dark">{{ formitem.activity_sell_price.label }}</label>
+                    {{ formitem.activity_sell_price }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.activity_sell_currency.id_for_label }}" class="text-dark">{{ formitem.activity_sell_currency.label }}</label>
+                    {{ formitem.activity_sell_currency }}
+                </div>
+                <div class="col align-self-end">
+                  <label for="{{ formitem.museum_sell_price.id_for_label }}" class="text-dark">{{ formitem.museum_sell_price.label }}</label>
+                  {{ formitem.museum_sell_price }}
+                </div>
+                <div class="col align-self-end">
+                  <label for="{{ formitem.museum_sell_currency.id_for_label }}" class="text-dark">{{ formitem.museum_sell_currency.label }}</label>
+                  {{ formitem.museum_sell_currency }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.hotel_sell_price.id_for_label }}" class="text-dark">{{ formitem.hotel_sell_price.label }}</label>
+                    {{ formitem.hotel_sell_price }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.hotel_sell_currency.id_for_label }}" class="text-dark">{{ formitem.hotel_sell_currency.label }}</label>
+                    {{ formitem.hotel_sell_currency }}
+                </div>
+                <div class="col align-self-end">
+                  <label for="{{ formitem.guide_sell_price.id_for_label }}" class="text-dark">{{ formitem.guide_sell_price.label }}</label>
+                  {{ formitem.guide_sell_price }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.guide_sell_currency.id_for_label }}" class="text-dark">{{ formitem.guide_sell_currency.label }}</label>
+                    {{ formitem.guide_sell_currency }}
+                </div>
+                <div class="col align-self-end">
+                  <label for="{{ formitem.other_sell_price.id_for_label }}" class="text-dark">{{ formitem.other_sell_price.label }}</label>
+                  {{ formitem.other_sell_price }}
+                </div>
+                <div class="col align-self-end">
+                    <label for="{{ formitem.other_sell_currency.id_for_label }}" class="text-dark">{{ formitem.other_sell_currency.label }}</label>
+                    {{ formitem.other_sell_currency }}
+                </div>
+            </div>
                 <div class="row">
                 <h6 class="text-center mt-2">Tur Detayları</h6>
                 <div class="col align-self-end">

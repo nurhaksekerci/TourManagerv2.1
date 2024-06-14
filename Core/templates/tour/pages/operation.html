@@ -23,13 +23,31 @@
 
 {% block js %}
 <script>
-    document.getElementById('id_ticket').addEventListener('input', function() {
-        var ticket = this.value;
-        var inputField = document.getElementById('id_ticket');
-        var submitButton = document.getElementById('submit-all');
+document.addEventListener('DOMContentLoaded', function () {
+    const submitButton = document.getElementById('submit-all');
+    const usdField = document.querySelector('[name="usd_sales_price"]');
+    const eurField = document.querySelector('[name="eur_sales_price"]');
+    const tlField = document.querySelector('[name="tl_sales_price"]');
+    const rbmField = document.querySelector('[name="rbm_sales_price"]');
+    const ticketField = document.getElementById('id_ticket');
 
+    function checkSalesPrices() {
+        const usdValue = parseFloat(usdField.value) || 0;
+        const eurValue = parseFloat(eurField.value) || 0;
+        const tlValue = parseFloat(tlField.value) || 0;
+        const rbmValue = parseFloat(rbmField.value) || 0;
+
+        if (usdValue === 0 && eurValue === 0 && tlValue === 0 && rbmValue === 0) {
+            submitButton.disabled = true;
+        } else {
+            submitButton.disabled = false;
+        }
+    }
+
+    function checkTicket() {
+        const ticket = ticketField.value;
         if (ticket === '') {
-            inputField.style.borderColor = 'red';
+            ticketField.style.borderColor = 'red';
             submitButton.disabled = true;
         } else {
             var xhr = new XMLHttpRequest();
@@ -38,23 +56,35 @@
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var isTaken = JSON.parse(this.responseText).is_taken;
                     if (isTaken) {
-                        inputField.style.borderColor = 'red';
+                        ticketField.style.borderColor = 'red';
                         submitButton.disabled = true;
                     } else {
-                        inputField.style.borderColor = 'green';
-                        submitButton.disabled = false;
+                        ticketField.style.borderColor = 'green';
+                        checkSalesPrices();  // Check prices again to ensure all conditions are met
                     }
                 }
             }
             xhr.send();
         }
-    });
-    
+    }
+
+    usdField.addEventListener('input', checkSalesPrices);
+    eurField.addEventListener('input', checkSalesPrices);
+    tlField.addEventListener('input', checkSalesPrices);
+    rbmField.addEventListener('input', checkSalesPrices);
+    ticketField.addEventListener('input', checkTicket);
+
+    // İlk yüklemede kontrolleri yap
+    checkSalesPrices();
+    checkTicket();
+});
 </script>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var submitButton = document.getElementById('submit-item-all');
-        
+
         if (submitButton) {
             submitButton.addEventListener('click', function() {
                 // Butona tıklanınca 1 saniye bekleyip başka bir sayfaya yönlendir
@@ -65,6 +95,6 @@
         }
     });
 </script>
-    
+
 {% endblock js %}
 

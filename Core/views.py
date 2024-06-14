@@ -1,4 +1,3 @@
-import requests
 from urllib.parse import unquote
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +19,9 @@ from openpyxl.styles import Font
 from django.apps import apps
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-
+from decimal import Decimal, DivisionUndefined
+from django.views.decorators.csrf import csrf_exempt
+import requests
 
 def get_exchange_rates(request):
     today = date.today()
@@ -35,7 +36,7 @@ def get_exchange_rates(request):
         }
         return JsonResponse(data)
     else:
-        exchange_rates()
+        return exchange_rates()
 
 def exchange_rates():
     today = date.today()
@@ -66,6 +67,14 @@ def exchange_rates():
         else:
             print("Veriler çekilemedi. Lütfen daha sonra tekrar deneyin.")
             return JsonResponse({'error': 'Veriler çekilemedi'}, status=500)
+    else:
+        exchange_rate = ExchangeRate.objects.get(created_at__date=today)
+        data = {
+            'usd_to_try': exchange_rate.usd_to_try,
+            'usd_to_eur': exchange_rate.usd_to_eur,
+            'usd_to_rmb': exchange_rate.usd_to_rmb
+        }
+        return JsonResponse(data)
 
 def can_access_personel(user):
     # Kullanıcının Personel modeline erişim yetkisini kontrol et
@@ -565,7 +574,7 @@ def logs(request):
     staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
     logs = UserActivityLog.objects.filter(company=sirket).exclude(action="Giriş Yaptı.") \
         .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
-    page = Paginator(logs, 50)
+    page = Paginator(logs, 500)
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
     context = {'page': page, 'title': 'Loglar', 'login': False, 'personel': None, 'staffs': staffs,}
@@ -582,7 +591,7 @@ def log_staff(request, personel_id):
     staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
     logs = UserActivityLog.objects.filter(company=sirket, staff=staff).exclude(action="Giriş Yaptı.") \
         .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
-    page = Paginator(logs, 50)
+    page = Paginator(logs, 500)
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
     context = {'page': page, 'title': 'Loglar', 'login': False, 'personel': personel_id, 'staffs': staffs,}
@@ -598,7 +607,7 @@ def login_logs(request):
     staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
     logs = UserActivityLog.objects.filter(company=sirket, action="Giriş Yaptı.") \
         .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
-    page = Paginator(logs, 50)
+    page = Paginator(logs, 500)
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
     context = {'page': page, 'title': 'Giriş Logları', 'login': True, 'personel': None, 'staffs': staffs}
@@ -615,7 +624,7 @@ def log_staff_login(request, personel_id):
     staffs = Personel.objects.filter(company=sirket).order_by('user__first_name')
     logs = UserActivityLog.objects.filter(company=sirket, staff=staff, action="Giriş Yaptı.") \
         .annotate(date_only=TruncDate('timestamp')).order_by('-date_only', '-timestamp')
-    page = Paginator(logs, 50)
+    page = Paginator(logs, 500)
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
     context = {'page': page, 'title': 'Giriş Logları', 'login': True, 'personel': personel_id, 'staffs': staffs}
@@ -697,78 +706,68 @@ def create_operation(request):
 
 @login_required
 def create_operation_item(request, day_id):
-    day = Operationday.objects.get(id = day_id)
+    day = get_object_or_404(Operationday, id=day_id)
     if request.method == "POST":
         requestPersonel = Personel.objects.get(user=request.user)
         sirket = requestPersonel.company
 
-        form = OperationitemForm(request.POST or None, request=request)
-        if form.is_valid():
-            new = form.save(commit=False)
+        formitem = OperationitemForm(request.POST, request=request)
+        if formitem.is_valid():
+            new = formitem.save(commit=False)
             new.company = sirket
             new.day = day
 
-            if new.vehicle != None:
-                if new.vehicle_price == 0 or new.vehicle_price == 0.00 or new.vehicle_price == None:
-                    if new.tour:
-                        cost = Cost.objects.filter(company=sirket, tour=new.tour, supplier=new.supplier).first()
-                    else:
-                        cost = Cost.objects.filter(company=sirket, transfer=new.transfer, supplier=new.supplier).first()
-                    if cost:
-                        new.cost = cost
-                        vehicle_type = new.vehicle.vehicle
-                        # Araç tipine göre maliyeti güncelle
-                        if vehicle_type == "Binek":
-                            new.vehicle_price = cost.car
-                        elif vehicle_type == "Minivan":
-                            new.vehicle_price = cost.minivan
-                        elif vehicle_type == "Minibüs":
-                            new.vehicle_price = cost.minibus
-                        elif vehicle_type == "Midibüs":
-                            new.vehicle_price = cost.midibus
-                        elif vehicle_type == "Otobüs":
-                            new.vehicle_price = cost.bus
             try:
                 UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=f"Operasyonİtem kaydı yapıldı. Operasyonitem ID: {new.id} Operasyon Etiket: {new.day.operation.ticket} İşlem Türü: {new.operation_type}")
             except Personel.DoesNotExist:
                 pass
+
             new.save()
-            form.save_m2m()
+            formitem.save_m2m()
 
             return HttpResponse('Başarıyla Kaydedildi.')
-    context={
-        'formitem' : OperationitemForm(request=request),
-        'day' : day,
+        else:
+            print('Form geçersiz. Hatalar: ' + str(formitem.errors))
+
+    context = {
+        'formitem': OperationitemForm(request=request),
+        'day': day,
         'random_number': random.randint(1000, 9999)
     }
     return render(request, 'tour/partials/operation-item-form.html', context)
 
 @login_required
 def create_operation_item_add(request):
-    context={
-        'formitem' : OperationitemForm(request=request),
+    context = {
+        'formitem': OperationitemForm(request=request),
         'random_number': random.randint(1000, 9999)
     }
     return render(request, 'tour/partials/operation-item-form.html', context)
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
 
-
-#####################################################################################################
-#####################################################################################################
-#####################################################################################################
-#####################################################################################################
 
 @login_required
 def operation_list(request):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
     today = datetime.today()
-    # Operasyonlarla ilişkili günleri ve günlerin operasyon öğelerini çeken sorgu
-    buyer_company = Buyercompany.objects.filter(company = sirket, is_delete=False).order_by('name')
-    finished_jobs = Operation.objects.filter(company=sirket, finish__lt=today, is_delete=False).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
-    started_jobs = Operation.objects.filter(company=sirket, start__lte=today, finish__gte=today, is_delete=False).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
-    future_jobs = Operation.objects.filter(company=sirket, start__gt=today, is_delete=False).order_by('-create_date').prefetch_related('operationday_set', 'operationday_set__operationitem_set')
-    return render(request, 'tour/pages/operation-list.html', {'comp': True, 'finished_jobs': finished_jobs, 'started_jobs': started_jobs, 'future_jobs': future_jobs, 'buyer_companies': buyer_company, 'title': 'Operasyon', 'createtitle': 'Operasyon Listesi', 'comp' : False})
 
+    buyer_companies = Buyercompany.objects.filter(company=sirket, is_delete=False).order_by('name')
+
+    # Her bir buyer_company için ilgili operasyonları getirin
+    for company in buyer_companies:
+        company.started_operations = Operation.objects.filter(company=sirket, start__lte=today, finish__gte=today, is_delete=False, buyer_company=company).order_by('start')
+        company.finished_operations = Operation.objects.filter(company=sirket, finish__lt=today, is_delete=False, buyer_company=company).order_by('-start')
+        company.future_operations = Operation.objects.filter(company=sirket, start__gt=today, is_delete=False, buyer_company=company).order_by('start')
+
+    return render(request, 'tour/pages/operation-list.html', {
+        'buyer_companies': buyer_companies,
+        'title': 'Operasyon',
+        'createtitle': 'Operasyon Listesi',
+    })
 from django.db.models import Prefetch
 
 @login_required
@@ -793,119 +792,117 @@ def update_operation(request, operation_id):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
     operation = get_object_or_404(Operation, id=operation_id)
-
-    # Eski değerleri sakla
-    old_follow_staff = operation.follow_staff
-    old_buyer_company = operation.buyer_company
-    old_start = operation.start
-    old_finish = operation.finish
-    old_passenger_info = operation.passenger_info
-    old_ticket = operation.ticket
-    old_usd_sales_price = operation.usd_sales_price
-    old_tl_sales_price = operation.tl_sales_price
-    old_eur_sales_price = operation.eur_sales_price
-    old_rbm_sales_price = operation.rbm_sales_price
-    old_number_passengers = operation.number_passengers
-    old_payment_type = operation.payment_type
-    old_payment_channel = operation.payment_channel
-
+    follow_staff = operation.follow_staff
+    buyer_company = operation.buyer_company
+    start = operation.start
+    finish = operation.finish
+    ticket = operation.ticket
+    passenger_info = operation.passenger_info
+    usd_sales_price = operation.usd_sales_price
+    tl_sales_price = operation.tl_sales_price
+    eur_sales_price = operation.eur_sales_price
+    rbm_sales_price = operation.rbm_sales_price
+    number_passengers = operation.number_passengers
+    payment_channel = operation.payment_channel
+    payment_type = operation.payment_type
+    sold = operation.sold
     if request.method == "POST":
         form = OperationForm(request.POST, instance=operation, request=request)
         if form.is_valid():
-            operation = form.save()
-            operation.refresh_from_db()  # En son veritabanı durumunu al
-            print(f"Güncellenmiş Etiket: {operation.ticket}")  # Debug çıktısı
-
-            # Bitiş tarihi değişikliğini kontrol et
-            if operation.finish > old_finish:
-                current_date = old_finish + timedelta(days=1)
-                while current_date <= operation.finish:
-                    operasyon_gun, created = Operationday.objects.get_or_create(
-                        date=current_date,
-                        operation=operation,
-                        defaults={'company': sirket}
-                    )
-                    current_date += timedelta(days=1)
-
-            days_with_items = Operationday.objects.filter(operation=operation).annotate(items_count=Count('operationitem')).filter(items_count__gt=0)
-
-            if operation.finish < old_finish:
-                max_date = days_with_items.filter(date__gt=operation.finish).aggregate(max_date=Max('date'))['max_date']
-                if max_date:
-                    operation.finish = max_date
-                    operation.save()
-
-                Operationday.objects.filter(operation=operation, date__gt=operation.finish).exclude(id__in=days_with_items.values('id')).delete()
-
-            if operation.start > old_start:
-                min_date = days_with_items.filter(date__lt=operation.start).aggregate(min_date=Min('date'))['min_date']
-                if min_date:
-                    operation.start = min_date
-                    operation.save()
-
-                Operationday.objects.filter(operation=operation, date__lt=operation.start).exclude(id__in=days_with_items.values('id')).delete()
-
-            if operation.start < old_start:
-                current_date = operation.start
-                while current_date < old_start:
-                    operasyon_gun, created = Operationday.objects.get_or_create(
-                        date=current_date,
-                        operation=operation,
-                        defaults={'company': sirket}
-                    )
-                    current_date += timedelta(days=1)
-
-            action = ""
+            updated_operation = form.save(commit=False)
+            print(f"Eski: {tl_sales_price}, Yeni: {updated_operation.tl_sales_price}")
             if any([
-                old_follow_staff != operation.follow_staff,
-                old_buyer_company != operation.buyer_company,
-                old_start != operation.start,
-                old_finish != operation.finish,
-                old_passenger_info != operation.passenger_info,
-                old_ticket != operation.ticket,
-                old_usd_sales_price != operation.usd_sales_price,
-                old_tl_sales_price != operation.tl_sales_price,
-                old_eur_sales_price != operation.eur_sales_price,
-                old_rbm_sales_price != operation.rbm_sales_price,
-                old_number_passengers != operation.number_passengers,
-                old_payment_channel != operation.payment_channel,
-                old_payment_type != operation.payment_type
+                follow_staff != updated_operation.follow_staff,
+                buyer_company != updated_operation.buyer_company,
+                start != updated_operation.start,
+                finish != updated_operation.finish,
+                passenger_info != updated_operation.passenger_info,
+                ticket != updated_operation.ticket,
+                usd_sales_price != updated_operation.usd_sales_price,
+                tl_sales_price != updated_operation.tl_sales_price,
+                eur_sales_price != updated_operation.eur_sales_price,
+                rbm_sales_price != updated_operation.rbm_sales_price,
+                number_passengers != updated_operation.number_passengers,
+                sold != updated_operation.sold,
+                payment_channel != updated_operation.payment_channel,
+                payment_type != updated_operation.payment_type
             ]):
-                action = f"Operasyon Güncellendi. Operasyon ID : {operation.id}"
-                if old_follow_staff != operation.follow_staff:
-                    action += f" Takip Eden Personel: {old_follow_staff}>{operation.follow_staff}"
-                if old_buyer_company != operation.buyer_company:
-                    action += f" Alıcı Şirket: {old_buyer_company}>{operation.buyer_company}"
-                if old_start != operation.start:
-                    action += f" Başlangıç Tarihi: {old_start}>{operation.start}"
-                if old_finish != operation.finish:
-                    action += f" Bitiş Tarihi: {old_finish}>{operation.finish}"
-                if old_passenger_info != operation.passenger_info:
-                    action += f" Yolcu Bilgisi: {old_passenger_info}>{operation.passenger_info}"
-                if old_ticket != operation.ticket:
-                    action += f" Etiket : {old_ticket}>{operation.ticket}"
-                if old_usd_sales_price != operation.usd_sales_price:
-                    action += f" USD Satış Fiyatı: {old_usd_sales_price}>{operation.usd_sales_price}"
-                if old_tl_sales_price != operation.tl_sales_price:
-                    action += f" TL Satış Fiyatı: {old_tl_sales_price}>{operation.tl_sales_price}"
-                if old_eur_sales_price != operation.eur_sales_price:
-                    action += f" EUR Satış Fiyatı: {old_eur_sales_price}>{operation.eur_sales_price}"
-                if old_rbm_sales_price != operation.rbm_sales_price:
-                    action += f" RBM Satış Fiyatı: {old_rbm_sales_price}>{operation.rbm_sales_price}"
-                if old_number_passengers != operation.number_passengers:
-                    action += f" Yolcu Sayısı: {old_number_passengers}>{operation.number_passengers}"
-                if old_payment_type != operation.payment_type:
-                    action += f" Ödeme Türü: {old_payment_type}>{operation.payment_type}"
-                if old_payment_channel != operation.payment_channel:
-                    action += f" Ödeme Kanalı: {old_payment_channel}>{operation.payment_channel}"
+                updated_operation.save()  # Formu kaydet
 
-            if action:
+                # Bitiş tarihi değişikliğini kontrol et
+                if updated_operation.finish > finish:
+                    current_date = finish + timedelta(days=1)
+                    while current_date <= updated_operation.finish:
+                        Operationday.objects.get_or_create(
+                            date=current_date,
+                            operation=updated_operation,
+                            defaults={'company': sirket}
+                        )
+                        current_date += timedelta(days=1)
+
+                days_with_items = Operationday.objects.filter(operation=updated_operation).annotate(items_count=Count('operationitem')).filter(items_count__gt=0)
+
+                if updated_operation.finish < finish:
+                    max_date = days_with_items.filter(date__gt=updated_operation.finish).aggregate(max_date=Max('date'))['max_date']
+                    if max_date:
+                        updated_operation.finish = max_date
+                        updated_operation.save()
+
+                    Operationday.objects.filter(operation=updated_operation, date__gt=updated_operation.finish).exclude(id__in=days_with_items.values('id')).delete()
+
+                if updated_operation.start > start:
+                    min_date = days_with_items.filter(date__lt=updated_operation.start).aggregate(min_date=Min('date'))['min_date']
+                    if min_date:
+                        updated_operation.start = min_date
+                        updated_operation.save()
+
+                    Operationday.objects.filter(operation=updated_operation, date__lt=updated_operation.start).exclude(id__in=days_with_items.values('id')).delete()
+
+                if updated_operation.start < start:
+                    current_date = updated_operation.start
+                    while current_date < start:
+                        Operationday.objects.get_or_create(
+                            date=current_date,
+                            operation=updated_operation,
+                            defaults={'company': sirket}
+                        )
+                        current_date += timedelta(days=1)
+
+                action = f"Operasyon Güncellendi. Operasyon ID : {updated_operation.id}"
+                # Hangi alanların değiştiğini kontrol et
+                if follow_staff != updated_operation.follow_staff:
+                    action += f" Takip Eden Personel: {follow_staff}>{updated_operation.follow_staff}"
+                if buyer_company != updated_operation.buyer_company:
+                    action += f" Alıcı Şirket: {buyer_company}>{updated_operation.buyer_company}"
+                if start != updated_operation.start:
+                    action += f" Başlangıç Tarihi: {start}>{updated_operation.start}"
+                if finish != updated_operation.finish:
+                    action += f" Bitiş Tarihi: {finish}>{updated_operation.finish}"
+                if passenger_info != updated_operation.passenger_info:
+                    action += f" Yolcu Bilgisi: {passenger_info}>{updated_operation.passenger_info}"
+                if ticket != updated_operation.ticket:
+                    action += f" Etiket: {ticket}>{updated_operation.ticket}"
+                if usd_sales_price != updated_operation.usd_sales_price:
+                    action += f" USD Satış Fiyatı: {usd_sales_price}>{updated_operation.usd_sales_price}"
+                if tl_sales_price != updated_operation.tl_sales_price:
+                    action += f" TL Satış Fiyatı: {tl_sales_price}>{updated_operation.tl_sales_price}"
+                if eur_sales_price != updated_operation.eur_sales_price:
+                    action += f" EUR Satış Fiyatı: {eur_sales_price}>{updated_operation.eur_sales_price}"
+                if rbm_sales_price != updated_operation.rbm_sales_price:
+                    action += f" RBM Satış Fiyatı: {rbm_sales_price}>{updated_operation.rbm_sales_price}"
+                if number_passengers != updated_operation.number_passengers:
+                    action += f" Yolcu Sayısı: {number_passengers}>{updated_operation.number_passengers}"
+                if payment_type != updated_operation.payment_type:
+                    action += f" Ödeme Türü: {payment_type}>{updated_operation.payment_type}"
+                if payment_channel != updated_operation.payment_channel:
+                    action += f" Ödeme Kanalı: {payment_channel}>{updated_operation.payment_channel}"
+
                 try:
                     UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=action)
                 except Personel.DoesNotExist:
                     pass
 
-                notification_text = f"Ticket: {operation.ticket} Güncellendi. ID{operation.id} {action}"
+                notification_text = f"Ticket: {updated_operation.ticket} Güncellendi. ID{updated_operation.id} {action}"
                 notification_title = "Bir Operation Güncellendi. [Otomatik Bildirim]"
                 sender = requestPersonel
                 recipients_group = "Herkes"
@@ -914,10 +911,16 @@ def update_operation(request, operation_id):
                 recipients = Personel.objects.filter(company=sirket)
                 for recipient in recipients:
                     NotificationReceipt.objects.create(notification=notification, recipient=recipient)
-            update_operation_costs(operation)
-            messages.success(request, "Operasyon başarıyla güncellendi.")
-            return HttpResponse('Başarı ile kaydedildi.')
 
+                update_operation_costs(updated_operation)
+                messages.success(request, "Operasyon başarıyla güncellendi.")
+                return HttpResponse('Başarı ile kaydedildi.')
+            else:
+                messages.info(request, "Hiçbir değişiklik yapılmadı.")
+                return HttpResponse('Başarı ile kaydedildi.')
+        else:
+            print(f"Operation Hata2: {form.errors}")
+            return HttpResponse('Form kaydedilemedi.')
     else:
         form = OperationForm(instance=operation, request=request)
 
@@ -930,20 +933,12 @@ def update_operation(request, operation_id):
 
 def update_total_cost(operation_item, currency, price):
     if currency == "TL":
-        if operation_item.tl_cost_price is None:
-            operation_item.tl_cost_price = Decimal('0.00')
         operation_item.tl_cost_price += price
     elif currency == "USD":
-        if operation_item.usd_cost_price is None:
-            operation_item.usd_cost_price = Decimal('0.00')
         operation_item.usd_cost_price += price
     elif currency == "EUR":
-        if operation_item.eur_cost_price is None:
-            operation_item.eur_cost_price = Decimal('0.00')
         operation_item.eur_cost_price += price
     elif currency == "RMB":
-        if operation_item.rmb_cost_price is None:
-            operation_item.rmb_cost_price = Decimal('0.00')
         operation_item.rmb_cost_price += price
     operation_item.save()
 
@@ -967,6 +962,33 @@ def update_operation_costs(operation):
     operation.usd_cost_price = total_usd
     operation.eur_cost_price = total_eur
     operation.rbm_cost_price = total_rmb
+    operation.save()
+
+def add_operation_item(request, day_id):
+    requestPersonel = Personel.objects.get(user=request.user)
+    sirket = requestPersonel.company
+    operation_day = get_object_or_404(Operationday, id=day_id)
+    operation = operation_day.operation
+
+    if request.method == "POST":
+        bugun = datetime.now().date()
+        yarin = bugun + timedelta(days=1)
+        ertesigun = bugun + timedelta(days=2)
+        formitem = OperationitemForm(request.POST, request=request)
+        if formitem.is_valid():
+            operation_item = formitem.save(commit=False)
+            operation_item.day = operation_day
+            operation_item.company = sirket
+            operation_item.save()
+            formitem.save_m2m()  # ManyToMany alanları kaydet
+            operation_item.refresh_from_db()
+            return HttpResponse('Başarıyla Güncellendi.')
+        else:
+            print('Form geçersiz. Hatalar: ' + str(formitem.errors))
+    else:
+        formitem = OperationitemForm(request=request)
+
+    return render(request, 'tour/partials/add_operation_item.html', {'formitem': formitem, 'day_id': day_id, 'operation_day': operation_day, 'random_number': random.randint(1000, 9999)})
 
 
 @login_required
@@ -976,43 +998,22 @@ def update_or_add_operation_item(request, day_id, item_id=None):
     operation_day = get_object_or_404(Operationday, id=day_id)
     operation = operation_day.operation
     operation_item = None if item_id is None else get_object_or_404(Operationitem, id=item_id)
-    if operation_item:
-        if operation_item.driver:
-            old_driver = operation_item.driver
-            old_driver_phone = operation_item.driver_phone
-            old_plaka = operation_item.plaka
-        else:
-            old_driver = None
-            old_driver_phone = None
-            old_plaka = None
-        if operation_item.guide:
-            old_guide = operation_item.guide
-            old_guide_phone = operation_item.guide.phone
-        else:
-            old_guide = None
-            old_guide_phone = None
-        if operation_item.description:
-            old_description = operation_item.description
-        else:
-            old_description = None
-        if operation_item.pick_time:
-            old_pick_time = operation_item.pick_time
-        else:
-            old_pick_time = None
-        if operation_item.pick_location:
-            old_pick_location = operation_item.pick_location
-        else:
-            old_pick_location = None
-        if operation_item.tour:
-            old_tour = operation_item.tour
-        else:
-            old_tour = None
-        if operation_item.transfer:
-            old_transfer = operation_item.transfer
-        else:
-            old_transfer = None
+    action = ""
+
+    if operation_item and item_id:
+        old_driver = operation_item.driver
+        old_driver_phone = operation_item.driver_phone if operation_item.driver else None
+        old_plaka = operation_item.plaka if operation_item.driver else None
+        old_guide = operation_item.guide
+        old_guide_phone = operation_item.guide.phone if operation_item.guide else None
+        old_description = operation_item.description
+        old_pick_time = operation_item.pick_time
+        old_pick_location = operation_item.pick_location
+        old_tour = operation_item.tour
+        old_transfer = operation_item.transfer
+
     old_values = {}
-    if operation_item:
+    if operation_item and item_id:
         old_values = model_to_dict(operation_item, exclude=['id', 'day'])
         for field, value in old_values.items():
             if isinstance(getattr(operation_item, field), Manager):  # ManyToManyField'ları kontrol et
@@ -1020,6 +1021,7 @@ def update_or_add_operation_item(request, day_id, item_id=None):
             elif hasattr(getattr(operation_item, field), '__str__'):
                 old_values[field] = str(getattr(operation_item, field))
         action = f"Operasyon İçeriği Güncellendi. Operasyon Etiketi: {operation_item.day.operation.ticket}, Operasyon İtem ID: {operation_item.id}. Değişenler: "
+
 
     if request.method == "POST":
         bugun= datetime.now().date()
@@ -1036,76 +1038,96 @@ def update_or_add_operation_item(request, day_id, item_id=None):
             operation_item.eur_cost_price = 0
             operation_item.rmb_cost_price = 0
 
+
             operation_item.save()
             formitem.save_m2m()  # ManyToMany alanları kaydet
             operation_item.refresh_from_db()
-
-            if operation_item.tour:
-                if operation_item.supplier and operation_item.vehicle:
-                    cost = Cost.objects.filter(supplier=operation_item.supplier, tour=operation_item.tour).first()
-                    if cost:
-                        print(cost.id)
-                        if operation_item.vehicle == Vehicle.objects.get(id=38):
-                            vehicle = "BINEK"
-                            vehicle_price = cost.car
-                        if operation_item.vehicle == Vehicle.objects.get(id=39):
-                            vehicle = "MINIVAN"
-                            vehicle_price = cost.minivan
-                        if operation_item.vehicle == Vehicle.objects.get(id=40):
-                            vehicle = "MINIBUS"
-                            vehicle_price = cost.minibus
-                        if operation_item.vehicle == Vehicle.objects.get(id=41):
-                            vehicle = "MIDIBUS"
-                            vehicle_price = cost.midibus
-                        if operation_item.vehicle == Vehicle.objects.get(id=42):
-                            vehicle = "OTOBUS"
-                            vehicle_price = cost.bus
-                        operation_item.cost = cost
-                        operation_item.vehicle_price = vehicle_price
-                        operation_item.vehicle_currency = cost.currency
-                        vehicle_currency = cost.currency
-                        update_total_cost(operation_item, vehicle_currency, vehicle_price)
-                    else:
-                        print('cost bulunamadı')
-            if operation_item.transfer:
-                if operation_item.supplier and operation_item.vehicle:
-                    cost = Cost.objects.filter(supplier=operation_item.supplier, transfer=operation_item.transfer).first()
-                    if cost:
-                        if operation_item.vehicle == Vehicle.objects.get(id=38):
-                            vehicle = "BINEK"
-                            vehicle_price = cost.car
-                        if operation_item.vehicle == Vehicle.objects.get(id=39):
-                            vehicle = "MINIVAN"
-                            vehicle_price = cost.minivan
-                        if operation_item.vehicle == Vehicle.objects.get(id=40):
-                            vehicle = "MINIBUS"
-                            vehicle_price = cost.minibus
-                        if operation_item.vehicle == Vehicle.objects.get(id=41):
-                            vehicle = "MIDIBUS"
-                            vehicle_price = cost.midibus
-                        if operation_item.vehicle == Vehicle.objects.get(id=42):
-                            vehicle = "OTOBUS"
-                            vehicle_price = cost.bus
-                        operation_item.cost = cost
-                        operation_item.vehicle_price = vehicle_price
-                        operation_item.vehicle_currency = cost.currency
-                        vehicle_currency = cost.currency
-                        update_total_cost(operation_item, vehicle_currency, vehicle_price)
-                    else:
-                        print('cost bulunamadı')
-            if operation_item.activity and operation_item.activity_supplier:
-                activity_cost = Activitycost.objects.filter(activity=operation_item.activity, supplier=operation_item.activity_supplier).first()
-                if activity_cost:
-                    print(activity_cost)
-                    operation_item.activity_cost = activity_cost
-                    operation_item.activity_price = activity_cost.price
-                    operation_item.activity_currency = activity_cost.currency
-                    activity_price = activity_cost.price
-                    activity_currency = activity_cost.currency
-                    if operation_item.activity_payment == "Evet":
-                        update_total_cost(operation_item, activity_currency, activity_price)
+            if operation_item.manuel_vehicle_price and operation_item.manuel_vehicle_price != 0:
+                operation_item.vehicle_price = operation_item.manuel_vehicle_price
+                vehicle_currency = operation_item.vehicle_currency
+                vehicle_price = operation_item.vehicle_price
+                operation_item.save()
+                operation_item.refresh_from_db()
+                update_total_cost(operation_item, vehicle_currency, vehicle_price)
             else:
-                print('aktivite cost bulunamadı')
+                if operation_item.tour and operation_item.tour.route != "WALKING TUR IST":
+                    if operation_item.supplier and operation_item.vehicle:
+                        cost = Cost.objects.filter(supplier=operation_item.supplier, tour=operation_item.tour).first()
+                        if cost:
+                            if operation_item.vehicle == Vehicle.objects.get(id=38):
+                                vehicle = "BINEK"
+                                auot_vehicle_price = cost.car
+                            if operation_item.vehicle == Vehicle.objects.get(id=39):
+                                vehicle = "MINIVAN"
+                                auot_vehicle_price = cost.minivan
+                            if operation_item.vehicle == Vehicle.objects.get(id=40):
+                                vehicle = "MINIBUS"
+                                auot_vehicle_price = cost.minibus
+                            if operation_item.vehicle == Vehicle.objects.get(id=41):
+                                vehicle = "MIDIBUS"
+                                auot_vehicle_price = cost.midibus
+                            if operation_item.vehicle == Vehicle.objects.get(id=42):
+                                vehicle = "OTOBUS"
+                                auot_vehicle_price = cost.bus
+                            operation_item.cost = cost
+                            operation_item.auot_vehicle_price = auot_vehicle_price
+                            operation_item.vehicle_price = auot_vehicle_price
+                            operation_item.vehicle_currency = cost.currency
+                            vehicle_currency = cost.currency
+                            vehicle_price = operation_item.vehicle_price
+                            update_total_cost(operation_item, vehicle_currency, vehicle_price)
+                        else:
+                            print('cost bulunamadı')
+                if operation_item.transfer:
+                    if operation_item.supplier and operation_item.vehicle:
+                        cost = Cost.objects.filter(supplier=operation_item.supplier, transfer=operation_item.transfer).first()
+                        if cost:
+                            if operation_item.vehicle == Vehicle.objects.get(id=38):
+                                vehicle = "BINEK"
+                                auot_vehicle_price = cost.car
+                            if operation_item.vehicle == Vehicle.objects.get(id=39):
+                                vehicle = "MINIVAN"
+                                auot_vehicle_price = cost.minivan
+                            if operation_item.vehicle == Vehicle.objects.get(id=40):
+                                vehicle = "MINIBUS"
+                                auot_vehicle_price = cost.minibus
+                            if operation_item.vehicle == Vehicle.objects.get(id=41):
+                                vehicle = "MIDIBUS"
+                                auot_vehicle_price = cost.midibus
+                            if operation_item.vehicle == Vehicle.objects.get(id=42):
+                                vehicle = "OTOBUS"
+                                auot_vehicle_price = cost.bus
+                            operation_item.cost = cost
+                            operation_item.auot_vehicle_price = auot_vehicle_price
+                            operation_item.vehicle_price = auot_vehicle_price
+                            operation_item.vehicle_currency = cost.currency
+                            vehicle_currency = cost.currency
+                            vehicle_price = operation_item.vehicle_price
+                            update_total_cost(operation_item, vehicle_currency, vehicle_price)
+                        else:
+                            print('cost bulunamadı')
+            if operation_item.manuel_activity_price and operation_item.manuel_activity_price != 0:
+                operation_item.activity_price = operation_item.manuel_activity_price
+                activity_price = operation_item.activity_price
+                activity_currency = operation_item.activity_currency
+                operation_item.save()
+                operation_item.refresh_from_db()
+                update_total_cost(operation_item, activity_currency, activity_price)
+            else:
+                if operation_item.activity and operation_item.activity_supplier:
+                    activity_cost = Activitycost.objects.filter(activity=operation_item.activity, supplier=operation_item.activity_supplier).first()
+                    if activity_cost:
+                        print(activity_cost)
+                        operation_item.activity_cost = activity_cost
+                        operation_item.auto_activity_price = activity_cost.price
+                        operation_item.activity_currency = activity_cost.currency
+                        operation_item.activity_price = operation_item.auto_activity_price
+                        activity_price = activity_cost.price
+                        activity_currency = activity_cost.currency
+                        if operation_item.activity_payment == "Evet":
+                            update_total_cost(operation_item, activity_currency, activity_price)
+                else:
+                    print('aktivite cost bulunamadı')
 
             museum_currency = operation_item.museum_currency
             museum_price = operation_item.museum_price
@@ -1139,9 +1161,9 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                 if new_value != old_value:
                     changes_detected = True
                     verbose_name = operation_item._meta.get_field(field).verbose_name
-                    if isinstance(new_value, set):
-                        removed = old_value - new_value
-                        added = new_value - old_value
+                    if isinstance(new_value, set) and old_value is not None:
+                        removed = old_value - new_value if old_value is not None else set()
+                        added = new_value - old_value if new_value is not None else set()
                         if removed:
                             action += f"Çıkarılan {verbose_name}: {', '.join(str(x) for x in removed)} "
                         if added:
@@ -1149,7 +1171,11 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                     else:
                         action += f"{verbose_name} : {old_value} > {new_value} "
 
-            if action and changes_detected:  # Eğer değişiklik algılandıysa ve action doluysa, log kaydını oluştur
+                # action uzunluğunu kontrol et ve gerekiyorsa kes
+
+
+
+            if action and changes_detected:
                 UserActivityLog.objects.create(staff=requestPersonel, company=sirket, action=action)
 
             if action != f"Operasyon İçeriği Güncellendi. Operasyon Etiketi: {operation_item.day.operation.ticket}, Operasyon İtem ID: {operation_item.id}. Değişenler: ":
@@ -1339,52 +1365,119 @@ def check_ticket(request):
 def index(request):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
+
     if request.method == "POST":
         date = request.POST.get('date_job')
-        if request.POST.get('date_finish_job') != "":
-            finishdate = request.POST.get('date_finish_job')
-        else:
-            finishdate=None
-        if finishdate != None:
+        finishdate = request.POST.get('date_finish_job') if request.POST.get('date_finish_job') != "" else None
+
+        if finishdate:
             week_jobs = Operationitem.objects.filter(company=sirket, is_delete=False, day__date__range=(date, finishdate))
             date_parts = date.split('-')
             date_finish_parts = finishdate.split('-')
 
-            # Listenin sırasını tersine çevir
-            reversed_date_parts = date_parts[::-1]
-            reversed_date_parts2 = date_finish_parts[::-1]
-
-            # Ters çevrilmiş listeyi yazdır
-            reversed_date = '.'.join(reversed_date_parts)
-            reversed_date2 = '.'.join(reversed_date_parts2)
+            reversed_date = '.'.join(date_parts[::-1])
+            reversed_date2 = '.'.join(date_finish_parts[::-1])
             weektitle = f"{reversed_date} - {reversed_date2} Tarihli İşler"
         else:
             week_jobs = Operationitem.objects.filter(company=sirket, day__date=date, is_delete=False)
-            date_parts = date.split('-')
-
-            # Listenin sırasını tersine çevir
-            reversed_date_parts = date_parts[::-1]
-
-            # Ters çevrilmiş listeyi yazdır
-            reversed_date = '.'.join(reversed_date_parts)
+            reversed_date = '.'.join(date.split('-')[::-1])
             weektitle = f"{reversed_date} Tarihli İşler"
-
-
     else:
         week_jobs = None
         weektitle = "Tarih Giriniz"
-    # Dates
+
     today = datetime.today()
     tomorrow = today + timedelta(days=1)
     totomorrow = today + timedelta(days=2)
 
-    # Queries
     today_jobs = Operationitem.objects.filter(company=sirket, day__date=today, is_delete=False).order_by('pick_time')
     tomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=tomorrow, is_delete=False).order_by('pick_time')
     totomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=totomorrow, is_delete=False).order_by('pick_time')
-    # Python'da sıralama yapın
 
-    # Context
+    def set_row_class(jobs):
+        for job in jobs:
+            if job.operation_type in ['Tur', 'TurTransfer', 'TransferTur']:
+                if job.vehicle and job.supplier and job.pick_time:
+                    if job.hotel_payment == 'Evet':
+                        if job.hotel and job.hotel_price:
+                            if job.museum_payment == 'Evet':
+                                if job.new_museum and job.museum_price:
+                                    if job.activity_payment == 'Evet':
+                                        if job.activity and job.activity_price and job.activity_supplier:
+                                            if job.guide_var == 'Evet':
+                                                if job.guide and job.guide_price != 0:
+                                                    job.row_class = ""
+                                                else:
+                                                    job.row_class = "red_tr"
+                                            else:
+                                                job.row_class = ""
+                                        else:
+                                            job.row_class = "red_tr"
+                                    else:
+                                        job.row_class = ""
+                                else:
+                                    job.row_class = "red_tr"
+                            else:
+                                job.row_class = ""
+                        else:
+                            job.row_class = "red_tr"
+                    else:
+                        job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Transfer':
+                if job.vehicle and job.supplier and job.pick_time:
+                    if job.hotel_payment == 'Evet':
+                        if job.hotel and job.room_type and job.hotel_price:
+                            if job.museum_payment == 'Evet':
+                                if job.new_museum and job.museum_price:
+                                    if job.activity_payment == 'Evet':
+                                        if job.activity and job.activity_price and job.activity_supplier:
+                                            if job.guide_var == 'Evet':
+                                                if job.guide and job.guide_price != 0:
+                                                    job.row_class = ""
+                                                else:
+                                                    job.row_class = "red_tr"
+                                            else:
+                                                job.row_class = ""
+                                        else:
+                                            job.row_class = "red_tr"
+                                    else:
+                                        job.row_class = ""
+                                else:
+                                    job.row_class = "red_tr"
+                            else:
+                                job.row_class = ""
+                        else:
+                            job.row_class = "red_tr"
+                    else:
+                        job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Aktivite':
+                if job.activity_payment == 'Evet' and job.activity and job.pick_time and job.activity_price and job.activity_supplier:
+                    job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Müze':
+                if job.museum_payment == 'Evet' and job.new_museum and job.pick_time and job.museum_price:
+                    job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Rehber':
+                if job.guide_var == 'Evet' and job.guide and job.guide_price and job.guide_currency:
+                    job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            else:
+                job.row_class = ""
+
+    set_row_class(today_jobs)
+    set_row_class(tomorrow_jobs)
+    set_row_class(totomorrow_jobs)
+    if week_jobs:
+        set_row_class(week_jobs)
+
     context = {
         'today_jobs': today_jobs,
         'tomorrow_jobs': tomorrow_jobs,
@@ -1395,10 +1488,11 @@ def index(request):
         'totomorrowtitle': totomorrow,
         'weektitle': weektitle,
         'title': 'İşler',
-        'test' : 'test%20Mesajıdır'
+        'test': 'test%20Mesajıdır',
     }
 
     return render(request, 'tour/pages/index.html', context)
+
 @login_required
 def filtre(request):
     requestPersonel = Personel.objects.get(user=request.user)
@@ -1483,6 +1577,89 @@ def indexim(request):
     totomorrow_jobs = Operationitem.objects.filter(company=sirket, day__date=totomorrow, day__operation__follow_staff=requestPersonel, is_delete=False).order_by('pick_time')
     # Python'da sıralama yapın
 
+    def set_row_class(jobs):
+        for job in jobs:
+            if job.operation_type in ['Tur', 'TurTransfer', 'TransferTur']:
+                if job.vehicle and job.supplier and job.pick_time:
+                    if job.hotel_payment == 'Evet':
+                        if job.hotel and job.room_type and job.hotel_price:
+                            if job.museum_payment == 'Evet':
+                                if job.new_museum and job.museum_price:
+                                    if job.activity_payment == 'Evet':
+                                        if job.activity and job.activity_price and job.activity_supplier:
+                                            if job.guide_var == 'Evet':
+                                                if job.guide and job.guide_price != 0:
+                                                    job.row_class = ""
+                                                else:
+                                                    job.row_class = "red_tr"
+                                            else:
+                                                job.row_class = ""
+                                        else:
+                                            job.row_class = "red_tr"
+                                    else:
+                                        job.row_class = ""
+                                else:
+                                    job.row_class = "red_tr"
+                            else:
+                                job.row_class = ""
+                        else:
+                            job.row_class = "red_tr"
+                    else:
+                        job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Transfer':
+                if job.vehicle and job.supplier and job.pick_time:
+                    if job.hotel_payment == 'Evet':
+                        if job.hotel and job.room_type and job.hotel_price:
+                            if job.museum_payment == 'Evet':
+                                if job.new_museum and job.museum_price:
+                                    if job.activity_payment == 'Evet':
+                                        if job.activity and job.activity_price and job.activity_supplier:
+                                            if job.guide_var == 'Evet':
+                                                if job.guide and job.guide_price != 0:
+                                                    job.row_class = ""
+                                                else:
+                                                    job.row_class = "red_tr"
+                                            else:
+                                                job.row_class = ""
+                                        else:
+                                            job.row_class = "red_tr"
+                                    else:
+                                        job.row_class = ""
+                                else:
+                                    job.row_class = "red_tr"
+                            else:
+                                job.row_class = ""
+                        else:
+                            job.row_class = "red_tr"
+                    else:
+                        job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Aktivite':
+                if job.activity_payment == 'Evet' and job.activity and job.pick_time and job.activity_price and job.activity_supplier:
+                    job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Müze':
+                if job.museum_payment == 'Evet' and job.new_museum and job.pick_time and job.museum_price:
+                    job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            elif job.operation_type == 'Rehber':
+                if job.guide_var == 'Evet' and job.guide and job.guide_price and job.guide_currency:
+                    job.row_class = ""
+                else:
+                    job.row_class = "red_tr"
+            else:
+                job.row_class = ""
+
+    set_row_class(today_jobs)
+    set_row_class(tomorrow_jobs)
+    set_row_class(totomorrow_jobs)
+    if week_jobs:
+        set_row_class(week_jobs)
     # Context
     context = {
         'today_jobs': today_jobs,
@@ -2114,3 +2291,365 @@ def smsgonder(request):
     return render(request, 'tour/pages/smsgonder.html', context)
 
 
+def fetch_personnel_list(request):
+    request_personel = Personel.objects.get(user=request.user)
+    sirket = request_personel.company
+    personnel = Personel.objects.filter(company=sirket).exclude(id=request_personel.id).values('id', 'user__first_name')
+    return JsonResponse(list(personnel), safe=False)
+
+def fetch_chat_messages(request, personnel_id):
+    try:
+        user1 = request.user
+        user2 = User.objects.get(personel__id=personnel_id)
+        room = ChatRoom.get_or_create_room(user1, user2)
+        messages = Message.objects.filter(room=room).values('user__id', 'user__first_name', 'content', 'timestamp')
+        return JsonResponse(list(messages), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+def send_message(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            personnel_id = data.get('personnel_id')
+            content = data.get('content')
+
+            # Authenticated user
+            user1 = request.user
+            user2 = User.objects.get(personel__id=personnel_id)
+
+            # Get or create chat room between the two users
+            room = ChatRoom.get_or_create_room(user1, user2)
+
+            # Create a new message
+            message = Message.objects.create(user=user1, room=room, content=content)
+
+            # Return the user first name and message content
+            response_data = {
+                'user': {
+                    'id': user1.id,
+                    'first_name': user1.first_name
+                },
+                'content': message.content
+            }
+
+            return JsonResponse(response_data)
+
+        except Personel.DoesNotExist:
+            return JsonResponse({'error': 'Personnel does not exist.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+
+def gelir(request, month=None):
+    request_personel = Personel.objects.get(user=request.user)
+    sirket = request_personel.company
+    if not month:
+        month_sec = datetime.now().month
+    else:
+        month_sec = int(month)
+
+    odemeler = Cari.objects.filter(company=sirket, create_date__month=month_sec, is_delete=False).order_by("-create_date")
+    context={
+        'title' : 'Gelir Gider',
+        'odemeler'  : odemeler
+    }
+
+    return render(request, 'tour/pages/gelir.html', context)
+
+def grafik(request):
+    request_personel = Personel.objects.get(user=request.user)
+    sirket = request_personel.company
+    current_year = datetime.now().year
+    monthly_data = {
+        'aylar': [],
+        'satis': [],
+        'maliyet': [],
+        'kar': [],
+    }
+
+    for month in range(1, 13):
+        maliyet = Decimal('0.0')
+        satis = Decimal('0.0')
+        operations = Operation.objects.filter(finish__year=current_year, finish__month=month, company=sirket, is_delete=False)
+
+        for operation in operations:
+            update_operation_costs(operation)
+            start = operation.start
+            exchange = ExchangeRate.objects.filter(created_at__gte=start).order_by('created_at').first()
+            if exchange:
+                eur_cost_price = Decimal(operation.eur_cost_price or 0)
+                tl_cost_price = Decimal(operation.tl_cost_price or 0)
+                rbm_cost_price = Decimal(operation.rbm_cost_price or 0)
+                usd_cost_price = Decimal(operation.usd_cost_price or 0)
+
+                eur_sales_price = Decimal(operation.eur_sales_price or 0)
+                tl_sales_price = Decimal(operation.tl_sales_price or 0)
+                rbm_sales_price = Decimal(operation.rbm_sales_price or 0)
+                usd_sales_price = Decimal(operation.usd_sales_price or 0)
+
+                usd_to_eur = Decimal(exchange.usd_to_eur)
+                usd_to_try = Decimal(exchange.usd_to_try)
+                usd_to_rmb = Decimal(exchange.usd_to_rmb)
+
+                maliyet += (eur_cost_price / usd_to_eur) + (tl_cost_price / usd_to_try) + (rbm_cost_price / usd_to_rmb) + usd_cost_price
+                satis += (eur_sales_price / usd_to_eur) + (tl_sales_price / usd_to_try) + (rbm_sales_price / usd_to_rmb) + usd_sales_price
+            else:
+                exchange = ExchangeRate.objects.filter(created_at__lte=start).order_by('created_at').first()
+                if exchange:
+                    eur_cost_price = Decimal(operation.eur_cost_price or 0)
+                    tl_cost_price = Decimal(operation.tl_cost_price or 0)
+                    rbm_cost_price = Decimal(operation.rbm_cost_price or 0)
+                    usd_cost_price = Decimal(operation.usd_cost_price or 0)
+
+                    eur_sales_price = Decimal(operation.eur_sales_price or 0)
+                    tl_sales_price = Decimal(operation.tl_sales_price or 0)
+                    rbm_sales_price = Decimal(operation.rbm_sales_price or 0)
+                    usd_sales_price = Decimal(operation.usd_sales_price or 0)
+
+                    usd_to_eur = Decimal(exchange.usd_to_eur)
+                    usd_to_try = Decimal(exchange.usd_to_try)
+                    usd_to_rmb = Decimal(exchange.usd_to_rmb)
+
+                    maliyet += (eur_cost_price / usd_to_eur) + (tl_cost_price / usd_to_try) + (rbm_cost_price / usd_to_rmb) + usd_cost_price
+                    satis += (eur_sales_price / usd_to_eur) + (tl_sales_price / usd_to_try) + (rbm_sales_price / usd_to_rmb) + usd_sales_price
+
+        kar = satis - maliyet
+        monthly_data['aylar'].append(datetime(current_year, month, 1).strftime('%B'))
+        monthly_data['satis'].append(float(satis))
+        monthly_data['maliyet'].append(float(maliyet))
+        monthly_data['kar'].append(float(kar))
+
+    context = {
+        'title' : 'Grafik',
+        'monthly_data': monthly_data,
+    }
+    return render(request, 'tour/pages/grafik.html', context)
+
+
+
+def dashboard(request, month_sec=None):
+    request_personel = Personel.objects.get(user=request.user)  # Assuming you have imported Personel model
+    sirket = request_personel.company
+    current_year = datetime.now().year
+    today = datetime.now().date()  # Get today's date
+
+    if not month_sec:
+        month_sec = datetime.now().month
+    else:
+        month_sec = int(month_sec)  # Ensure month is an integer
+
+    monthly_data = {
+        'aylar': [],
+        'satis': [],
+        'maliyet': [],
+        'kar': [],
+        'marj': [],
+        'oran': [],
+        'tamam': [],
+        'devam': [],
+        'gelecek': [],
+    }
+
+    for month in range(1, 13):
+        maliyet = Decimal('0.0')
+        satis = Decimal('0.0')
+        operations = Operation.objects.filter(finish__year=current_year, finish__month=month, company=sirket, is_delete=False)
+        tamam = 0
+        devam = 0
+        gelecek = 0
+        tamam_is = 0
+        devam_is = 0
+        gelecek_is = 0
+        for operation in operations:
+            update_operation_costs(operation)
+            start = operation.start
+            finish = operation.finish
+
+            if start > today:
+                gelecek += 1
+            elif finish > today and start < today:
+                devam += 1
+            elif today > finish:
+                tamam += 1
+
+            exchange = ExchangeRate.objects.filter(created_at__gte=start).order_by('created_at').first()
+            if not exchange:
+                exchange = ExchangeRate.objects.filter(created_at__lte=start).order_by('-created_at').first()
+
+            if exchange:
+                eur_cost_price = Decimal(operation.eur_cost_price or 0)
+                tl_cost_price = Decimal(operation.tl_cost_price or 0)
+                rbm_cost_price = Decimal(operation.rbm_cost_price or 0)
+                usd_cost_price = Decimal(operation.usd_cost_price or 0)
+
+                eur_sales_price = Decimal(operation.eur_sales_price or 0)
+                tl_sales_price = Decimal(operation.tl_sales_price or 0)
+                rbm_sales_price = Decimal(operation.rbm_sales_price or 0)
+                usd_sales_price = Decimal(operation.usd_sales_price or 0)
+
+                usd_to_eur = Decimal(exchange.usd_to_eur)
+                usd_to_try = Decimal(exchange.usd_to_try)
+                usd_to_rmb = Decimal(exchange.usd_to_rmb)
+
+                try:
+                    maliyet += (eur_cost_price / usd_to_eur) + (tl_cost_price / usd_to_try) + (rbm_cost_price / usd_to_rmb) + usd_cost_price
+                except ZeroDivisionError:
+                    pass  # Handle appropriate error handling
+                try:
+                    satis += (eur_sales_price / usd_to_eur) + (tl_sales_price / usd_to_try) + (rbm_sales_price / usd_to_rmb) + usd_sales_price
+                except ZeroDivisionError:
+                    pass  # Handle appropriate error handling
+
+        kar = satis - maliyet
+        marj = (Decimal('0.0') if satis == 0 else Decimal(kar) / Decimal(satis) * Decimal(100.00))
+        oran = (Decimal('0.0') if maliyet == 0 else Decimal(kar) / Decimal(maliyet) * Decimal(100.00))
+        monthly_data['aylar'].append(datetime(current_year, month, 1).strftime('%B'))
+        monthly_data['satis'].append(float(satis))
+        monthly_data['maliyet'].append(float(maliyet))
+        monthly_data['kar'].append(float(kar))
+        monthly_data['marj'].append(float(marj))
+        monthly_data['oran'].append(float(oran))
+        monthly_data['tamam'].append(tamam)
+        monthly_data['devam'].append(devam)
+        monthly_data['gelecek'].append(gelecek)
+
+    if 1 <= month_sec <= 12:
+        month_marj = monthly_data['marj'][month_sec - 1]
+        month_oran = monthly_data['oran'][month_sec - 1]
+        gelir = monthly_data['satis'][month_sec - 1]
+        gider = monthly_data['maliyet'][month_sec - 1]
+        kazanc = monthly_data['kar'][month_sec - 1]
+        tamam_is = monthly_data['tamam'][month_sec - 1]
+        devam_is = monthly_data['devam'][month_sec - 1]
+        gelecek_is = monthly_data['gelecek'][month_sec - 1]
+    else:
+        month_marj = None
+        month_oran = None
+        gelir = None
+        gider = None
+        kazanc = None
+        tamam_is = 0
+        devam_is = 0
+        gelecek_is = 0
+    items = Operation.objects.filter(finish__year=current_year, finish__month=month_sec, company=sirket, is_delete=False)
+    context = {
+        'title': 'Grafik',
+        'monthly_data': monthly_data,
+        'month_marj': month_marj,
+        'month_oran': month_oran,
+        'gelir': gelir,
+        'gider': gider,
+        'kazanc': kazanc,
+        'tamam_is' : tamam_is,
+        'devam_is' : devam_is,
+        'gelecek_is' : gelecek_is,
+        'operations' : items,
+        'var' : False,
+    }
+
+    return render(request, 'tour/pages/dashboard.html', context)
+
+
+def hata_bildir(request):
+    url = "http://soap.netgsm.com.tr:8080/Sms_webservis/SMS?wsdl"
+    headers = {'content-type': 'text/xml'}
+    personel = Personel.objects.get(user = request.user)
+    company = personel.company
+    if request.method == 'POST':
+        item_id = request.POST.get('item')
+        message = request.POST.get('message')
+        item = get_object_or_404(Operationitem, id=item_id)
+        mesaj = ""
+        if item:
+            mesaj = f"{item.day.operation.ticket} grup kodlu turun {item.day.date.day}.{item.day.date.month} tarihinde hata tespit edildi. \n Hata: {message} \n {personel.user.first_name} {personel.user.last_name} {personel.job}"
+            alici = item.day.operation.follow_staff
+            if alici.phone:
+                    phone = alici.phone.strip()
+                    if phone.startswith('('):
+                        match = re.match(r'\((\d{3})\)\s*(\d{3})-(\d{4})', phone)
+                        if match:
+                            formatted_phone = match.group(1) + match.group(2) + match.group(3)
+                        else:
+                            pass
+                    elif phone.startswith('5'):
+                        formatted_phone = '0' + phone
+                    else:
+                        formatted_phone = phone
+
+                    body = f"""<?xml version="1.0"?>
+                        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                                    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <SOAP-ENV:Body>
+                                <ns3:smsGonder1NV2 xmlns:ns3="http://sms/">
+                                    <username>8503081334</username>
+                                    <password>6D18AD8</password>
+                                    <header>MNC GROUP</header>
+                                    <msg>{mesaj}</msg>
+                                    <gsm>{formatted_phone}</gsm>
+                                    <encoding>TR</encoding>
+                                    <filter>0</filter>
+                                    <startdate></startdate>
+                                    <stopdate></stopdate>
+                                </ns3:smsGonder1NV2>
+                            </SOAP-ENV:Body>
+                        </SOAP-ENV:Envelope>"""
+                    response = requests.post(url, data=body, headers=headers)
+                    log = UserActivityLog(
+                        company=company,
+                        staff=personel,
+                        action=f"Sms Gönderildi. SMS: {mesaj}"
+                    )
+                    log.save()
+                    return redirect(index)
+            else:
+                return redirect(indexim)
+
+    return redirect(index)
+
+from rest_framework import viewsets
+
+from .serializers import OperationItemSerializer
+
+class OperationItemViewSet(viewsets.ModelViewSet):
+    today = date.today()
+    queryset = Operationitem.objects.filter(day__date=today, is_delete=False).order_by('pick_time')
+    serializer_class = OperationItemSerializer
+
+
+
+def odeme_create(request):
+    personel = Personel.objects.get(user=request.user)
+    company = personel.company
+    if request.method == 'POST':
+        form = CariForm(request.POST, request.FILES)
+        if form.is_valid():
+            odeme = form.save(commit=False)  # commit=False kullanarak formu kaydetmeden önce instance'ı döndürüyoruz
+            odeme.company = company  # company alanını ayarlıyoruz
+            odeme.created_staff = personel  # created_staff alanını ayarlıyoruz
+            odeme.save()  # şimdi instance'ı kaydediyoruz
+            return redirect('gelir')
+    else:
+        form = CariForm()
+    return render(request, 'tour/pages/odeme.html', {'form': form})
+
+def odeme_update(request, pk):
+    cari = get_object_or_404(Cari, pk=pk)
+    if request.method == 'POST':
+        form = CariForm(request.POST, request.FILES, instance=cari)
+        if form.is_valid():
+            form.save()
+            return redirect('gelir')
+    else:
+        form = CariForm(instance=cari)
+    return render(request, 'cari_form.html', {'form': form})
+
+def odeme_delete(request, pk):
+    cari = get_object_or_404(Cari, pk=pk)
+    cari.is_delete = True
+    cari.save()
+    return redirect('gelir')

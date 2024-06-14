@@ -23,23 +23,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dsg_u_02)i!eva2o+cu!q&ar&38fxzesd$uj=ea1*we%w%jtro'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+SESSION_COOKIE_AGE = 2 * 60 * 60  # 2 saat (saniye cinsinden)
+SESSION_SAVE_EVERY_REQUEST = True
+LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/TourManagerV2/'
 
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'Core',
     'Login',
+    "chat",
+    'rest_framework',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Core.middlewares.AutoLogoutMiddleware',
 ]
 
 ROOT_URLCONF = 'TourManager.urls'
@@ -73,6 +88,21 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'TourManager.wsgi.application'
+ASGI_APPLICATION = "TourManager.asgi.application"
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                {
+                    "address": "redis://:4ugkT4pY6bGcI5LGl5fJ5KrVYuxC9PGT@redis-12956.c311.eu-central-1-1.ec2.redns.redis-cloud.com:12956",
+                }
+            ],
+        },
+    },
+}
 
 
 # Database
@@ -80,8 +110,15 @@ WSGI_APPLICATION = 'TourManager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'defnesera$TourManager',
+        'USER': 'defnesera',
+        'PASSWORD': 'Nurhak12.',
+        'HOST': 'defnesera.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES',
+        },
     }
 }
 

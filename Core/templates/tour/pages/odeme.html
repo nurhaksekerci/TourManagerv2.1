@@ -1,0 +1,205 @@
+{% extends "tour/base/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="text-center my-4">Ödeme İşlemleri</h1>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 align-self-end">
+                        <label for="{{ form.transaction_type.id_for_label }}">{{ form.transaction_type.label }}</label>
+                        {{ form.transaction_type }}
+                    </div>
+                    <div class="col-12 align-self-end" id="income_field" style="display: none;">
+                        <label for="{{ form.income.id_for_label }}">{{ form.income.label }}</label>
+                        {{ form.income }}
+                    </div>
+                    <div class="col-12 align-self-end" id="expense_field" style="display: none;">
+                        <label for="{{ form.expense.id_for_label }}">{{ form.expense.label }}</label>
+                        {{ form.expense }}
+                    </div>
+                    <div class="col-12 align-self-end" id="buyer_field" style="display: none;">
+                        <label for="{{ form.buyer_company.id_for_label }}">{{ form.buyer_company.label }}</label>
+                        {{ form.buyer_company }}
+                    </div>
+                    <div class="col-12 align-self-end" id="supplier_field" style="display: none;">
+                        <label for="{{ form.supplier.id_for_label }}">{{ form.supplier.label }}</label>
+                        {{ form.supplier }}
+                    </div>
+                    <div class="col-12 align-self-end" id="guide_field" style="display: none;">
+                        <label for="{{ form.guide.id_for_label }}">{{ form.guide.label }}</label>
+                        {{ form.guide }}
+                    </div>
+                    <div class="col-12 align-self-end" id="activity_supplier_field" style="display: none;">
+                        <label for="{{ form.activity_supplier.id_for_label }}">{{ form.activity_supplier.label }}</label>
+                        {{ form.activity_supplier }}
+                    </div>
+                    <div class="col-12 align-self-end" id="hotel_field" style="display: none;">
+                        <label for="{{ form.hotel.id_for_label }}">{{ form.hotel.label }}</label>
+                        {{ form.hotel }}
+                    </div>
+                    <div class="col-12 align-self-end additional-fields" style="display: none;">
+                        <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="col-12 align-self-end additional-fields" style="display: none;">
+                        <label for="{{ form.receipt.id_for_label }}">{{ form.receipt.label }}</label>
+                        {{ form.receipt }}
+                    </div>
+                    <div class="col-12 align-self-end additional-fields" style="display: none;">
+                        <label for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
+                        {{ form.price }}
+                    </div>
+                    <div class="col-12 align-self-end additional-fields" style="display: none;">
+                        <label for="{{ form.currency.id_for_label }}">{{ form.currency.label }}</label>
+                        {{ form.currency }}
+                    </div>
+                    <div class="col-4 align-self-end my-2 additional-fields" style="display: none;">
+                        <button class="btn btn-success" type="submit">Kaydet</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var transactionTypeField = document.querySelector('#id_transaction_type');
+        var incomeField = document.getElementById('income_field');
+        var expenseField = document.getElementById('expense_field');
+        var incomeSelectField = document.querySelector('#id_income');
+        var expenseSelectField = document.querySelector('#id_expense');
+        var buyerField = document.getElementById('buyer_field');
+        var buyerSelectField = buyerField.querySelector('select');
+        var supplierField = document.getElementById('supplier_field');
+        var guideField = document.getElementById('guide_field');
+        var activitySupplierField = document.getElementById('activity_supplier_field');
+        var hotelField = document.getElementById('hotel_field');
+        var additionalFields = document.querySelectorAll('.additional-fields');
+
+        function clearHiddenFields() {
+            var fieldsToClear = [
+                incomeField,
+                expenseField,
+                buyerField,
+                supplierField,
+                guideField,
+                activitySupplierField,
+                hotelField
+            ];
+            fieldsToClear.forEach(function(field) {
+                if (field.style.display === 'none') {
+                    var inputs = field.querySelectorAll('input, select');
+                    inputs.forEach(function(input) {
+                        input.value = '';
+                    });
+                }
+            });
+            additionalFields.forEach(function(field) {
+                if (field.style.display === 'none') {
+                    var inputs = field.querySelectorAll('input, select');
+                    inputs.forEach(function(input) {
+                        input.value = '';
+                    });
+                }
+            });
+        }
+
+        function toggleFields() {
+            clearHiddenFields(); // Clear hidden fields
+
+            // Reset all fields
+            incomeField.style.display = 'none';
+            expenseField.style.display = 'none';
+            buyerField.style.display = 'none';
+            supplierField.style.display = 'none';
+            activitySupplierField.style.display = 'none';
+            guideField.style.display = 'none';
+            hotelField.style.display = 'none';
+            additionalFields.forEach(function(field) {
+                field.style.display = 'none';
+            });
+
+            var transactionType = transactionTypeField.value;
+
+            if (transactionType === 'income') {
+                incomeField.style.display = 'block';
+                if (incomeSelectField.value) {
+                    buyerField.style.display = 'block';
+                }
+            } else if (transactionType === 'expense') {
+                expenseField.style.display = 'block';
+                var selectedExpense = expenseSelectField.value;
+                switch (selectedExpense) {
+                    case 'Arac':
+                        supplierField.style.display = 'block';
+                        break;
+                    case 'Aktivite':
+                        activitySupplierField.style.display = 'block';
+                        break;
+                    case 'Otel':
+                        hotelField.style.display = 'block';
+                        break;
+                    case 'Rehber':
+                        guideField.style.display = 'block';
+                        break;
+                    case 'Müze':
+                        additionalFields.forEach(function(field) {
+                            field.style.display = 'block';
+                        });
+                        break;
+                    case 'Maas':
+                        additionalFields.forEach(function(field) {
+                            field.style.display = 'block';
+                        });
+                        break;
+                    case 'Fatura':
+                        additionalFields.forEach(function(field) {
+                            field.style.display = 'block';
+                        });
+                        break;
+                    case 'Vergi':
+                        additionalFields.forEach(function(field) {
+                            field.style.display = 'block';
+                        });
+                        break;
+                    case 'Diğer':
+                        additionalFields.forEach(function(field) {
+                            field.style.display = 'block';
+                        });
+                        break;
+                }
+            }
+
+            if (transactionType === 'income' && buyerSelectField.value) {
+                additionalFields.forEach(function(field) {
+                    field.style.display = 'block';
+                });
+            } else if (transactionType === 'expense' && (supplierField.querySelector('select').value ||
+                guideField.querySelector('select').value ||
+                activitySupplierField.querySelector('select').value ||
+                hotelField.querySelector('select').value)) {
+                additionalFields.forEach(function(field) {
+                    field.style.display = 'block';
+                });
+            }
+        }
+
+        transactionTypeField.addEventListener('change', toggleFields);
+        incomeSelectField.addEventListener('change', toggleFields);
+        expenseSelectField.addEventListener('change', toggleFields);
+        buyerSelectField.addEventListener('change', toggleFields);
+        supplierField.querySelector('select').addEventListener('change', toggleFields);
+        guideField.querySelector('select').addEventListener('change', toggleFields);
+        activitySupplierField.querySelector('select').addEventListener('change', toggleFields);
+        hotelField.querySelector('select').addEventListener('change', toggleFields);
+        toggleFields();  // Initialize fields display on page load
+    });
+</script>
+{% endblock js %}

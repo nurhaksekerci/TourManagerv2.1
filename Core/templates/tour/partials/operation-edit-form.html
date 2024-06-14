@@ -43,14 +43,18 @@
                     <label for="{{ operation_form.rbm_sales_price.id_for_label }}">{{ operation_form.rbm_sales_price.label }}</label>
                     {{ operation_form.rbm_sales_price }}
                 </div>
-                <div class="col-md-2 align-self-end">
-                    <label for="{{ operation_form.payment_type.id_for_label }}">{{ operation_form.payment_type.label }}</label>
-                    {{ operation_form.payment_type }}
-                </div>
-                <div class="col-md-2 align-self-end">
-                    <label for="{{ operation_form.payment_channel.id_for_label }}">{{ operation_form.payment_channel.label }}</label>
-                    {{ operation_form.payment_channel }}
-                </div>
+                {% if operation_form.usd_sales_price.value != 0 or operation_form.eur_sales_price.value != 0 or operation_form.tl_sales_price.value != 0 or operation_form.rbm_sales_price.value != 0 %}
+                    {% if operation_form.sold.value == "Alındı" and operation_form.sold.value != None %}
+                        <div class="col-md-2 align-self-end">
+                            <label for="{{ operation_form.payment_type.id_for_label }}">{{ operation_form.payment_type.label }}</label>
+                            {{ operation_form.payment_type }}
+                        </div>
+                        <div class="col-md-2 align-self-end">
+                            <label for="{{ operation_form.payment_channel.id_for_label }}">{{ operation_form.payment_channel.label }}</label>
+                            {{ operation_form.payment_channel }}
+                        </div>
+                    {% endif %}
+                {% endif %}
                 <div class="col-md-2 align-self-end">
                     <label for="{{ operation_form.usd_sales_price.id_for_label }}">{{ operation_form.usd_activity_price.label }}</label>
                     {{ operation_form.usd_activity_price }}
@@ -67,6 +71,15 @@
                     <label for="{{ operation_form.rbm_sales_price.id_for_label }}">{{ operation_form.rbm_activity_price.label }}</label>
                     {{ operation_form.rbm_activity_price }}
                 </div>
+                {% if operation_form.usd_sales_price.value != 0 or operation_form.eur_sales_price.value != 0 or operation_form.tl_sales_price.value != 0 or operation_form.rbm_sales_price.value != 0 %}
+                    <div class="col-md-2 align-self-end">
+                        <label for="{{ operation_form.sold.id_for_label }}">Ödeme Durumu</label>
+                        {{ operation_form.sold }}
+                    </div>
+
+                {% endif %}
+            </div>
+            <div class="row">
                 <div class="col-md-8 align-self-end">
                     <label for="{{ operation_form.passenger_info.id_for_label }}">{{ operation_form.passenger_info.label }}</label>
                     {{ operation_form.passenger_info }}

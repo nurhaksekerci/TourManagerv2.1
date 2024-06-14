@@ -1,264 +1,129 @@
-{% if today.operation_type == 'Tur' or today.operation_type == 'TurTransfer' or today.operation_type == 'TransferTur' %}
-    {% if today.vehicle and today.supplier and today.pick_time %}
-        {% if today.hotel_payment == 'Evet' %}
-            {% if today.hotel and today.room_type and today.hotel_price %}
-                {% if today.museum_payment == 'Evet' %}
-                    {% if today.new_museum and today.museum_price %}
-                        {% if today.activity_payment == 'Evet' %}
-                            {% if today.activity and today.activity_price and today.activity_supplier %}
-                                {% if today.guide_var == 'Evet' %}
-                                    {% if today.guide and today.guide_price != 0 %}
-                                        <tr>
-                                    {% else %}
-                                        <tr class="red_tr">
-                                    {% endif %}
-                                {% else %}
-                                    <tr>
-                                {% endif %}
-                            {% else %}
-                                <tr class="red_tr">
-                            {% endif %}
-                        {% else %}
-                            <tr>
-                        {% endif %}
+{% with today=job %}
+<tr class="{% if today.row_class %}{{ today.row_class }}{% endif %}">
+
+    <td>{{ today.day.operation.follow_staff.user.get_full_name }}</td>
+    <td>
+    {% if today.day.operation.id %}
+        <a href="{% url 'update_operation' today.day.operation.id %}" style="color:
+            {% if today.day.operation.usd_sales_price or today.day.operation.eur_sales_price or today.day.operation.tl_sales_price or today.day.operation.rbm_sales_price %}
+                {% if today.day.operation.sold == 'Alındı' %}
+                    {% if today.day.operation.payment_channel %}
+                        black;
                     {% else %}
-                        <tr class="red_tr">
+                        green;
                     {% endif %}
                 {% else %}
-                    <tr>
+                    blue;
                 {% endif %}
             {% else %}
-                <tr class="red_tr">
+                red;
             {% endif %}
-        {% elif today.museum_payment == 'Evet' %}
-            {% if today.new_museum and today.museum_price %}
-                {% if today.activity_payment == 'Evet' %}
-                    {% if today.activity and today.activity_price and today.activity_supplier %}
-                        {% if today.guide_var == 'Evet' %}
-                            {% if today.guide and today.guide_price != 0 %}
-                                <tr>
-                            {% else %}
-                                <tr class="red_tr">
-                            {% endif %}
-                        {% else %}
-                            <tr>
-                        {% endif %}
-                    {% else %}
-                        <tr class="red_tr">
-                    {% endif %}
-                {% else %}
-                    <tr>
-                {% endif %}
-            {% else %}
-                <tr class="red_tr">
-            {% endif %}
-        {% elif today.activity_payment == 'Evet' %}
-            {% if today.activity and today.activity_price and today.activity_supplier %}
-                {% if today.guide_var == 'Evet' %}
-                    {% if today.guide and today.guide_price != 0 %}
-                        <tr>
-                    {% else %}
-                        <tr class="red_tr">
-                    {% endif %}
-                {% else %}
-                    <tr>
-                {% endif %}
-            {% else %}
-                <tr class="red_tr">
-            {% endif %}
-        {% elif today.guide_var == 'Evet' %}
-            {% if today.guide and today.guide_price != 0 %}
-                <tr>
-            {% else %}
-                <tr class="red_tr">
-            {% endif %}
-        {% else %}
-            <tr>
-        {% endif %}
+        ">
+            {{ today.day.operation.ticket|default:"----" }}
+        </a>
     {% else %}
-        <tr class="red_tr">
+        {{ today.day.operation.ticket|default:"----" }}
     {% endif %}
-{% elif today.operation_type == 'Transfer' %}
-    {% if today.vehicle and today.supplier and today.pick_time %}
-        {% if today.hotel_payment == 'Evet' %}
-            {% if today.hotel and today.room_type and today.hotel_price %}
-                {% if today.museum_payment == 'Evet' %}
-                    {% if today.new_museum and today.museum_price %}
-                        {% if today.activity_payment == 'Evet' %}
-                            {% if today.activity and today.activity_price and today.activity_supplier %}
-                                <tr>
-                            {% else %}
-                                <tr class="red_tr">
-                            {% endif %}
-                        {% else %}
-                            <tr>
-                        {% endif %}
-                    {% else %}
-                        <tr class="red_tr">
-                    {% endif %}
-                {% else %}
-                    <tr>
-                {% endif %}
-            {% else %}
-                <tr class="red_tr">
-            {% endif %}
-        {% elif today.museum_payment == 'Evet' %}
-            {% if today.new_museum and today.museum_price %}
-                {% if today.activity_payment == 'Evet' %}
-                    {% if today.activity and today.activity_price and today.activity_supplier %}
-                        <tr>
-                    {% else %}
-                        <tr class="red_tr">
-                    {% endif %}
-                {% else %}
-                    <tr>
-                {% endif %}
-            {% else %}
-                <tr class="red_tr">
-            {% endif %}
-        {% elif today.activity_payment == 'Evet' %}
-            {% if today.activity and today.activity_price and today.activity_supplier %}
-                <tr>
-            {% else %}
-                <tr class="red_tr">
-            {% endif %}
-        {% else %}
-            <tr>
-        {% endif %}
-    {% else %}
-        <tr class="red_tr">
-    {% endif %}
-
-
-{% elif today.operation_type == 'Aktivite' %}
-    {% if today.activity_payment == 'Evet' and today.activity and today.pick_time and today.activity_price and today.activity_supplier %}
-        <tr>
-    {% else %}
-        <tr class="red_tr">
-    {% endif %}
-{% elif today.operation_type == 'Müze' %}
-    {% if today.museum_payment == 'Evet' and today.new_museum and today.pick_time and today.museum_price %}
-        <tr>
-    {% else %}
-        <tr class="red_tr">
-    {% endif %}
-{% else %}
-    <tr>
-{% endif %}
-    {% if request.user.personel.first.job == "Operasyon Şefi" or request.user.personel.first.job == "Yönetim" or request.user.personel.first.job == "Sistem Geliştiricisi" %}
-        <td>{{ today.day.operation.follow_staff.user.first_name }} {{ today.day.operation.follow_staff.user.last_name }}</td>
-
-        <td><a href="{% url 'update_operation' today.day.operation.id %}">{{ today.day.operation.ticket|default:"----" }}</a></td>
-        <td>{{ today.operation_type|default:"----" }}</td>
-        <td>{{ today.description|default:"----" }}</td>
-        <td>{{ today.pick_time|time:"H:i"|default:"----" }}</td>
-        <td>{{ today.pick_location|default:"----" }}</td>
-
-        <td>{{ today.tour|default:"---" }}</td>
-        <td>{{ today.transfer|default:"----" }}</td>
-        <td>{{ today.vehicle|default:"----" }}</td>
-        <td>{{ today.supplier|default:"----" }}</td>
-
-        <td>{{ today.hotel|default:"----" }}</td>
-
-        <td>{{ today.activity|default:"----" }}</td>
-        <td>{{ today.activity_supplier|default:"----" }}</td>
-        <td>{{ today.activity_price|default:"----" }}</td>
-
-        <td>
-            {% with museums=today.new_museum.all %}
-                {% if museums.exists %}
-                    {% for museum in museums %}
-                        {{ forloop.counter }}) {{ museum.name }}{% if not forloop.last %}, {% endif %}<br>
-                    {% endfor %}
-                {% else %}
-                    ----
-                {% endif %}
-            {% endwith %}
-        </td>
-
-
-        <td>{{ today.museum_price|default:"----" }}</td>
-
-
-
-        <td>{{ today.guide|default:"----" }}</td>
-        <td>{{ today.guide_var|default:"----" }}</td>
-        <td>{{ today.guide_price|default:"----" }}</td>
-        <td>{{ today.driver|default:"----" }}</td>
-        <td>{{ today.driver_phone|default:"----" }}</td>
-        <td>{{ today.plaka|default:"----" }}</td>
-        <td class="text-center">
-    <a target="_blank" href="https://wa.me/send?phone=905533836533&text=Grup%20Kodu:%20{{ today.day.operation.ticket }}%0A
-Tarih:%20{{ today.day.date|date:'d.m.Y' }}{% if today.operation_type %}%0A
-İşlem%20Turu:%20{{ today.operation_type }}{% endif %}{% if today.description %}%0A
-Açıklama:%20{{ today.description }}{% endif %}{% if today.tour %}%0A
-Tur:%20{{ today.tour }}{% endif %}{% if today.transfer %}%0A
-Transfer:%20{{ today.transfer }}{% endif %}{% if today.pick_time %}%0A
-Alış%20Saati:%20{{ today.pick_time|time:'H:i' }}{% endif %}{% if today.release_location %}%0A
-Bırakma%20Yeri:%20{{ today.release_location }}{% endif %}{% if today.pick_location %}%0A
-Alış%20Yeri:%20{{ today.pick_location }}{% endif %}{% if today.vehicle %}%0A
-Araç:%20{{ today.vehicle }}{% endif %}{% if today.hotel %}%0A
-Otel:%20{{ today.hotel }}{% endif %}{% with museums=today.new_museum.all %}{% if museums.exists %}%0A
-Müzeler:%20{% for museum in museums %}{{ forloop.counter }})%20{{ museum.name }}{% if not forloop.last %},%20{% endif %}{% endfor %}{% endif %}{% endwith %}{% if today.guide %}%0A
-Rehber:%20{{ today.guide }}{% endif %}">
-        <i class="fab fa-whatsapp"></i>
-    </a>
 </td>
 
-
-    {% else %}
-
-        <td><a href="{% url 'update_operation' today.day.operation.id %}">{{ today.day.operation.ticket|default:"----" }}</a></td>
-        <td>{{ today.operation_type|default:"----" }}</td>
-        <td>{{ today.description|default:"----" }}</td>
-        <td>{{ today.pick_time|time:"H:i"|default:"----" }}</td>
-        <td>{{ today.pick_location|default:"----" }}</td>
-
-        <td>{{ today.tour|default:"---" }}</td>
-        <td>{{ today.transfer|default:"----" }}</td>
-        <td>{{ today.vehicle|default:"----" }}</td>
-        <td>{{ today.supplier|default:"----" }}</td>
-
-        <td>{{ today.hotel|default:"----" }}</td>
-
-        <td>{{ today.activity|default:"----" }}</td>
-        <td>{{ today.activity_supplier|default:"----" }}</td>
+    <td>{{ today.operation_type|default:"----" }}</td>
+    <td>{{ today.description|default:"----" }}</td>
+    <td>{{ today.pick_time|time:"H:i"|default:"----" }}</td>
+    <td>{{ today.pick_location|default:"----" }}</td>
+    <td>{{ today.tour|default:"----" }}</td>
+    <td>{{ today.transfer|default:"----" }}</td>
+    <td>{{ today.vehicle|default:"----" }}</td>
+    <td>{{ today.supplier|default:"----" }}</td>
+    <td>{{ today.hotel|default:"----" }}</td>
+    <td>
+        {% if today.hotel_price %}
+            {{ today.hotel_price }} {{ today.hotel_currency|default:"" }}
+        {% else %}
+            ----
+        {% endif %}
+    </td>
+    <td>{{ today.activity|default:"----" }}</td>
+    <td>{{ today.activity_supplier|default:"----" }}</td>
+    <td>
         {% if today.activity_price %}
-            <td>Dolu</td>
+            {{ today.activity_price }} {{ today.activity_currency|default:"" }}
         {% else %}
-            <td>----</td>
+            ----
         {% endif %}
-        <td>
-            {% with museums=today.new_museum.all %}
-                {% if museums.exists %}
-                    {% for museum in museums %}
-                        {{ forloop.counter }}) {{ museum.name }}{% if not forloop.last %}, {% endif %}<br>
-                    {% endfor %}
-                {% else %}
-                    ----
-                {% endif %}
-            {% endwith %}
-        </td>
-
+    </td>
+    <td>
+        {% with museums=today.new_museum.all %}
+            {% if museums.exists %}
+                {% for museum in museums %}
+                    {{ forloop.counter }}) {{ museum.name }}{% if not forloop.last %}, {% endif %}<br>
+                {% endfor %}
+            {% else %}
+                ----
+            {% endif %}
+        {% endwith %}
+    </td>
+    <td>
         {% if today.museum_price %}
-            <td>Dolu</td>
+            {{ today.museum_price }} {{ today.museum_currency|default:"" }}
         {% else %}
-            <td>----</td>
+            ----
         {% endif %}
-
-
-
-        <td>{{ today.guide|default:"----" }}</td>
-        <td>{{ today.guide_var|default:"----" }}</td>
+    </td>
+    <td>{{ today.guide|default:"----" }}</td>
+    <td>{{ today.guide_var|default:"----" }}</td>
+    <td>
         {% if today.guide_price %}
-            <td>Dolu</td>
+            {{ today.guide_price }} {{ today.guide_currency|default:"" }}
         {% else %}
-            <td>----</td>
+            ----
         {% endif %}
+    </td>
 
-        <td>{{ today.driver|default:"----" }}</td>
-        <td>{{ today.driver_phone|default:"----" }}</td>
-        <td>{{ today.plaka|default:"----" }}</td>
-    {% endif %}
+    <td>{{ today.driver|default:"----" }}</td>
+    <td>{{ today.driver_phone|default:"----" }}</td>
+    <td>{{ today.plaka|default:"----" }}</td>
+    <td class="text-center">
+        <a target="_blank" href="https://wa.me/send?phone={% if request.user.username == 'DAMLA' %}905304874388{% else %}905533836533{% endif %}&text=Grup%20Kodu:%20{{ today.day.operation.ticket }}%0A
+            Tarih:%20{{ today.day.date|date:'d.m.Y' }}{% if today.operation_type %}%0A
+            İşlem%20Turu:%20{{ today.operation_type }}{% endif %}{% if today.description %}%0A
+            Açıklama:%20{{ today.description }}{% endif %}{% if today.tour %}%0A
+            Tur:%20{{ today.tour }}{% endif %}{% if today.transfer %}%0A
+            Transfer:%20{{ today.transfer }}{% endif %}{% if today.pick_time %}%0A
+            Alış%20Saati:%20{{ today.pick_time|time:'H:i' }}{% endif %}{% if today.release_location %}%0A
+            Bırakma%20Yeri:%20{{ today.release_location }}{% endif %}{% if today.pick_location %}%0A
+            Alış%20Yeri:%20{{ today.pick_location }}{% endif %}{% if today.vehicle %}%0A
+            Araç:%20{{ today.vehicle }}{% endif %}{% if today.hotel %}%0A
+            Otel:%20{{ today.hotel }}{% endif %}{% with museums=today.new_museum.all %}{% if museums.exists %}%0A
+            Müzeler:%20{% for museum in museums %}{{ forloop.counter }})%20{{ museum.name }}{% if not forloop.last %},%20{% endif %}{% endfor %}{% endif %}{% endwith %}{% if today.guide %}%0A
+            Rehber:%20{{ today.guide }}{% endif %}">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </td>
+    <td>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Modal{{today.id}}">
+          Hata
+        </button>
+    </td>
 </tr>
+<div class="modal fade" id="Modal{{today.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form action="{% url 'hata_bildir' %}" method="POST">
+            {% csrf_token %}
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">{{ today.day.operation.ticket }} Grup kodlu turda hata tespit ettim.</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <input name="item" class="d-none" value="{{ today.id }}">
+            <textarea name="message" class="w-100"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            <button type="submit" class="btn btn-primary">Gönder</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endwith %}
