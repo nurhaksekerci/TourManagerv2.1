@@ -1,8 +1,114 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.text import slugify
 
 
+CITY_CHOICES = (
+    ('Adana', 'Adana'),
+    ('Adıyaman', 'Adıyaman'),
+    ('Afyonkarahisar', 'Afyonkarahisar'),
+    ('Ağrı', 'Ağrı'),
+    ('Aksaray', 'Aksaray'),
+    ('Amasya', 'Amasya'),
+    ('Ankara', 'Ankara'),
+    ('Antalya', 'Antalya'),
+    ('Ardahan', 'Ardahan'),
+    ('Artvin', 'Artvin'),
+    ('Aydın', 'Aydın'),
+    ('Balıkesir', 'Balıkesir'),
+    ('Bartın', 'Bartın'),
+    ('Batman', 'Batman'),
+    ('Bayburt', 'Bayburt'),
+    ('Bilecik', 'Bilecik'),
+    ('Bingöl', 'Bingöl'),
+    ('Bitlis', 'Bitlis'),
+    ('Bolu', 'Bolu'),
+    ('Burdur', 'Burdur'),
+    ('Bursa', 'Bursa'),
+    ('Çanakkale', 'Çanakkale'),
+    ('Çankırı', 'Çankırı'),
+    ('Çorum', 'Çorum'),
+    ('Denizli', 'Denizli'),
+    ('Diyarbakır', 'Diyarbakır'),
+    ('Düzce', 'Düzce'),
+    ('Edirne', 'Edirne'),
+    ('Elazığ', 'Elazığ'),
+    ('Erzincan', 'Erzincan'),
+    ('Erzurum', 'Erzurum'),
+    ('Eskişehir', 'Eskişehir'),
+    ('Gaziantep', 'Gaziantep'),
+    ('Giresun', 'Giresun'),
+    ('Gümüşhane', 'Gümüşhane'),
+    ('Hakkari', 'Hakkari'),
+    ('Hatay', 'Hatay'),
+    ('Iğdır', 'Iğdır'),
+    ('Isparta', 'Isparta'),
+    ('İstanbul', 'İstanbul'),
+    ('İstanbul (Avrupa)', 'İstanbul (Avrupa)'),
+    ('İstanbul (Anadolu)', 'İstanbul (Anadolu)'),
+    ('İzmir', 'İzmir'),
+    ('Kahramanmaraş', 'Kahramanmaraş'),
+    ('Karabük', 'Karabük'),
+    ('Karaman', 'Karaman'),
+    ('Kars', 'Kars'),
+    ('Kastamonu', 'Kastamonu'),
+    ('Kayseri', 'Kayseri'),
+    ('Kırıkkale', 'Kırıkkale'),
+    ('Kırklareli', 'Kırklareli'),
+    ('Kırşehir', 'Kırşehir'),
+    ('Kilis', 'Kilis'),
+    ('Kocaeli', 'Kocaeli'),
+    ('Konya', 'Konya'),
+    ('Kütahya', 'Kütahya'),
+    ('Malatya', 'Malatya'),
+    ('Manisa', 'Manisa'),
+    ('Mardin', 'Mardin'),
+    ('Mersin', 'Mersin'),
+    ('Muğla', 'Muğla'),
+    ('Muş', 'Muş'),
+    ('Nevşehir', 'Nevşehir'),
+    ('Niğde', 'Niğde'),
+    ('Ordu', 'Ordu'),
+    ('Osmaniye', 'Osmaniye'),
+    ('Rize', 'Rize'),
+    ('Sakarya', 'Sakarya'),
+    ('Samsun', 'Samsun'),
+    ('Siirt', 'Siirt'),
+    ('Sinop', 'Sinop'),
+    ('Sivas', 'Sivas'),
+    ('Şanlıurfa', 'Şanlıurfa'),
+    ('Şırnak', 'Şırnak'),
+    ('Tekirdağ', 'Tekirdağ'),
+    ('Tokat', 'Tokat'),
+    ('Trabzon', 'Trabzon'),
+    ('Tunceli', 'Tunceli'),
+    ('Uşak', 'Uşak'),
+    ('Van', 'Van'),
+    ('Yalova', 'Yalova'),
+    ('Yozgat', 'Yozgat'),
+    ('Zonguldak', 'Zonguldak'),
+    ('Türkiye', 'Türkiye'),
+    ('Marmara', 'Marmara'),
+    ('Ege', 'Ege'),
+    ('Akdeniz', 'Akdeniz'),
+    ('İç Anadolu', 'İç Anadolu'),
+    ('Doğu Anadolu', 'Doğu Anadolu'),
+    ('Güneydoğu Anadolu', 'Güneydoğu Anadolu'),
+    ('Karadeniz', 'Karadeniz'),
+)
+
+CURRENCY_CHOICES = (
+    ('TL', 'TL'),
+    ('USD', 'USD'),
+    ('EUR', 'EUR'),
+    ('RMB', 'RMB'),
+
+)
+TRUE_FALSE_CHOICES = (
+    ('Yes', 'Yes'),
+    ('No', 'No'),
+)
 # Create your models here.
 # Create your models here.
 class Sirket(models.Model):
@@ -16,13 +122,63 @@ class Sirket(models.Model):
     start = models.DateField(verbose_name="Başlama Tarihi")
     finish = models.DateField(verbose_name="Bitiş Tarihi")
     is_active = models.BooleanField(verbose_name="Aktif mi?")
+    logo = models.ImageField(verbose_name="Logo", upload_to='company_logos/', null=True, blank=True)
     statu = models.CharField(max_length=20, choices=STATU_CHOICES, verbose_name="Statü", default="demo")
     created_at = models.DateField(verbose_name="Kurulma Tarihi", auto_now_add=True, blank=True, null=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
-
+    slug = models.SlugField(verbose_name="Slug", unique=True, blank=True, null=True)
+    updated_at = models.DateField(verbose_name="Güncelleme Tarihi", auto_now=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self.generate_unique_slug()
+        super(Sirket, self).save(*args, **kwargs)
+
+    def generate_unique_slug(self):
+        original_slug = slugify(self.name.replace('ı', 'i').replace('İ', 'I'))
+        slug = original_slug
+        counter = 1
+        while Sirket.objects.filter(slug=slug).exists():
+            slug = f"{original_slug}-{counter}"
+            counter += 1
+        return slug
+
+class Plan(models.Model):
+    PLAN_NAME_CHOICES = (
+        ('demo', 'Demo'),
+        ('basic', 'Basic'),
+        ('team', 'Team'),
+        ('professional', 'Professional'),
+    )
+
+    name = models.CharField(max_length=20, choices=PLAN_NAME_CHOICES, verbose_name="Plan Name")
+    description = models.TextField(verbose_name="Description", blank=True, null=True)
+    monthly_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monthly Price", default=0)
+    yearly_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Yearly Price", default=0)
+    is_active = models.BooleanField(default=True, verbose_name="Is Active")
+    created_at = models.DateField(auto_now_add=True, verbose_name="Created At")
+    updated_at = models.DateField(auto_now=True, verbose_name="Updated At")
+    slug = models.SlugField(unique=True, verbose_name="Slug")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self.generate_unique_slug()
+        super(Plan, self).save(*args, **kwargs)
+
+    def generate_unique_slug(self):
+        original_slug = slugify(dict(self.PLAN_NAME_CHOICES).get(self.name, self.name))
+        slug = original_slug
+        counter = 1
+        while Plan.objects.filter(slug=slug).exists():
+            slug = f"{original_slug}-{counter}"
+            counter += 1
+        return slug
+
+    def __str__(self):
+        return self.get_name_display()
 
 class Personel(models.Model):
     JOB_CHOICES = (
@@ -32,10 +188,15 @@ class Personel(models.Model):
         ('Muhasebe', 'Muhasebe'),
         ('Sistem Geliştiricisi', 'Sistem Geliştiricisi'),
     )
+    GENDER_CHOICES = (
+        ('man', 'Man'),
+        ('woman', 'Woman'),
+    )
     user = models.ForeignKey(User, verbose_name="User", on_delete=models.CASCADE, related_name='personel')
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     is_active = models.BooleanField(verbose_name="Aktif mi?", default=True)
     phone = models.CharField(verbose_name="Telefon", max_length=50, blank=True, null=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default="man", verbose_name="Gender")
     job = models.CharField(max_length=20, choices=JOB_CHOICES, verbose_name="Görevi", default="Satış Personeli")
     created_at = models.DateField(verbose_name="Kurulma Tarihi", auto_now_add=True, blank=True, null=True)
     dark_mode = models.BooleanField(verbose_name="Dark Mode", default=False)
@@ -45,9 +206,21 @@ class Personel(models.Model):
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name.upper()
 
+class Konum(models.Model):
+    company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
+    route = models.CharField(verbose_name="Konum", max_length=155)
+    is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
+
+    def __str__(self):
+        return self.route
+
 class Tour(models.Model):
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     route = models.CharField(verbose_name="Güzergah", max_length=155)
+    start_city = models.CharField(verbose_name="Başlangıç Şehri", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
+    finish_city = models.CharField(verbose_name="Bitiş Şehri", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
+    created_at = models.DateField(verbose_name="Kurulma Tarihi", auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateField(verbose_name="Güncelleme Tarihi", auto_now=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
     def __str__(self):
@@ -56,10 +229,33 @@ class Tour(models.Model):
 class Transfer(models.Model):
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     route = models.CharField(verbose_name="Güzergah", max_length=155)
+    start_city = models.CharField(verbose_name="Başlangıç Şehri", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
+    finish_city = models.CharField(verbose_name="Bitiş Şehri", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
+    created_at = models.DateField(verbose_name="Kurulma Tarihi", auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateField(verbose_name="Güncelleme Tarihi", auto_now=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
     def __str__(self):
         return self.route
+
+
+class TourRoute(models.Model):
+    company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
+    tour=models.ForeignKey(Tour, verbose_name="Tur", on_delete=models.CASCADE)
+    konum=models.ForeignKey(Konum, verbose_name="Konum", on_delete=models.CASCADE)
+    is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
+
+    def __str__(self):
+        return f"{self.tour} {self.konum}"
+
+class TransferRoute(models.Model):
+    company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
+    transfer=models.ForeignKey(Transfer, verbose_name="Tur", on_delete=models.CASCADE)
+    konum=models.ForeignKey(Konum, verbose_name="Konum", on_delete=models.CASCADE)
+    is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
+
+    def __str__(self):
+        return f"{self.transfer} {self.konum}"
 
 class Vehicle(models.Model):
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
@@ -70,77 +266,63 @@ class Vehicle(models.Model):
     def __str__(self):
         return self.vehicle
 
+
+
 class Guide(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
-    )
+
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="Adı", max_length=155)
     city = models.CharField(verbose_name="Şehir", max_length=155)
+    new_city = models.CharField(verbose_name="Şehir", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
     doc_no = models.CharField(verbose_name="Rehber No", max_length=155, blank=True, null=True)
     phone = models.CharField(verbose_name="Telefon No", max_length=155)
     mail = models.CharField(verbose_name="Mail", max_length=155, blank=True, null=True)
     price = models.DecimalField(verbose_name="Ücreti", max_digits=10, decimal_places=2, default=0)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Para Birimi", default="TL")
+    location = models.ForeignKey(Konum, verbose_name="Location", on_delete=models.CASCADE, blank=True, null=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
     def __str__(self):
         return f"{self.city} - {self.name}"
 
 class Hotel(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
-    )
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="Adı", max_length=100)
     city = models.CharField(verbose_name="Şehir", max_length=155)
+    new_city = models.CharField(verbose_name="Şehir", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
     mail = models.CharField(verbose_name="Mail", max_length=155, blank=True, null=True)
     one_person = models.DecimalField(verbose_name="Tek Kişilik Ücreti", max_digits=10, decimal_places=2, default=0)
     two_person = models.DecimalField(verbose_name="İki Kişilik Ücreti", max_digits=10, decimal_places=2, default=0)
     tree_person = models.DecimalField(verbose_name="Üç Kişilik Ücreti", max_digits=10, decimal_places=2, default=0)
     finish = models.DateField(verbose_name="Fiyat Geçerlilik Tarihi", blank=True, null=True)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Para Birimi", default="TL")
+    location = models.ForeignKey(Konum, verbose_name="Location", on_delete=models.CASCADE, blank=True, null=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
     def __str__(self):
         return f"{self.name} - {self.city}"
 
 class Activity(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
-    )
 
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="Adı", max_length=100)
     city = models.CharField(verbose_name="Şehir", max_length=155)
+    location = models.ForeignKey(Konum, verbose_name="Location", on_delete=models.CASCADE, blank=True, null=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
     def __str__(self):
         return f"{self.city} - {self.name}"
 
 class Museum(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
-    )
 
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="Adı", max_length=100)
     city = models.CharField(verbose_name="Şehir", max_length=155)
+    new_city = models.CharField(verbose_name="Şehir", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
     contact = models.CharField(verbose_name="İletişim", max_length=155, blank=True, null=True)
     price = models.DecimalField(verbose_name="Ücreti", max_digits=10, decimal_places=2, default=0)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Para Birimi", default="TL")
+    location = models.ForeignKey(Konum, verbose_name="Location", on_delete=models.CASCADE, blank=True, null=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
     def __str__(self):
@@ -155,6 +337,13 @@ class Supplier(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class VehiclesupplierCities(models.Model):
+    supplier = models.ForeignKey(Supplier, verbose_name=("Tedarikçi"), on_delete=models.CASCADE)
+    city = models.CharField(verbose_name="Şehir", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.supplier.name} - {self.city}"
+
 class Activitysupplier(models.Model):
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="Adı", max_length=100)
@@ -164,13 +353,14 @@ class Activitysupplier(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class ActivitysupplierCities(models.Model):
+    supplier = models.ForeignKey(Activitysupplier, verbose_name=("Aktivite Tedarikçi"), on_delete=models.CASCADE)
+    city = models.CharField(verbose_name="Şehir", max_length=155, choices=CITY_CHOICES, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.supplier.name} - {self.city}"
+
 class Cost(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
-    )
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, verbose_name="Tedarikçi", on_delete=models.SET_NULL, blank=True, null=True)
     tour = models.ForeignKey(Tour, verbose_name="Tur", on_delete=models.SET_NULL, blank=True, null=True)
@@ -189,13 +379,44 @@ class Cost(models.Model):
         else:
             return f"{self.transfer} {self.supplier}"
 
+
+class Vehiclecost(models.Model):
+    company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE, blank=True, null=True)
+    vehicle = models.ForeignKey(Vehicle, verbose_name="Araç", on_delete=models.CASCADE)
+    price = models.DecimalField(verbose_name="Fiyat", max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Para Birimi", default="TL")
+    created_at = models.DateField(verbose_name="Kurulma Tarihi", auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateField(verbose_name="Güncelleme Tarihi", auto_now=True)
+    is_delete = models.BooleanField(verbose_name="Silindi mi?", default=False)
+    def __str__(self):
+        return f"{self.vehicle.vehicle} - {self.price} - {self.currency}"
+
+class Tourvehiclecost(models.Model):
+    company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE, blank=True, null=True)
+    tour = models.ForeignKey(Tour, verbose_name="Tur", on_delete=models.CASCADE)
+    vehicle_cost = models.ForeignKey(Vehiclecost, verbose_name="Araç", on_delete=models.CASCADE, blank=True, null=True)
+    supplier = models.ForeignKey(Supplier, verbose_name="Tedarikçi", on_delete=models.SET_NULL, blank=True, null=True)
+    created_at = models.DateField(verbose_name="Kurulma Tarihi", auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateField(verbose_name="Güncelleme Tarihi", auto_now=True)
+    is_delete = models.BooleanField(verbose_name="Silindi mi?", default=False)
+
+    def __str__(self):
+        return f"{self.tour} - {self.vehicle_cost.vehicle} - {self.supplier}"
+
+class Transfervehiclecost(models.Model):
+    company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE, blank=True, null=True)
+    transfer = models.ForeignKey(Transfer, verbose_name="Transfer", on_delete=models.CASCADE)
+    vehicle_cost = models.ForeignKey(Vehiclecost, verbose_name="Araç", on_delete=models.CASCADE, blank=True, null=True)
+    supplier = models.ForeignKey(Supplier, verbose_name="Tedarikçi", on_delete=models.SET_NULL, blank=True, null=True)
+    created_at = models.DateField(verbose_name="Kurulma Tarihi", auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateField(verbose_name="Güncelleme Tarihi", auto_now=True)
+    is_delete = models.BooleanField(verbose_name="Silindi mi?", default=False)
+
+    def __str__(self):
+        return f"{self.transfer} - {self.vehicle_cost.vehicle} - {self.supplier}"
+
 class Activitycost(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
-    )
+
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     supplier = models.ForeignKey(Activitysupplier, verbose_name="Aktivite Tedarikçisi", on_delete=models.SET_NULL, blank=True, null=True)
     activity = models.ForeignKey(Activity, verbose_name="Activite", on_delete=models.SET_NULL, blank=True, null=True)
@@ -221,10 +442,13 @@ class UserActivityLog(models.Model):
     company = models.ForeignKey(Sirket, verbose_name="Şirket (公司)", on_delete=models.CASCADE, blank=True, null=True)
     staff = models.ForeignKey(Personel, verbose_name="Personel", on_delete=models.SET_NULL, blank=True, null=True)
     action = models.TextField()
+    ip_address = models.GenericIPAddressField(verbose_name="IP Adresi", blank=True, null=True)
+    browser_info = models.TextField(verbose_name="Tarayıcı Bilgisi", blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.staff} - {self.action} - {self.timestamp}"
+
 
 
 
@@ -312,15 +536,37 @@ class Operation(models.Model):
         super().save(*args, **kwargs)
 
 
+class Customer(models.Model):
+    company = models.ForeignKey(Sirket, verbose_name="Şirket", on_delete=models.CASCADE)
+    operation = models.ForeignKey(Operation, verbose_name="Opetaion", on_delete=models.CASCADE, related_name="customers")
+    name = models.CharField(verbose_name="Müşteri Adı", max_length=50)
+    pasaport = models.CharField(verbose_name="Pasaport Numarası", max_length=50, blank=True, null=True)
+    phone = models.CharField(verbose_name="Telefon Numarası", max_length=50, blank=True, null=True)
+    date_of_birth = models.DateField(verbose_name=("Doğum Tarihi"), auto_now=False, auto_now_add=False)
+    create_date = models.DateTimeField(verbose_name="Oluşturulma Tarihi", auto_now=False, auto_now_add=True)
+    update_date = models.DateTimeField(verbose_name="Güncelleme Tarihi", auto_now=True, auto_now_add=False)
+    is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
+
+class Salesprice(models.Model):
+    company = models.ForeignKey(Sirket, verbose_name="Şirket", on_delete=models.CASCADE)
+    operation = models.ForeignKey(Operation, verbose_name="Opetaion", related_name="prices", on_delete=models.CASCADE)
+    price = models.DecimalField(verbose_name="Ücreti", max_digits=10, decimal_places=2, default=0)
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Para Birimi", default="TL")
+    create_date = models.DateTimeField(verbose_name="Oluşturulma Tarihi", auto_now=False, auto_now_add=True)
+    update_date = models.DateTimeField(verbose_name="Güncelleme Tarihi", auto_now=True, auto_now_add=False)
+    is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
 class Operationday(models.Model):
     company = models.ForeignKey(Sirket, verbose_name="Şirket", on_delete=models.CASCADE)
-    operation = models.ForeignKey(Operation, verbose_name="Operasyon", on_delete=models.CASCADE)
+    operation = models.ForeignKey(Operation, verbose_name="Operasyon", on_delete=models.CASCADE, related_name="days")
     date = models.DateField(verbose_name="Tarih")
+    day_number = models.PositiveIntegerField(verbose_name="Gün Numarası", default=1)
+    create_date = models.DateTimeField(verbose_name="Oluşturulma Tarihi", auto_now=False, auto_now_add=True, blank=True, null=True)
+    update_date = models.DateTimeField(verbose_name="Güncelleme Tarihi", auto_now=True, auto_now_add=False, blank=True, null=True)
     is_delete =  models.BooleanField(verbose_name="Silindi mi?", default=False)
 
     def __str__(self):
-        return self.date.strftime("%d-%m-%Y")
+        return f"{self.date.strftime('%d-%m-%Y')} - {self.operation.ticket}"
 
 
 class Operationitem(models.Model):
@@ -342,18 +588,9 @@ class Operationitem(models.Model):
         ('Cift', 'Çift'),
         ('Uc', 'Üç'),
     )
-    TRUE_FALSE_CHOICES = (
-        ('Evet', 'Evet'),
-        ('Hayır', 'Hayır'),
-    )
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB'),
-    )
+
     company = models.ForeignKey(Sirket, verbose_name="Şirket", on_delete=models.CASCADE)
-    day = models.ForeignKey(Operationday, verbose_name="Gün", on_delete=models.CASCADE)
+    day = models.ForeignKey(Operationday, verbose_name="Gün", on_delete=models.CASCADE, related_name="items")
 
     operation_type = models.CharField(max_length=20, choices=OPERATIONSTYPE_CHOICES, verbose_name="İşlem Türü")
     pick_time = models.TimeField(blank=True, null=True, verbose_name="Alış Saati")
@@ -368,7 +605,7 @@ class Operationitem(models.Model):
     supplier = models.ForeignKey(Supplier, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Araç Tedarikçi")
     manuel_vehicle_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Manuel Araç Ücreti")
     auto_vehicle_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Hesaplanan Araç Ücreti")
-    vehicle_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Araç Ücreti")
+    vehicle_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Araç Ücreti", blank=True, null=True)
     vehicle_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Araç Satış Ücreti")
     vehicle_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Araç Satış Birimi", default="TL")
     vehicle_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Araç Para Birimi", default="TL")
@@ -380,7 +617,7 @@ class Operationitem(models.Model):
     hotel_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Otel Satış Ücreti")
     hotel_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Otel Satış Birimi", default="USD")
     hotel_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Otel Para Birimi", default="USD")
-    hotel_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Otel Ödemesi Bizde", default="Hayır")
+    hotel_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Otel Ödemesi Bizde", default="No")
 
     activity = models.ForeignKey(Activity, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Aktivite")
     activity_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Kayıtlı Aktivite Ücreti")
@@ -391,7 +628,7 @@ class Operationitem(models.Model):
     activity_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Aktivite Satış Birimi", default="USD")
     activity_supplier = models.ForeignKey(Activitysupplier, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Aktivite Tedarikçi")
     activity_cost = models.ForeignKey(Activitycost, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Aktivite Maliyet")
-    activity_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Activite Ödemesi Bizde", default="Hayır")
+    activity_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Activite Ödemesi Bizde", default="No")
 
     new_museum = models.ManyToManyField(Museum, blank=True, verbose_name="Müzeler", related_name="new_operation_items")
     museum_person = models.IntegerField(verbose_name="Kişi Sayısı", default=0)
@@ -399,7 +636,7 @@ class Operationitem(models.Model):
     museum_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Müze Satış Ücreti")
     museum_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Müze Satış Birimi", default="USD")
     museum_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Müze Para Birimi", default="USD")
-    museum_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Müze Ödemesi Bizde", default="Hayır")
+    museum_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Müze Ödemesi Bizde", default="No")
 
     driver = models.CharField(max_length=255, blank=True, null=True, verbose_name="Şoför")
     driver_phone = models.CharField(max_length=255, blank=True, null=True, verbose_name="Şoför Telefon")
@@ -409,10 +646,9 @@ class Operationitem(models.Model):
     guide_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Rehber Satış Ücreti")
     guide_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Rehber Satış Birimi", default="USD")
     guide_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Rehber Para Birimi", default="USD")
-    guide_var = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Rehber var mı?", default="Hayır")
+    guide_var = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Rehber var mı?", default="No")
     other_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Diğer")
     other_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Diğer Para Birimi", default="USD")
-    guide_var = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Rehber var mı?", default="Hayır")
     other_sell_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Diğer Satış")
     other_sell_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name="Diğer Satış Birimi", default="USD")
 
@@ -544,16 +780,7 @@ class OperationitemTemplate(models.Model):
         ('Cift', 'Çift'),
         ('Uc', 'Üç'),
     )
-    TRUE_FALSE_CHOICES = (
-        ('Evet', 'Evet'),
-        ('Hayır', 'Hayır'),
-    )
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB'),
-    )
+
     company = models.ForeignKey(Sirket, verbose_name="Şirket", on_delete=models.CASCADE)
     operation = models.ForeignKey(OperationTemplate, verbose_name="Operasyon Şablonu", on_delete=models.CASCADE)
     operation_type = models.CharField(max_length=20, choices=OPERATIONSTYPE_CHOICES, verbose_name="İşlem Türü")
@@ -567,13 +794,13 @@ class OperationitemTemplate(models.Model):
 
     hotel = models.ForeignKey(Hotel, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Otel")
     room_type = models.CharField(max_length=20, choices=ROOMTYPE_CHOICES, blank=True, null=True, verbose_name="Oda Türü")
-    hotel_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Otel Ödemesi Bizde", default="Hayır")
+    hotel_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Otel Ödemesi Bizde", default="No")
 
     activity = models.ForeignKey(Activity, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Aktivite")
-    activity_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Activite Ödemesi Bizde", default="Hayır")
+    activity_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Activite Ödemesi Bizde", default="No")
 
     new_museum = models.ManyToManyField(Museum, blank=True, verbose_name="Müzeler")
-    museum_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Müze Ödemesi Bizde", default="Hayır")
+    museum_payment = models.CharField(max_length=20, choices=TRUE_FALSE_CHOICES, verbose_name="Müze Ödemesi Bizde", default="No")
 
     description = models.TextField(verbose_name="Tur Detayı", blank=True, null=True)
 
@@ -597,12 +824,7 @@ class ExchangeRate(models.Model):
 
 
 class Sell(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB (人民币)'),
-    )
+
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     buyer = models.ForeignKey(Buyercompany, verbose_name="Firma", on_delete=models.SET_NULL, blank=True, null=True)
     tour = models.ForeignKey(Tour, verbose_name="Tur", on_delete=models.SET_NULL, blank=True, null=True)
@@ -622,12 +844,7 @@ class Sell(models.Model):
             return f"{self.transfer} {self.buyer}"
 
 class Activitysell(models.Model):
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB'),
-    )
+
     company=models.ForeignKey(Sirket, verbose_name="Sirket", on_delete=models.CASCADE)
     buyer = models.ForeignKey(Buyercompany, verbose_name="Firma", on_delete=models.SET_NULL, blank=True, null=True)
     activity = models.ForeignKey(Activity, verbose_name="Activite", on_delete=models.SET_NULL, blank=True, null=True)
@@ -703,12 +920,7 @@ class Cari(models.Model):
         ('income', 'Gelir'),
         ('expense', 'Gider'),
     )
-    CURRENCY_CHOICES = (
-        ('TL', 'TL'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RMB', 'RMB'),
-    )
+
     GELIR_KAYNAK = (
         ('Truzim', 'Truzim'),
 

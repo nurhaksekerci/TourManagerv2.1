@@ -1,0 +1,170 @@
+<div class="card stretch stretch-full">
+    <div class="card-header">
+        <h5 class="card-title">İşler</h5>
+        <div class="card-header-action">
+            <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                <div class="dropdown">
+                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12"
+                        data-bs-auto-close="outside">
+                        <i class="feather-filter"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=1 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="january">
+                            <i class="{% if month == 1 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>January</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=2 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="february">
+                            <i class="{% if month == 2 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>February</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=3 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="march">
+                            <i class="{% if month == 3 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>March</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=4 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="april">
+                            <i class="{% if month == 4 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>April</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=5 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="may">
+                            <i class="{% if month == 5 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>May</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=6 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="june">
+                            <i class="{% if month == 6 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>June</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=7 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="july">
+                            <i class="{% if month == 7 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>July</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=8 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="august">
+                            <i class="{% if month == 8 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>August</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=9 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="september">
+                            <i class="{% if month == 9 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>September</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=10 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="october">
+                            <i class="{% if month == 10 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>October</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=11 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="november">
+                            <i class="{% if month == 11 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>November</span>
+                        </a>
+                        <a hx-get="{% url 'operation_list_details' company_id=company_id month=12 %}"
+                            hx-target="#detail" class="dropdown-item filter-item" data-filter="december">
+                            <i class="{% if month == 12 %}feather-check{% else %}feather-eye{% endif %} me-3"></i>
+                            <span>December</span>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="dropdown">
+                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12"
+                        data-bs-auto-close="outside">
+                        <i class="feather-paperclip"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="javascript:void(0);" class="dropdown-item download-item"
+                            data-filetype="pdf" data-day="today">
+                            <i class="bi bi-filetype-pdf me-3"></i>
+                            <span>PDF</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item download-item"
+                            data-filetype="txt" data-day="today">
+                            <i class="bi bi-filetype-txt me-3"></i>
+                            <span>Text</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item download-item"
+                            data-filetype="excel" data-day="today">
+                            <i class="bi bi-filetype-exe me-3"></i>
+                            <span>Excel</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="javascript:void(0);" class="dropdown-item download-item"
+                            data-filetype="print" data-day="today">
+                            <i class="bi bi-printer me-3"></i>
+                            <span>Print</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body custom-card-action p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0"
+                style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="word-wrap: break-word; white-space: normal;">Ticket</th>
+                        <th style="word-wrap: break-word; white-space: normal;">Start Date</th>
+                        <th style="word-wrap: break-word; white-space: normal;">Finish Date</th>
+                        <th style="word-wrap: break-word; white-space: normal;">Sold Employee</th>
+                        <th style="word-wrap: break-word; white-space: normal;">Follow Employee</th>
+                        <th style="word-wrap: break-word; white-space: normal;">Created Date</th>
+                        <th style="word-wrap: break-word; white-space: normal;">Prices</th>
+                        <th style="word-wrap: break-word; white-space: normal;">Customers</th>
+                    </tr>
+                </thead>
+                <tbody id="operation-details-tbody">
+                    {% for operation in operations %}
+                        <tr id="opr-details" data-company-name="{{ company.name }}">
+                            <td style="word-wrap: break-word; white-space: normal;">{{ operation.ticket }}</td>
+                            <td style="word-wrap: break-word; white-space: normal;">{{ operation.start|date:'d.m.Y' }}</td>
+                            <td style="word-wrap: break-word; white-space: normal;">{{ operation.finish|date:'d.m.Y' }}</td>
+                            <td style="word-wrap: break-word; white-space: normal;">{{ operation.selling_staff }}</td>
+                            <td style="word-wrap: break-word; white-space: normal;">{{ operation.follow_staff }}</td>
+                            <td style="word-wrap: break-word; white-space: normal;">{{ operation.create_date|date:'d.m.Y H:i' }}</td>
+                            <td style="word-wrap: break-word; white-space: normal;">
+                                {% if operation.prices %}
+                                    <ol>
+                                        {% for price in operation.prices.all %}
+                                            <li>{{ price.price }} {{ price.currency }}</li>
+                                        {% endfor %}
+                                    </ol>
+                                {% else %}
+                                    ----
+                                {% endif %}
+
+                            </td>
+                            <td style="word-wrap: break-word; white-space: normal;">
+                                {% if operation.customers %}
+                                    <ol>
+                                        {% for customer in operation.customers.all %}
+                                            <li>{{ customer.name }} - {{ customer.phone }}</li>
+                                        {% endfor %}
+                                    </ol>
+                                {% else %}
+                                    ----
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr class="fade-in main-row">
+                            <th colspan="8" style="word-wrap: break-word; white-space: normal;">
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="fa-solid fa-circle-info"></i> No jobs found.
+                                </div>
+                            </th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

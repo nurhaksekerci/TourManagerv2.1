@@ -1,0 +1,1028 @@
+{% extends "daphne/main/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2-theme.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/jquery.time-to.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/datepicker.min.css' %}">
+
+{% endblock css %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-left d-flex align-items-center">
+        <div class="page-header-title">
+            <h5 class="m-b-10">{{ title }}</h5>
+        </div>
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">{{ title }}</li>
+        </ul>
+    </div>
+    <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            <div class="dropdown">
+                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                                    <i class="feather-filter"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <h6 class="my-2 text-center">Filter of date</h6>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="container row">
+                                            <div class="col-lg-12 mb-4">
+                                                <label class="form-label">Start <span class="text-danger">*</span></label>
+                                                <input type="date" class="form-control" name="startDate" placeholder="start date ">
+                                            </div>
+                                            <div class="col-lg-12 mb-4">
+                                                <label class="form-label">Due <span class="text-danger"></span></label>
+                                                <input type="date" class="form-control" name="dueDate" placeholder="Due date">
+                                            </div>
+                                            <div class="col-lg-12 mb-4">
+                                                <button class="btn btn-secondary">Go Jobs</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
+                        </a>
+                    </div>
+                </div>
+</div>
+
+<div class="main-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card stretch stretch-full">
+                <div class="card-header">
+                    <h5 class="card-title">{{ today }}</h5>
+                    <div class="card-header-action">
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            <div class="dropdown">
+                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                                    <i class="feather-filter"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="all" data-day="today">
+                                        <i class="feather-eye me-3"></i>
+                                        <span>All</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="tours" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Tours</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="transfers" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Transfers</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="tour-transfers" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Tour + Transfers</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="transfer-tours" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Transfer + Tours</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="guides" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Guides</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="museums" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Museums</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="activities" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Activities</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="hotels" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Hotels</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="free-times" data-day="today">
+                                        <i class="feather-check me-3"></i>
+                                        <span>Free Times</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                                    <i class="feather-paperclip"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="pdf" data-day="today">
+                                        <i class="bi bi-filetype-pdf me-3"></i>
+                                        <span>PDF</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="txt" data-day="today">
+                                        <i class="bi bi-filetype-txt me-3"></i>
+                                        <span>Text</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="excel" data-day="today">
+                                        <i class="bi bi-filetype-exe me-3"></i>
+                                        <span>Excel</span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="print" data-day="today">
+                                        <i class="bi bi-printer me-3"></i>
+                                        <span>Print</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body custom-card-action p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="word-wrap: break-word; white-space: normal;">Following Employee</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Ticket</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Operation type</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Description</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Pick-up Time</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Pick-up Point</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Route</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Type</th>
+                                    <th style="word-wrap: break-word; white-space: normal;">Hotel</th>
+                                    <th class="text-end" style="word-wrap: break-word; white-space: normal;">Update</th>
+                                </tr>
+                            </thead>
+                            <tbody id="today-operation-items">
+                                {% for item in jobs %}
+                                <tr class="fade-in main-row" onclick="toggleDetails(this)">
+                                    <td style="word-wrap: break-word; white-space: normal;">
+                                        <small class="text-muted">{{ item.day.operation.follow_staff.user.first_name }} {{ item.day.operation.follow_staff.user.last_name }}</small>
+                                    </td>
+                                    <td style="word-wrap: break-word; white-space: normal;"><a href="javascript:void(0);"><span>{{ item.day.operation.ticket }}</span></a></td>
+                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.operation_type }}</td>
+                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.description }}</td>
+                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_time }}</td>
+                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_location }}</td>
+                                    <td style="word-wrap: break-word; white-space: normal;">
+                                        {% if item.tour %}
+                                        {{ item.tour.route }}
+                                        {% elif item.transfer %}
+                                        {{ item.transfer.route }}
+                                        {% else %}
+                                        ---
+                                        {% endif %}
+                                    </td>
+                                    <td style="word-wrap: break-word; white-space: normal;">
+                                        {% if item.vehicle %}
+                                        {{ item.vehicle.vehicle }}
+                                        {% else %}
+                                        ---
+                                        {% endif %}
+                                    </td>
+                                    <td style="word-wrap: break-word; white-space: normal;">
+                                        {% if item.hotel %}
+                                        {{ item.hotel.name }}
+                                        {% else %}
+                                        ---
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end" style="word-wrap: break-word; white-space: normal;"><a href="javascript:void(0);" class="avatar-text avatar-md ms-auto"><i class="feather-arrow-right"></i></a></td>
+                                </tr>
+                                <tr class="details-row" style="display: none;">
+                                    <td colspan="10" style="word-wrap: break-word; white-space: normal;">
+                                        <table class="table table-bordered mb-0" style="font-size: 0.6rem;">
+                                            <tr>
+                                                <th style="word-wrap: break-word; white-space: normal;">Vehicle Cost Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Vehicle Sell Price</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_price }} {{ item.vehicle_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_sell_price }} {{ item.vehicle_sell_currency }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="word-wrap: break-word; white-space: normal;">Hotel Name</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Hotel Cost Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Hotel Sell Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="word-wrap: break-word; white-space: normal;">
+                                                    {% if item.hotel %}
+                                                    {{item.hotel.name}}
+                                                    {% else %}
+                                                    ---
+                                                    {% endif %}
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_price }} {{ item.hotel_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_cost_price }} {{ item.hotel_cost_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_payment }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="word-wrap: break-word; white-space: normal;">Activity Name</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Activity Cost Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Activity Sell Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="word-wrap: break-word; white-space: normal;">
+                                                    {% if item.activity %}
+                                                    {{item.activity.name}}
+                                                    {% else %}
+                                                    ---
+                                                    {% endif %}
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_price }} {{ item.activity_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_cost_price }} {{ item.activity_cost_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_payment }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="word-wrap: break-word; white-space: normal;">Museums</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Museum Cost Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Museum Sell Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="word-wrap: break-word; white-space: normal;" class="today-museum">
+                                                    {% if item.new_museum.exists %}
+                                                    {% for museum in item.new_museum.all %}
+                                                    {{ museum.name }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    ---
+                                                    {% endif %}
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_price }} {{ item.museum_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_cost_price }} {{ item.museum_cost_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_payment }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="word-wrap: break-word; white-space: normal;">Guide Name</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Guide Cost Price</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Guide Sell Price</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="word-wrap: break-word; white-space: normal;">
+                                                    {% if item.guide %}
+                                                    {{item.guide.name}}
+                                                    {% else %}
+                                                    ---
+                                                    {% endif %}
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_price }} {{ item.guide_currency }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_cost_price }} {{ item.guide_cost_currency }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="word-wrap: break-word; white-space: normal;">Driver Name</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Driver Phone</th>
+                                                <th style="word-wrap: break-word; white-space: normal;">Vehicle Plate</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="word-wrap: break-word; white-space: normal;">
+                                                    {% if item.driver %}
+                                                    {{item.driver}}
+                                                    {% else %}
+                                                    ---
+                                                    {% endif %}
+                                                </td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.driver_phone }}</td>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.plaka }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="word-wrap: break-word; white-space: normal;">Other Price</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="word-wrap: break-word; white-space: normal;">{{ item.other_price }} {{ item.other_currency }}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr class="fade-in main-row">
+                                    <th colspan="10" style="word-wrap: break-word; white-space: normal;">
+                                        <div class="alert alert-warning" role="alert">
+                                            <i class="fa-solid fa-circle-info"></i> No jobs found.
+                                        </div>
+                                    </th>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Benzer yapılar diğer günler için de tekrarlanabilir -->
+    <!-- Yarın -->
+    {% if date_input == False %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card stretch stretch-full">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ tomorrow|date:"d.m.Y" }}</h5>
+                        <div class="card-header-action">
+                            <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                                <div class="dropdown">
+                                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                                        <i class="feather-filter"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="all" data-day="tomorrow">
+                                            <i class="feather-eye me-3"></i>
+                                            <span>All</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="tours" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Tours</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="transfers" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Transfers</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="tour-transfers" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Tour + Transfers</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="transfer-tours" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Transfer + Tours</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="guides" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Guides</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="museums" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Museums</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="activities" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Activities</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="hotels" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Hotels</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="free-times" data-day="tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Free Times</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                                        <i class="feather-paperclip"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="pdf" data-day="tomorrow">
+                                            <i class="bi bi-filetype-pdf me-3"></i>
+                                            <span>PDF</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="txt" data-day="tomorrow">
+                                            <i class="bi bi-filetype-txt me-3"></i>
+                                            <span>Text</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="excel" data-day="tomorrow">
+                                            <i class="bi bi-filetype-exe me-3"></i>
+                                            <span>Excel</span>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="print" data-day="tomorrow">
+                                            <i class="bi bi-printer me-3"></i>
+                                            <span>Print</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body custom-card-action p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="word-wrap: break-word; white-space: normal;">Following Employee</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Ticket</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Operation type</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Description</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Pick-up Time</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Pick-up Point</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Route</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Vehicle Type</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Hotel</th>
+                                        <th class="text-end" style="word-wrap: break-word; white-space: normal;">Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tomorrow-operation-items">
+                                    {% for item in tomorrow_jobs %}
+                                    <tr class="fade-in main-row" onclick="toggleDetails(this)">
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            <small class="text-muted">{{ item.day.operation.follow_staff.user.first_name }} {{ item.day.operation.follow_staff.user.last_name }}</small>
+                                        </td>
+                                        <td style="word-wrap: break-word; white-space: normal;"><a href="javascript:void(0);"><span>{{ item.day.operation.ticket }}</span></a></td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.operation_type }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.description }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_time }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_location }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            {% if item.tour %}
+                                            {{ item.tour.route }}
+                                            {% elif item.transfer %}
+                                            {{ item.transfer.route }}
+                                            {% else %}
+                                            ---
+                                            {% endif %}
+                                        </td>
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            {% if item.vehicle %}
+                                            {{ item.vehicle.vehicle }}
+                                            {% else %}
+                                            ---
+                                            {% endif %}
+                                        </td>
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            {% if item.hotel %}
+                                            {{ item.hotel.name }}
+                                            {% else %}
+                                            ---
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end" style="word-wrap: break-word; white-space: normal;"><a href="javascript:void(0);" class="avatar-text avatar-md ms-auto"><i class="feather-arrow-right"></i></a></td>
+                                    </tr>
+                                    <tr class="details-row" style="display: none;">
+                                        <td colspan="10" style="word-wrap: break-word; white-space: normal;">
+                                            <table class="table table-bordered mb-0" style="font-size: 0.6rem;">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Sell Price</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_price }} {{ item.vehicle_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_sell_price }} {{ item.vehicle_sell_currency }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.hotel %}
+                                                        {{item.hotel.name}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_price }} {{ item.hotel_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_cost_price }} {{ item.hotel_cost_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_payment }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.activity %}
+                                                        {{item.activity.name}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_price }} {{ item.activity_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_cost_price }} {{ item.activity_cost_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_payment }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museums</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museum Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museum Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;" class="today-museum">
+                                                        {% if item.new_museum.exists %}
+                                                        {% for museum in item.new_museum.all %}
+                                                        {{ museum.name }}{% if not forloop.last %}, {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_price }} {{ item.museum_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_cost_price }} {{ item.museum_cost_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_payment }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Sell Price</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.guide %}
+                                                        {{item.guide.name}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_price }} {{ item.guide_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_cost_price }} {{ item.guide_cost_currency }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Driver Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Driver Phone</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Plate</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.driver %}
+                                                        {{item.driver}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.driver_phone }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.plaka }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Other Price</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.other_price }} {{ item.other_currency }}</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr class="fade-in main-row">
+                                        <th colspan="10" style="word-wrap: break-word; white-space: normal;">
+                                            <div class="alert alert-warning" role="alert">
+                                                <i class="fa-solid fa-circle-info"></i> No jobs found.
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Üçüncü gün -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card stretch stretch-full">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ day_after_tomorrow|date:"d.m.Y" }}</h5>
+                        <div class="card-header-action">
+                            <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                                <div class="dropdown">
+                                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                                        <i class="feather-filter"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="all" data-day="day-after-tomorrow">
+                                            <i class="feather-eye me-3"></i>
+                                            <span>All</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="tours" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Tours</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="transfers" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Transfers</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="tour-transfers" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Tour + Transfers</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="transfer-tours" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Transfer + Tours</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="guides" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Guides</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="museums" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Museums</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="activities" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Activities</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="hotels" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Hotels</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item filter-item" data-filter="free-times" data-day="day-after-tomorrow">
+                                            <i class="feather-check me-3"></i>
+                                            <span>Free Times</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                                        <i class="feather-paperclip"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="pdf" data-day="day-after-tomorrow">
+                                            <i class="bi bi-filetype-pdf me-3"></i>
+                                            <span>PDF</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="txt" data-day="day-after-tomorrow">
+                                            <i class="bi bi-filetype-txt me-3"></i>
+                                            <span>Text</span>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="exceş" data-day="day-after-tomorrow">
+                                            <i class="bi bi-filetype-exe me-3"></i>
+                                            <span>Excel</span>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="javascript:void(0);" class="dropdown-item download-item" data-filetype="print" data-day="day-after-tomorrow">
+                                            <i class="bi bi-printer me-3"></i>
+                                            <span>Print</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body custom-card-action p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="word-wrap: break-word; white-space: normal;">Following Employee</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Ticket</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Operation type</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Description</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Pick-up Time</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Pick-up Point</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Route</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Vehicle Type</th>
+                                        <th style="word-wrap: break-word; white-space: normal;">Hotel</th>
+                                        <th class="text-end" style="word-wrap: break-word; white-space: normal;">Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="day-after-tomorrow-operation-items">
+                                    {% for item in day_after_tomorrow_jobs %}
+                                    <tr class="fade-in main-row" onclick="toggleDetails(this)">
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            <small class="text-muted">{{ item.day.operation.follow_staff.user.first_name }} {{ item.day.operation.follow_staff.user.last_name }}</small>
+                                        </td>
+                                        <td style="word-wrap: break-word; white-space: normal;"><a href="javascript:void(0);"><span>{{ item.day.operation.ticket }}</span></a></td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.operation_type }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.description }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_time }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_location }}</td>
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            {% if item.tour %}
+                                            {{ item.tour.route }}
+                                            {% elif item.transfer %}
+                                            {{ item.transfer.route }}
+                                            {% else %}
+                                            ---
+                                            {% endif %}
+                                        </td>
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            {% if item.vehicle %}
+                                            {{ item.vehicle.vehicle }}
+                                            {% else %}
+                                            ---
+                                            {% endif %}
+                                        </td>
+                                        <td style="word-wrap: break-word; white-space: normal;">
+                                            {% if item.hotel %}
+                                            {{ item.hotel.name }}
+                                            {% else %}
+                                            ---
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end" style="word-wrap: break-word; white-space: normal;"><a href="javascript:void(0);" class="avatar-text avatar-md ms-auto"><i class="feather-arrow-right"></i></a></td>
+                                    </tr>
+                                    <tr class="details-row" style="display: none;">
+                                        <td colspan="10" style="word-wrap: break-word; white-space: normal;">
+                                            <table class="table table-bordered mb-0" style="font-size: 0.6rem;">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Sell Price</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_price }} {{ item.vehicle_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_sell_price }} {{ item.vehicle_sell_currency }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.hotel %}
+                                                        {{item.hotel.name}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_price }} {{ item.hotel_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_cost_price }} {{ item.hotel_cost_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_payment }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.activity %}
+                                                        {{item.activity.name}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_price }} {{ item.activity_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_cost_price }} {{ item.activity_cost_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_payment }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museums</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museum Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museum Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;" class="today-museum">
+                                                        {% if item.new_museum.exists %}
+                                                        {% for museum in item.new_museum.all %}
+                                                        {{ museum.name }}{% if not forloop.last %}, {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_price }} {{ item.museum_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_cost_price }} {{ item.museum_cost_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_payment }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Sell Price</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.guide %}
+                                                        {{item.guide.name}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_price }} {{ item.guide_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_cost_price }} {{ item.guide_cost_currency }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Driver Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Driver Phone</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Plate</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.driver %}
+                                                        {{item.driver}}
+                                                        {% else %}
+                                                        ---
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.driver_phone }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.plaka }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Other Price</th>
+                                                </tr>
+                                                <tr>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.other_price }} {{ item.other_currency }}</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr class="fade-in main-row">
+                                        <th colspan="10" style="word-wrap: break-word; white-space: normal;">
+                                            <div class="alert alert-warning" role="alert">
+                                                <i class="fa-solid fa-circle-info"></i> No jobs found.
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'assets/vendor/js/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/vendor/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/vendor/js/select2-active.min.js' %}"></script>
+<script src="{% static 'assets/vendor/js/jquery.time-to.min.js' %}"></script>
+<script src="{% static 'assets/js/widgets-tables-init.min.js' %}"></script>
+<script>
+    function toggleDetails(row) {
+        var nextRow = row.nextElementSibling;
+        if (nextRow && nextRow.classList.contains('details-row')) {
+            if (nextRow.style.display === 'none' || nextRow.style.display === '') {
+                nextRow.style.display = 'table-row';
+            } else {
+                nextRow.style.display = 'none';
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const operationTypeMap = {
+            'tours': 'Tur',
+            'transfers': 'Transfer',
+            'tour-transfers': 'Tur + Transfer',
+            'transfer-tours': 'Transfer + Tur',
+            'guides': 'Rehber',
+            'museums': 'Müze',
+            'activities': 'Aktivite',
+            'hotels': 'Otel',
+            'free-times': 'Serbest Zaman'
+        };
+
+        const filterItems = (filter, day) => {
+            const rows = document.querySelectorAll(`#${day}-operation-items tr.main-row`);
+            rows.forEach(row => {
+                const operationType = row.querySelector('td:nth-child(3)').textContent.trim();
+                if (filter === 'all') {
+                    row.style.display = '';
+                } else if (filter === 'museums') {
+                    const museumText = row.nextElementSibling.querySelector('.today-museum').textContent.trim();
+                    if (museumText !== '---') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                } else {
+                    if (operationType === operationTypeMap[filter]) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        };
+
+        document.querySelectorAll('.filter-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const filter = item.getAttribute('data-filter');
+                const day = item.getAttribute('data-day') || 'operation-items';
+                filterItems(filter, day);
+            });
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="{% static 'assets/vendor/js/datepicker.min.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const downloadButtons = document.querySelectorAll('.download-item');
+
+        downloadButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const day = button.getAttribute('data-day');
+                const fileType = button.getAttribute('data-filetype');
+                const rows = document.querySelectorAll(`#${day}-operation-items tr.main-row`);
+                const data = [];
+                const headers = [
+                    "Takip Eden", "Ticket", "İşlem Türü", "Açıklama", "Alış Zamanı", "Alış Yeri",
+                    "Güzergah", "Araç", "Otel", "Araç Fiyatı", "Araç Satış Fiyatı", "Araç Para Birimi",
+                    "Otel Fiyatı", "Otel Para Birimi", "Otel Ödemesi", "Aktivite", "Aktivite Fiyatı",
+                    "Aktivite Para Birimi", "Aktivite Ödemesi", "Müzeler", "Müze Fiyatı", "Müze Para Birimi",
+                    "Müze Ödemesi", "Rehber", "Rehber Fiyatı", "Rehber Para Birimi", "Şoför", "Şoför Tel",
+                    "Plaka", "Diğer Fiyat", "Diğer Para Birimi"
+                ];
+
+                // Add headers to data
+                data.push(headers);
+
+                rows.forEach(row => {
+                    if (row.style.display !== 'none') {
+                        const rowData = [];
+                        const detailsRow = row.nextElementSibling.querySelectorAll('td > table tr');
+
+                        const getTextContent = (element, selector) => {
+                            const el = element.querySelector(selector);
+                            return el ? el.textContent.trim() : '';
+                        };
+
+                        rowData.push(getTextContent(row, 'td:nth-child(1)'));  // Takip Eden
+                        rowData.push(getTextContent(row, 'td:nth-child(2)'));  // Ticket
+                        rowData.push(getTextContent(row, 'td:nth-child(3)'));  // İşlem Türü
+                        rowData.push(getTextContent(row, 'td:nth-child(4)'));  // Açıklama
+                        rowData.push(getTextContent(row, 'td:nth-child(5)'));  // Alış Zamanı
+                        rowData.push(getTextContent(row, 'td:nth-child(6)'));  // Alış Yeri
+                        rowData.push(getTextContent(row, 'td:nth-child(7)'));  // Güzergah
+                        rowData.push(getTextContent(row, 'td:nth-child(8)'));  // Araç
+                        rowData.push(getTextContent(row, 'td:nth-child(9)'));  // Otel
+
+                        // Araç Fiyatı, Araç Satış Fiyatı, Araç Para Birimi
+                        rowData.push(getTextContent(detailsRow[1], 'td:nth-child(1)'));
+                        rowData.push(getTextContent(detailsRow[1], 'td:nth-child(2)'));
+                        rowData.push(getTextContent(detailsRow[1], 'td:nth-child(3)'));
+
+                        // Otel Fiyatı, Otel Para Birimi, Otel Ödemesi
+                        rowData.push(getTextContent(detailsRow[3], 'td:nth-child(2)'));
+                        rowData.push(getTextContent(detailsRow[3], 'td:nth-child(3)'));
+                        rowData.push(getTextContent(detailsRow[3], 'td:nth-child(4)'));
+
+                        // Aktivite, Aktivite Fiyatı, Aktivite Para Birimi, Aktivite Ödemesi
+                        rowData.push(getTextContent(detailsRow[5], 'td:nth-child(1)'));
+                        rowData.push(getTextContent(detailsRow[5], 'td:nth-child(2)'));
+                        rowData.push(getTextContent(detailsRow[5], 'td:nth-child(3)'));
+                        rowData.push(getTextContent(detailsRow[5], 'td:nth-child(4)'));
+
+                        // Müzeler, Müze Fiyatı, Müze Para Birimi, Müze Ödemesi
+                        rowData.push(getTextContent(detailsRow[7], 'td:nth-child(1)'));
+                        rowData.push(getTextContent(detailsRow[7], 'td:nth-child(2)'));
+                        rowData.push(getTextContent(detailsRow[7], 'td:nth-child(3)'));
+                        rowData.push(getTextContent(detailsRow[7], 'td:nth-child(4)'));
+
+                        // Rehber, Rehber Fiyatı, Rehber Para Birimi
+                        rowData.push(getTextContent(detailsRow[9], 'td:nth-child(1)'));
+                        rowData.push(getTextContent(detailsRow[9], 'td:nth-child(2)'));
+                        rowData.push(getTextContent(detailsRow[9], 'td:nth-child(3)'));
+
+                        // Şoför, Şoför Tel, Plaka
+                        rowData.push(getTextContent(detailsRow[11], 'td:nth-child(1)'));
+                        rowData.push(getTextContent(detailsRow[11], 'td:nth-child(2)'));
+                        rowData.push(getTextContent(detailsRow[11], 'td:nth-child(3)'));
+
+                        // Diğer Fiyat, Diğer Para Birimi
+                        rowData.push(getTextContent(detailsRow[13], 'td:nth-child(1)'));
+                        rowData.push(getTextContent(detailsRow[13], 'td:nth-child(2)'));
+
+                        data.push(rowData);
+                    }
+                });
+
+                if (data.length === 1) {
+                    alert('No data available for download.');
+                    return;
+                }
+
+                if (fileType === 'pdf' || fileType === 'print') {
+                    alert('PDF and Print functionality not implemented.');
+                    return;
+                }
+
+                if (fileType === 'excel') {
+                    let wb = XLSX.utils.book_new();
+                    let ws = XLSX.utils.aoa_to_sheet(data);
+                    XLSX.utils.book_append_sheet(wb, ws, "Operations");
+                    XLSX.writeFile(wb, `${day}_operation_items.xlsx`);
+                } else if (fileType === 'txt') {
+                    let fileContent = data.map(e => e.join("\t")).join("\n");
+                    let mimeType = "data:text/plain;charset=utf-8,";
+                    const encodedUri = encodeURI(mimeType + fileContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", `${day}_operation_items.txt`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

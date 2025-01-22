@@ -1,0 +1,2957 @@
+[
+    {
+        "id": 3,
+        "name": "HAMPTON BY HILTON ISTANBUL OLD CITY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 4,
+        "name": "MILAT CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 5,
+        "name": "MANASPARK DELUXE",
+        "city": "Muğla"
+    },
+    {
+        "id": 6,
+        "name": "AG HOTELS ANTALYA",
+        "city": "Antalya"
+    },
+    {
+        "id": 7,
+        "name": "DOSSO DOSSI GOLDEN HORN",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 8,
+        "name": "PAMUKKALE APOLLON GARDEN",
+        "city": "Denizli"
+    },
+    {
+        "id": 9,
+        "name": "BAYMARI SUITES FLORYA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 10,
+        "name": "VALORE STONE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 11,
+        "name": "YACHT BOHEME HOTEL-BOUTIQUE CLASS",
+        "city": "Muğla"
+    },
+    {
+        "id": 12,
+        "name": "DOUBLETREE BY HILTON ANTALYA CITY CENTRE",
+        "city": "Antalya"
+    },
+    {
+        "id": 13,
+        "name": "DIVAN CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 14,
+        "name": "STAYSO THE HOUSE HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 15,
+        "name": "LUNAR CAPPADOCIA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 16,
+        "name": "HOTEL ARCADIA BLUE ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 17,
+        "name": "ADEMPIRA TERMAL&SPAHOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 19,
+        "name": "THE RITZ - CARLTON",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 21,
+        "name": "SAHKULU",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 22,
+        "name": "GLK PREMIER ACROPOL SUITES SPA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 23,
+        "name": "CAPPADOCIA CAVE LODGE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 24,
+        "name": "KAYA KAPI",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 25,
+        "name": "GARDEN HOUSE HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 26,
+        "name": "KARMA SUITES CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 27,
+        "name": "IMAGINE ISTANBUL - SULTANAHMET",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 28,
+        "name": "ATAKOY RAMADA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 29,
+        "name": "DOSSO DOSSI HOTELS DOWNTOWN",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 30,
+        "name": "TRAVELLERS CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 31,
+        "name": "SULTANAHMET PALACE",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 32,
+        "name": "SEVEN HILLS HOTEL-SPECIAL CLASS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 33,
+        "name": "MITHRA CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 34,
+        "name": "ROYAL STONE HOUSES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 35,
+        "name": "KAYAHAN HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 36,
+        "name": "ORKA BOUTIQUE",
+        "city": "Muğla"
+    },
+    {
+        "id": 37,
+        "name": "ARIF CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 38,
+        "name": "NEW GATE HOTEL",
+        "city": "Ankara"
+    },
+    {
+        "id": 39,
+        "name": "MDC CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 40,
+        "name": "ALESTA YATCH HOTEL",
+        "city": null
+    },
+    {
+        "id": 41,
+        "name": "HOLIDAY IN OLD CITY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 42,
+        "name": "AKRA HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 43,
+        "name": "ZEYTINLIK SHT. NUSRET SK. 34140 BAKIRKOY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 44,
+        "name": "MAKEL HOTEL TOPKAPI",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 45,
+        "name": "KOLIN HOTEL",
+        "city": "Çanakkale"
+    },
+    {
+        "id": 46,
+        "name": "RAMADA KUSADASI",
+        "city": "İzmir"
+    },
+    {
+        "id": 47,
+        "name": "LYCUS RIVER",
+        "city": "Denizli"
+    },
+    {
+        "id": 48,
+        "name": "ADONIS HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 49,
+        "name": "BAYIR DIAMOND",
+        "city": "Konya"
+    },
+    {
+        "id": 50,
+        "name": "HILTON GARDEN INN ANKARA GIMAT",
+        "city": "Ankara"
+    },
+    {
+        "id": 51,
+        "name": "SULTAN SARAY HOTEL",
+        "city": "Karabük"
+    },
+    {
+        "id": 52,
+        "name": "HOLIDAY IN LARA",
+        "city": "Antalya"
+    },
+    {
+        "id": 53,
+        "name": "YATCH CLASSIC HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 54,
+        "name": "HOTEL POEM",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 55,
+        "name": "HAGIA SOFIA MANSIONS ISTANBUL CURIO COLLECTION BY HILTON",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 56,
+        "name": "PULLMAN HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 57,
+        "name": "BEST WESTERN EMPIRE PALACE HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 58,
+        "name": "WANDA VISTA HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 59,
+        "name": "CHARISMA DE LUXE HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 61,
+        "name": "KELEBEK CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 62,
+        "name": "HELEN CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 63,
+        "name": "DEDEMAN BOSTANCI ISTANBUL/ATASEHIR",
+        "city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 64,
+        "name": "10 KARAKOY ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 66,
+        "name": "DOUBLETREE BY HILTON ISTANBUL SIRKECI",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 67,
+        "name": "CAVERNA HOTEL PREMIUM CAVES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 68,
+        "name": "AZA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 69,
+        "name": "SULTAN CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 70,
+        "name": "GRANADA LUXURY BELEK",
+        "city": "Antalya"
+    },
+    {
+        "id": 72,
+        "name": "NAIF HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 74,
+        "name": "THE LAND OF LEGENDS",
+        "city": "Antalya"
+    },
+    {
+        "id": 75,
+        "name": "SAFRAN CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 77,
+        "name": "HENNA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 78,
+        "name": "MUSEUM HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 79,
+        "name": "PERGE HOTELS",
+        "city": "Antalya"
+    },
+    {
+        "id": 80,
+        "name": "KAYAKAPI PREMIUM CAVES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 81,
+        "name": "TERRA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 82,
+        "name": "HOTEL MILLE KALEICI",
+        "city": "Antalya"
+    },
+    {
+        "id": 84,
+        "name": "CASA SUR ANTALYA",
+        "city": "Antalya"
+    },
+    {
+        "id": 85,
+        "name": "LUFF SUITES",
+        "city": "Antalya"
+    },
+    {
+        "id": 86,
+        "name": "VENUS SUITE HOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 88,
+        "name": "LOCAL CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 89,
+        "name": "BURDOCK HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 90,
+        "name": "ZARA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 91,
+        "name": "FOUR SEASONS HOTEL ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 92,
+        "name": "THE RUPESTRAL HOUSE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 93,
+        "name": "APEX CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 94,
+        "name": "CAPPADOCIA IN  CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 97,
+        "name": "OSMANLI CAPPADOCIA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 98,
+        "name": "TURAN CAPPADOCIA CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 99,
+        "name": "GRAND CAPPADOCIA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 100,
+        "name": "THE ARTISAN ISTANBUL MGALLERY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 102,
+        "name": "GOREME INN HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 103,
+        "name": "TAKAEV CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 104,
+        "name": "CAPPADOCIA CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 106,
+        "name": "VOLARE STONE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 107,
+        "name": "NOMADS CAVE HOTEL & ROOFTOP",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 108,
+        "name": "SYMBOLA BEACH HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 109,
+        "name": "AGARTA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 110,
+        "name": "HILTON ISTANBUL BAKIRKOY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 111,
+        "name": "CARAVANSERAI INN",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 114,
+        "name": "HYATT REGENCY IZMIR ISTINYEPARK",
+        "city": "İzmir"
+    },
+    {
+        "id": 115,
+        "name": "DOGA THERMAL HEALTH & SPA HOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 116,
+        "name": "SWISSOTEL THE BOSPHORUS ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 117,
+        "name": "DERVISH CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 118,
+        "name": "IZMIR MARRIOTT HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 119,
+        "name": "AKANTHUS HOTEL EPHESUS",
+        "city": "İzmir"
+    },
+    {
+        "id": 120,
+        "name": "ADORA CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 121,
+        "name": "ADVENTURE IN CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 122,
+        "name": "ADA CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 123,
+        "name": "OTTOMAN CAVE SUİTES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 125,
+        "name": "AHIYAN HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 126,
+        "name": "GLK PREMIER REGENCY SUITES & SPA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 128,
+        "name": "KAYATAS CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 131,
+        "name": "FAIRMONT QUASAR ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 132,
+        "name": "ARTEMIS CAVE SUITES-ADULTS ONLY",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 133,
+        "name": "ROYAL HAGIA SOPHIA ISTANBUL RADISSON INDIVIDUALS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 134,
+        "name": "GOLDEN RIVER HOTEL BY CONTINENT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 135,
+        "name": "PERISTYLE CAVE CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 136,
+        "name": "OGLAKCIOGLU PARK BOUTIQUE HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 137,
+        "name": "ILAYDA AVANTGARDE HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 138,
+        "name": "ROUTE HOTEL KALEICI",
+        "city": "Antalya"
+    },
+    {
+        "id": 139,
+        "name": "S3 KING RESIDENCE",
+        "city": "Muğla"
+    },
+    {
+        "id": 140,
+        "name": "BARCELO ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 141,
+        "name": "AVANTGARDE HOTEL LEVENT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 142,
+        "name": "ELYSEE CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 144,
+        "name": "KAYATA CAVE SUITES SPECIAL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 146,
+        "name": "VINTAGE CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 147,
+        "name": "THE OMIYA HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 148,
+        "name": "NOVA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 149,
+        "name": "PERA PALACE HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 150,
+        "name": "SKALION HOTEL -SPA",
+        "city": "Denizli"
+    },
+    {
+        "id": 152,
+        "name": "RAMADA PLAZA BY WYNDHAM ANTALYA",
+        "city": "Antalya"
+    },
+    {
+        "id": 153,
+        "name": "SWANDOR HOTELS-RESORTS -TOPKAPI PALACE",
+        "city": "Antalya"
+    },
+    {
+        "id": 154,
+        "name": "GARLON RESIDENCE",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 155,
+        "name": "CONRAD ISTANBUL BOSPHORUS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 156,
+        "name": "ELITE WORLD GRAND ISTANBUL BASIN EKSPRES",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 157,
+        "name": "CARUS CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 158,
+        "name": "AMIRAL PALACE HOTEL BOUTIQUE CLASS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 159,
+        "name": "SET OZER HOTEL",
+        "city": "Çanakkale"
+    },
+    {
+        "id": 160,
+        "name": "BACACAN OTEL",
+        "city": "Balıkesir"
+    },
+    {
+        "id": 163,
+        "name": "INFINITY CITY HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 164,
+        "name": "WHITE GARDEN HOTEL-ADULT ONLY",
+        "city": "Antalya"
+    },
+    {
+        "id": 165,
+        "name": "SAFRANBOLU HILTON GARDEN HOTEL",
+        "city": "Karabük"
+    },
+    {
+        "id": 166,
+        "name": "SUADHAN HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 167,
+        "name": "AYSIMA HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 168,
+        "name": "BALIKCILAR HOTEL",
+        "city": "Konya"
+    },
+    {
+        "id": 169,
+        "name": "THE ANKARA HOTEL",
+        "city": "Ankara"
+    },
+    {
+        "id": 170,
+        "name": "ROC OF CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 171,
+        "name": "HAMPTON BU HILTON IST ARNAVUTKOY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 172,
+        "name": "A LA MODE CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 174,
+        "name": "KARADUT CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 175,
+        "name": "MULA HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 176,
+        "name": "ARMADA ISTANBUL OLD CITY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 177,
+        "name": "HAREM SUITES CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 178,
+        "name": "SUNDIA EXCLUSIVE BY LIBERTY FETHIYE",
+        "city": "Muğla"
+    },
+    {
+        "id": 179,
+        "name": "3S KALE TOPAZ RESIDENCE SITE",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 180,
+        "name": "DEDEMAN HOTEL ISTANBUL/BESIKTAS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 181,
+        "name": "JW MARRİOTT ISTANBUL BOSPHORUS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 182,
+        "name": "BORSA ISTANBUL BASAKSEHIR MESLEKI VE TEKNIK ANADOLU LISESI",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 183,
+        "name": "MEDIAN HOTEL HANNOVER MESSE",
+        "city": null
+    },
+    {
+        "id": 184,
+        "name": "KARLIK CAVE SUITE CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 185,
+        "name": "COLOSSAE THERMAL",
+        "city": "Denizli"
+    },
+    {
+        "id": 186,
+        "name": "VOLKSWAGEN ARENA SARIYER",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 188,
+        "name": "HOTEL ESVE ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 189,
+        "name": "GOREME REVA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 190,
+        "name": "50.YIL AHMET MERTER ILK OKULU",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 192,
+        "name": "FAIK PASHA HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 195,
+        "name": "ANTIQUE TERRACE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 197,
+        "name": "SOFITEL ISTANBUL TAKSIM",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 198,
+        "name": "HARMAN CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 199,
+        "name": "FERIS CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 200,
+        "name": "KAYA KONAK CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 201,
+        "name": "GOREME OTOGAR",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 202,
+        "name": "VISTA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 203,
+        "name": "ARINNA CAPPADOCIA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 204,
+        "name": "AMBER CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 205,
+        "name": "CONCEPT CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 206,
+        "name": "AHG ATLAS HOTEL TAKSIM",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 207,
+        "name": "OLD TOWN POINT HOTEL SPA",
+        "city": "Antalya"
+    },
+    {
+        "id": 210,
+        "name": "THE PENINSULA ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 211,
+        "name": "AYDINLI CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 213,
+        "name": "EPOCH STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 214,
+        "name": "FAIRY CHIMNEYS SELFIE CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 215,
+        "name": "S-CAPE HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 216,
+        "name": "RUSTIC CAVES HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 217,
+        "name": "HILTON GARDEN INN ISTANBUL-BEYLİKDUZU",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 219,
+        "name": "INTERSTAR HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 220,
+        "name": "LORD OF CAPPADOCIA  HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 221,
+        "name": "SOHO HOUSE ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 222,
+        "name": "THE ST.REGIS ISTANBUL HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 224,
+        "name": "RAPSODI STONE SUITE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 225,
+        "name": "MEHMET TAN CD. NO:18 D:1, 50180 GOREME",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 226,
+        "name": "SEHSUVAR BEY, NEVIYE SK. NO:44, 34126 FATIH",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 227,
+        "name": "FENER, 1970. SK. NO:27, 07160 MURATPASA",
+        "city": "Antalya"
+    },
+    {
+        "id": 228,
+        "name": "BALLOON VIEW HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 229,
+        "name": "PANORAMIC CAVE",
+        "city": "Antalya"
+    },
+    {
+        "id": 231,
+        "name": "DOUBLE TREE BY HILTON ISTANBUL AVCILAR",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 233,
+        "name": "TONOZ BEACH HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 234,
+        "name": "BOGAZICI MAHALLESI, YAZLIK SITELER SK NO : 60 BODRUM",
+        "city": "Muğla"
+    },
+    {
+        "id": 235,
+        "name": "EMEKYEMEZ MAHALLESI BUGULU SOKAK NO:11 KARAKOY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 236,
+        "name": "SIRKECI MANSION",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 237,
+        "name": "LAGANIA CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 238,
+        "name": "IBOS",
+        "city": "İzmir"
+    },
+    {
+        "id": 239,
+        "name": "KIRAZLI SULTAN KONAK",
+        "city": "İzmir"
+    },
+    {
+        "id": 240,
+        "name": "MENALO HOTEL PREMIUM ISTANBUL AIRPORT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 241,
+        "name": "SACRED HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 242,
+        "name": "SHERATON ISTANBUL LEVENT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 243,
+        "name": "CANFEDA CIKMAZI NO:3, OMER AVNI 34427, BEYOGLU, ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 244,
+        "name": "LA FARINE HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 245,
+        "name": "LE BLEU HOTEL & RESORT",
+        "city": "İzmir"
+    },
+    {
+        "id": 246,
+        "name": "KAYRA CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 247,
+        "name": "DOSSO DOSSI HOTELS OLD CITY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 248,
+        "name": "GRAND HYATT ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 249,
+        "name": "BEACH 222 OLUDENIZ",
+        "city": "Muğla"
+    },
+    {
+        "id": 250,
+        "name": "IMPERIAL CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 251,
+        "name": "CAPPADOCIA CAVE LAND HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 252,
+        "name": "TASKONAKLAR HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 254,
+        "name": "VILLAGE CAVE HOUSE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 255,
+        "name": "KUCUK AYASOFYA MAHALLESI, CAYIROGLU SK. NO:28, 34122 FATIH",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 256,
+        "name": "OLUDENIZ BLU LUXURY UNIQUE HOTEL - ADULTS-ONLY",
+        "city": "Muğla"
+    },
+    {
+        "id": 257,
+        "name": "AVCILAR HILTON",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 259,
+        "name": "OSMANBEY CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 260,
+        "name": "NAUTICAL HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 261,
+        "name": "GOREME VALLEY CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 262,
+        "name": "LEGACY OTTOMAN HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 263,
+        "name": "VIRTUS CAPPADOCIA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 265,
+        "name": "THE STAY BOSPHORUS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 266,
+        "name": "SAH SARAY CAVE SUITES HALAL HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 267,
+        "name": "EMRE STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 268,
+        "name": "TEKKAYA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 270,
+        "name": "AKDENIZ MAHALLESI GAZI BULVARI NO 1 ALSANCAK, KONAK,",
+        "city": "İzmir"
+    },
+    {
+        "id": 271,
+        "name": "SISHANE METRO",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 272,
+        "name": "ROCCA CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 273,
+        "name": "GOREMEK REVA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 274,
+        "name": "LUCKY CAVE HOTEL CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 275,
+        "name": "HOLIDAY CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 276,
+        "name": "ONTUR IZMIR OTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 277,
+        "name": "UZAY CAVE SUİT HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 278,
+        "name": "ORIENT OCCIDENT HOTEL ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 279,
+        "name": "GALATA PORT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 281,
+        "name": "CASTILLO ROJO HOTEL ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 283,
+        "name": "THE MARMARA PERA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 284,
+        "name": "ROX CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 285,
+        "name": "ARCH PALACE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 286,
+        "name": "BALLOON CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 287,
+        "name": "ALPHA STONE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 288,
+        "name": "TRAVEL INN CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 290,
+        "name": "SWISS JW MARMARA THE CARLTON",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 291,
+        "name": "CIRAGAN PALACE KEMPINSKI ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 295,
+        "name": "THE TITANIC HAUSE OTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 296,
+        "name": "GALATA BY BOSS SWEET HOTEL SPA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 307,
+        "name": "CLASSIO SUITE HOTEL",
+        "city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 315,
+        "name": "HILTON ISTANBUL BOSPHORUS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 317,
+        "name": "JIVA BEACH RESORT",
+        "city": "Muğla"
+    },
+    {
+        "id": 318,
+        "name": "WHITE HEAVEN SUITE HOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 319,
+        "name": "OZBEK STONE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 320,
+        "name": "C SUITES ANTALYA",
+        "city": "Antalya"
+    },
+    {
+        "id": 322,
+        "name": "GARCIA RESORT & SPA",
+        "city": "Muğla"
+    },
+    {
+        "id": 326,
+        "name": "RENAISSANCE İSTANBUL POLAT BOSPHORUS HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 327,
+        "name": "YUNAK EVLERI",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 328,
+        "name": "AHMET EFENDI KONAGI",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 329,
+        "name": "DNZ TAKSIM FERIDIYE HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 330,
+        "name": "SACRED MANSION GOREME",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 331,
+        "name": "JW MARRIOTT MARMARA SEA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 332,
+        "name": "DOUBLETREE BY HILTON PIYALEPASA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 334,
+        "name": "CAVE HOTEL SAKSAGAN",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 335,
+        "name": "THE WHITE ORIENT HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 337,
+        "name": "ORKA COVE HOTEL PENTHOUSE & SUİTES ADULTS ONLY",
+        "city": "Muğla"
+    },
+    {
+        "id": 342,
+        "name": "CRATUS STONE PALACE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 344,
+        "name": "ICON ISTANBUL HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 347,
+        "name": "MACCAN CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 348,
+        "name": "GLOBAL SUITES HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 349,
+        "name": "SATO CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 350,
+        "name": "CEDRUS HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 352,
+        "name": "FETHIYE CITY APARTS",
+        "city": "Muğla"
+    },
+    {
+        "id": 659,
+        "name": "LA CASA DE AIRPORT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 660,
+        "name": "CAPPADOCIA IN TRANSFER",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 661,
+        "name": "CAPPADOCIA KEPEZ HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 663,
+        "name": "WYNDHAM GRAND ISTANBUL LEVENT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 664,
+        "name": "5 STAR CONFERENCE HOTEL IN TURKEY",
+        "city": "Ankara"
+    },
+    {
+        "id": 666,
+        "name": "Orka Cove Hotel Penthouse & Suites Adults only",
+        "city": "Muğla"
+    },
+    {
+        "id": 667,
+        "name": "SHERATON ANKARA HOTEL CONVENTION CENTER",
+        "city": "Ankara"
+    },
+    {
+        "id": 668,
+        "name": "NESSA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 669,
+        "name": "KAPADOKYA KONAK",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 670,
+        "name": "ER OZ HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 671,
+        "name": "SHANGRİ-LA BOSPHORUS İSTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 672,
+        "name": "Bellamaritimo Hotel",
+        "city": "Denizli"
+    },
+    {
+        "id": 673,
+        "name": "OLYMPOS GARDEN",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 674,
+        "name": "GÖREME CAVE LODGE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 675,
+        "name": "HOUSEZ HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 676,
+        "name": "TARU CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 677,
+        "name": "ROMA CAVE SUITE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 678,
+        "name": "HİDDEN CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 679,
+        "name": "InterContinental Istanbul, an IHG Hotel",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 680,
+        "name": "FOUR POİNTS BY SHERATON İSTANBUL KAĞITHANE",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 681,
+        "name": "THE DORM BY TRAVELLERS",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 682,
+        "name": "DOUBLETREE BY HILTON AVANOS CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 683,
+        "name": "EDİTİON OLD CİTY HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 684,
+        "name": "BEDROCK CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 686,
+        "name": "BELCİ CİTY RESİDENCE",
+        "city": "Muğla"
+    },
+    {
+        "id": 687,
+        "name": "TASKONAK OTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 688,
+        "name": "SAPPHIRE STONE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 690,
+        "name": "OLİVİA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 691,
+        "name": "CENTURY CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 692,
+        "name": "KİSTAR CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 693,
+        "name": "TULİP CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 694,
+        "name": "ALESTA MIDTOWN",
+        "city": "Muğla"
+    },
+    {
+        "id": 695,
+        "name": "LYNDA HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 696,
+        "name": "ÖLÜDENIZ BLU LUXURY UNIQUE HOTEL-ADULTS-ONLY",
+        "city": "Muğla"
+    },
+    {
+        "id": 697,
+        "name": "LUVİ CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 699,
+        "name": "PAMUKKALE WHİTE HEAVEN SUİTE HOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 700,
+        "name": "Firuzağa mahallesi Hüseyin Ağa bahçe sokak Building No: 21 Alpaslan apartmani Beyoğlu/Istanbul",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 701,
+        "name": "HOTEL UNİQUE-BOUTİQUE CLASS",
+        "city": "Muğla"
+    },
+    {
+        "id": 702,
+        "name": "Park Hyatt Istanbul Macka Palas",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 703,
+        "name": "RuinAdalia Hotel - Adults Only",
+        "city": "Antalya"
+    },
+    {
+        "id": 704,
+        "name": "Pam Thermal Hotel Clinic & Spa",
+        "city": "Denizli"
+    },
+    {
+        "id": 705,
+        "name": "MAI İNCİ HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 706,
+        "name": "PAYAM HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 707,
+        "name": "S3 HOTELS ORANGE",
+        "city": "Muğla"
+    },
+    {
+        "id": 709,
+        "name": "FERMAN HİLAL HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 710,
+        "name": "Hotel Grand İstanbul",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 711,
+        "name": "CRONTON DESİGN HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 712,
+        "name": "VILLA TULİPAN",
+        "city": "Antalya"
+    },
+    {
+        "id": 713,
+        "name": "PETRA INN CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 714,
+        "name": "VILLA HOTEL TAMARA",
+        "city": "Antalya"
+    },
+    {
+        "id": 715,
+        "name": "LA BOHEME KABAK",
+        "city": "Muğla"
+    },
+    {
+        "id": 716,
+        "name": "YUSUF BEY HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 718,
+        "name": "DOUBLETREE BY HILTON KUŞADASI",
+        "city": "İzmir"
+    },
+    {
+        "id": 720,
+        "name": "AC HOTEL ISTANBUL MAÇKA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 721,
+        "name": "BLUE POİNT HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 722,
+        "name": "ring downtown hotel",
+        "city": "Antalya"
+    },
+    {
+        "id": 723,
+        "name": "SKY KAMER HOTEL ANTALYA",
+        "city": "Antalya"
+    },
+    {
+        "id": 724,
+        "name": "OLD TOWN STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 725,
+        "name": "HEYBE HOTEL SPA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 726,
+        "name": "ROUTE CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 727,
+        "name": "MILLSTONE CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 728,
+        "name": "Fethiye Karagözler Abdi İpekçi Caddesi No:9, 48300 Fethiye",
+        "city": "Muğla"
+    },
+    {
+        "id": 729,
+        "name": "GLK PREMIER SEA MANSION SUİTES & SPA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 730,
+        "name": "ERBOY HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 731,
+        "name": "ARGOS",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 732,
+        "name": "FEEL CAPPADOCIA STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 734,
+        "name": "DoubleTree by Hilton Istanbul - Moda",
+        "city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 735,
+        "name": "HOTEL BLACK TULIP",
+        "city": null
+    },
+    {
+        "id": 736,
+        "name": "LA PORTE DE TAKSIM",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 737,
+        "name": "ALESTA RESIDENCE",
+        "city": "Muğla"
+    },
+    {
+        "id": 738,
+        "name": "TELMESSOS CITY HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 739,
+        "name": "turk art hotel",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 740,
+        "name": "CAPPADOCIA PEGASOS CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 741,
+        "name": "NİPPON HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 742,
+        "name": "ILLAYDA HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 744,
+        "name": "BERA KONYA HOTEL",
+        "city": "Konya"
+    },
+    {
+        "id": 745,
+        "name": "hotel Amira",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 746,
+        "name": "Demiray hotel",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 747,
+        "name": "HANZADE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 748,
+        "name": "SERENE PREMIUM",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 749,
+        "name": "MEST HOTEL ISTANBUL SIRKECI",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 751,
+        "name": "Nox Suite",
+        "city": "Antalya"
+    },
+    {
+        "id": 752,
+        "name": "Romance Istanbul Hotel Boutique Class",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 753,
+        "name": "SHOESTRING CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 754,
+        "name": "Şehsuvar Bey, Düzgün Sokak No:18, FATİH, ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 755,
+        "name": "MAJESTIC CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 756,
+        "name": "MY DREAM ISTANBUL HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 757,
+        "name": "SANASARYAN HAN,A LUXURY COLLECTION HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 758,
+        "name": "ENJOY STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 760,
+        "name": "mövenpick istanbul golden horn",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 761,
+        "name": "LELİKO SUITES",
+        "city": "Antalya"
+    },
+    {
+        "id": 762,
+        "name": "KAŞ ATHENA HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 763,
+        "name": "OSMANHAN HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 764,
+        "name": "RAMADA BY WYNDHAM ISTANBUL TAKSIM",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 765,
+        "name": "Crowne Plaza Florya Istanbul, an IHG Hotel",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 766,
+        "name": "EI Camino Hostel & Pub",
+        "city": "Muğla"
+    },
+    {
+        "id": 767,
+        "name": "EMİT CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 768,
+        "name": "DIAMOND OF BODRUM HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 769,
+        "name": "MAYA CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 770,
+        "name": "ikiz Konak Boutique Hotel",
+        "city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 771,
+        "name": "Akra Fethiye Tui Blue Sensatori",
+        "city": "Muğla"
+    },
+    {
+        "id": 773,
+        "name": "BREEZE OF CAPPADOCİA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 774,
+        "name": "Gümüşsuyu, Asker Ocağı Cd. No: 1, 34435, Beyoglu, Istanbul, 34435, Türkiye",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 775,
+        "name": "ZEYN HOTEL ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 776,
+        "name": "TAFONI HOUSES CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 777,
+        "name": "Cave Konak Cappadocia- special Category",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 778,
+        "name": "MAGIC TULIP HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 779,
+        "name": "HOTEL DELTA",
+        "city": "Muğla"
+    },
+    {
+        "id": 780,
+        "name": "NO 12 HOTEL SULTANAHMET",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 781,
+        "name": "KALKAN .KIŞLA CAD. NO:66",
+        "city": "Antalya"
+    },
+    {
+        "id": 782,
+        "name": "BEREKETZADE HACI ALI SOK NO:8 SUKRAN APT 2.BEYOGLU",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 783,
+        "name": "AHMET EFENDİ EVİ",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 784,
+        "name": "CRYSTAL KAYMAKLI",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 785,
+        "name": "AVLU CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 786,
+        "name": "THE MARMARA ANTALYA",
+        "city": "Antalya"
+    },
+    {
+        "id": 787,
+        "name": "KASSANDRA BOUTIQUE HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 789,
+        "name": "KULOĞLU , TURNABAŞI CAD.NO:17/4.BEYOĞLU",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 791,
+        "name": "TUVANA HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 792,
+        "name": "RAMADA PLAZA WYNDHAM TEKSTILKENT",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 793,
+        "name": "LIBERTY LYKIA",
+        "city": "Muğla"
+    },
+    {
+        "id": 794,
+        "name": "TO BE SOCIAL HOUSE",
+        "city": "Muğla"
+    },
+    {
+        "id": 795,
+        "name": "BELENLİ RESORT HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 796,
+        "name": "ORİENT BANK HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 797,
+        "name": "Midtown Fethiye Residences",
+        "city": "Muğla"
+    },
+    {
+        "id": 798,
+        "name": "MELİSA BOUTİQUE HOTEL&SPA",
+        "city": "Antalya"
+    },
+    {
+        "id": 799,
+        "name": "CCR CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 800,
+        "name": "DEVİL'S STONE CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 801,
+        "name": "wonder of cappadocia",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 802,
+        "name": "ISTANBUL SIRKECI HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 803,
+        "name": "SHERATON ISTANBUL CITY CENTER",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 804,
+        "name": "SEATOWN HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 805,
+        "name": "The Niche Cave Hotel",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 806,
+        "name": "Pera Sultan Suit",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 807,
+        "name": "HILTON ISTANBUL MASLAK",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 808,
+        "name": "JUST INN CITY HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 809,
+        "name": "Important Garden",
+        "city": null
+    },
+    {
+        "id": 810,
+        "name": "Maze Of Cappadocia Hotel",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 811,
+        "name": "Istport Garden",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 812,
+        "name": "KUMBARACI YOKUŞU NO:47 BEYOĞLU İSTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 813,
+        "name": "The Marmara Taksim",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 814,
+        "name": "Juglans Suites",
+        "city": "Muğla"
+    },
+    {
+        "id": 816,
+        "name": "TAV AİRPORT HOTEL İZMİR",
+        "city": "İzmir"
+    },
+    {
+        "id": 817,
+        "name": "ELİKA CAVE SUITES & SPA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 819,
+        "name": "Taksim Premium Hotel",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 820,
+        "name": "Louis Appartements Galata",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 822,
+        "name": "Lalahan Hotel",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 823,
+        "name": "Lykia Old Town Antalya",
+        "city": "Antalya"
+    },
+    {
+        "id": 824,
+        "name": "RAMADA BY WYNDHAM CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 825,
+        "name": "PERA NEUF HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 827,
+        "name": "Ayaz Stone House",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 829,
+        "name": "KONUT WOODEN HOUSE",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 830,
+        "name": "THE MARIST HOTEL",
+        "city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 831,
+        "name": "HOTEL SARI KONAK SULTANAHMET",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 832,
+        "name": "CAP PALACE STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 833,
+        "name": "HU OF CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 834,
+        "name": "DEDEMAN KONYA",
+        "city": "Konya"
+    },
+    {
+        "id": 835,
+        "name": "CAPIEDRA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 836,
+        "name": "SARNICH CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 837,
+        "name": "SUHAN CAPPADOCIA HOTEL&SPA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 838,
+        "name": "ASCENSION CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 839,
+        "name": "HOTEL IPEK PALAS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 840,
+        "name": "HOTEL RAVI",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 842,
+        "name": "ACROPOLİS CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 843,
+        "name": "CARRUBA BOUTIQUE HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 844,
+        "name": "IC HOTELS AIRPORT",
+        "city": "Antalya"
+    },
+    {
+        "id": 845,
+        "name": "KOZA HOTEL",
+        "city": "Bursa"
+    },
+    {
+        "id": 846,
+        "name": "NARACA CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 847,
+        "name": "GALATA GREENLAND HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 848,
+        "name": "MELLDAY HOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 849,
+        "name": "Belcekiz Beach Club Hotel",
+        "city": "Muğla"
+    },
+    {
+        "id": 850,
+        "name": "JW Marriott Ankara",
+        "city": "Ankara"
+    },
+    {
+        "id": 851,
+        "name": "days inn cappadocia",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 852,
+        "name": "SECRET HILL CAVE SUITES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 853,
+        "name": "THE COTTON HOUSE HOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 855,
+        "name": "HOTEL MARSALA",
+        "city": "Antalya"
+    },
+    {
+        "id": 856,
+        "name": "TOMTOM SUITES",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 857,
+        "name": "GUVEN CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 858,
+        "name": "HELIKE CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 861,
+        "name": "SHERATON ISTANBUL ATAKÖY HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 862,
+        "name": "Phocas Cave Suite",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 863,
+        "name": "Bossa Nova Apart Hotel",
+        "city": "Antalya"
+    },
+    {
+        "id": 864,
+        "name": "HIRA CAVE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 865,
+        "name": "NORDSTERN HOTEL GALATA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 866,
+        "name": "TAMARA VILLA",
+        "city": "Antalya"
+    },
+    {
+        "id": 867,
+        "name": "HILTON GARDEN INN KONYA",
+        "city": "Konya"
+    },
+    {
+        "id": 868,
+        "name": "HILL HOUSE ADULT ONLY",
+        "city": "Antalya"
+    },
+    {
+        "id": 869,
+        "name": "Peace Stone House",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 870,
+        "name": "LOVELY CAPPADOCIA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 871,
+        "name": "GEDIK CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 872,
+        "name": "Vineyard cave hotel",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 879,
+        "name": "TALE CAVE IN",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 881,
+        "name": "HOTELLINO",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 882,
+        "name": "ELİPS ROYAL HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 883,
+        "name": "PERLA CAPPADOCİA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 884,
+        "name": "HOLIDAY INN ISTANBUL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 885,
+        "name": "ARIKA HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 887,
+        "name": "Ariana Sustainable Luxury Lodge",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 888,
+        "name": "Mangana Konak Hotel",
+        "city": "İstanbul"
+    },
+    {
+        "id": 889,
+        "name": "TOYA NEXT RESİDENCE",
+        "city": "İstanbul"
+    },
+    {
+        "id": 890,
+        "name": "ARTIKA HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 891,
+        "name": "JASMINE OLUDENIZ VILLA",
+        "city": "Muğla"
+    },
+    {
+        "id": 893,
+        "name": "MOVENPİCK İZMİR",
+        "city": "İzmir"
+    },
+    {
+        "id": 894,
+        "name": "RICHMOND PAMUKKALE THERMAL",
+        "city": "Denizli"
+    },
+    {
+        "id": 896,
+        "name": "MEDUSA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 897,
+        "name": "ERATO - KALKAN",
+        "city": "Antalya"
+    },
+    {
+        "id": 898,
+        "name": "PERGE PINE GREEN",
+        "city": "Antalya"
+    },
+    {
+        "id": 901,
+        "name": "GLK PREMIER THE HOME SUITES & SPA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 902,
+        "name": "Beşiktaş iskelesi",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 903,
+        "name": "ALESTA SEASIDE RESIDENCE",
+        "city": "Muğla"
+    },
+    {
+        "id": 904,
+        "name": "PEARL HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 906,
+        "name": "IBIS KONYA",
+        "city": "Konya"
+    },
+    {
+        "id": 907,
+        "name": "Aysel İnn House",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 908,
+        "name": "MOSAIC CAVE HOTEL",
+        "city": "Kayseri"
+    },
+    {
+        "id": 909,
+        "name": "RAMADA PLAZA BY WYNDHAM KONYA",
+        "city": "Konya"
+    },
+    {
+        "id": 910,
+        "name": "POLAT PİYALEPAŞA İSTANBUL APARTMAN",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 912,
+        "name": "CITY LIFE DEMIR HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 913,
+        "name": "Galata Tower AC A1-H3",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 914,
+        "name": "woxx hotel",
+        "city": "İstanbul"
+    },
+    {
+        "id": 915,
+        "name": "HANEDAN CAPPADOCIA SUITE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 916,
+        "name": "SULTAN AHMET, AKBIYIK CAMİ SOKAK NO:8 8/3  FATIH  IST",
+        "city": "İstanbul"
+    },
+    {
+        "id": 917,
+        "name": "The Dorm Cave by Travellers",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 919,
+        "name": "HAMPTON BY HILTON ISTANBUL SIRKECI",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 920,
+        "name": "KAYA ISTANBUL FAIR & CONVENTION",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 921,
+        "name": "ANGEL VIEW SUITES",
+        "city": "Kayseri"
+    },
+    {
+        "id": 922,
+        "name": "CROWNE PLAZA ISTANBUL - OLD CITY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 923,
+        "name": "CROWNE PLAZA CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 924,
+        "name": "Nova Plaza Prime Hotel",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 925,
+        "name": "Marriott Executive Apartments Istanbul Fulya",
+        "city": "İstanbul"
+    },
+    {
+        "id": 926,
+        "name": "SERAPHİM CAVE CAPPADOCİA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 927,
+        "name": "BEST WESTERN PLUS KHAN HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 928,
+        "name": "MARLON HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 929,
+        "name": "MÖVENPİCK HOTEL İSTANBUL BOSPHORUS",
+        "city": "İstanbul"
+    },
+    {
+        "id": 930,
+        "name": "SOBEK STONE HOUSE CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 931,
+        "name": "UÇHİSAR KAYA OTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 932,
+        "name": "HOTEL RAFFLES İSTANBUL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 933,
+        "name": "ADELYA 34 STANDART CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 934,
+        "name": "EURO PLAZA TAKSIM PERA",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 936,
+        "name": "DOWNTOWN SIRKECI HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 937,
+        "name": "AZALEA TERRACA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 940,
+        "name": "BENTLEY OLD TOWN",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 942,
+        "name": "Bentley Hotel Old City- Special Class",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 943,
+        "name": "GULTEPE APARTMENTS",
+        "city": "İzmir"
+    },
+    {
+        "id": 944,
+        "name": "KAPPADOKS CAVE HOTEL",
+        "city": "Kayseri"
+    },
+    {
+        "id": 946,
+        "name": "WYNDHAM GRAND IZMIR OZDILEK THERMAL AND SPA",
+        "city": "İzmir"
+    },
+    {
+        "id": 947,
+        "name": "GEZI BOSPHORUS",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 948,
+        "name": "GLORİA GOLF RESORT",
+        "city": "Antalya"
+    },
+    {
+        "id": 949,
+        "name": "HAMPTON BY HILTON ISTANBUL KURTKOY",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 950,
+        "name": "HOTEL HAL-TUR",
+        "city": "Denizli"
+    },
+    {
+        "id": 953,
+        "name": "GLORIA VERDE RESORT",
+        "city": "Antalya"
+    },
+    {
+        "id": 955,
+        "name": "CAPPADOCIA EMPIRE CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 956,
+        "name": "Germir Palas Hotel - Special Class",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 958,
+        "name": "DOORS OF CAPPADOCIA HOTEL - KAPADOKYA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 959,
+        "name": "LIVIA GARDEN HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 960,
+        "name": "GÖREME ALATURCA HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 961,
+        "name": "DOGAN HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 962,
+        "name": "LEMON RESİDENCE",
+        "city": "İstanbul"
+    },
+    {
+        "id": 963,
+        "name": "VIEW CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 964,
+        "name": "CAPPA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 965,
+        "name": "NILLS STONE HOUSE HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 966,
+        "name": "MARON STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 967,
+        "name": "GLORIUS HOUSE GOREME",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 969,
+        "name": "HOTEL HISTORIA",
+        "city": "İstanbul"
+    },
+    {
+        "id": 970,
+        "name": "GUZIDE CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 972,
+        "name": "HOTEL AYSIMA",
+        "city": "Antalya"
+    },
+    {
+        "id": 973,
+        "name": "ECCLESIA HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 974,
+        "name": "ARIEL HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 975,
+        "name": "HORASAN BOUTIQUE HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 976,
+        "name": "VILLA KONAK - KUŞADASI",
+        "city": "Aydın"
+    },
+    {
+        "id": 977,
+        "name": "FRESCO CAVE SUITES CAPPADOCIA",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 978,
+        "name": "CHAKRA SPECIAL CAVES HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 979,
+        "name": "CRATUS PREMIUM RESTAURANT & LOUNGE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 980,
+        "name": "OLENDA CAPPADOCIA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 982,
+        "name": "KATAPA STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 983,
+        "name": "CAPPADOCIA CAVE ROOMS",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 984,
+        "name": "THE PEARL ÖLÜDENİZ",
+        "city": "Muğla"
+    },
+    {
+        "id": 985,
+        "name": "BELCEHAN HOTEL",
+        "city": "Muğla"
+    },
+    {
+        "id": 987,
+        "name": "VALIDE SULTAN KONAGI",
+        "city": "İstanbul"
+    },
+    {
+        "id": 988,
+        "name": "MARCAN BEACH  HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 989,
+        "name": "BREEZE HOTEL",
+        "city": "Eskişehir"
+    },
+    {
+        "id": 990,
+        "name": "CİTY LİFE ISTANBUL BAYMARİ SUİTES",
+        "city": "İstanbul"
+    },
+    {
+        "id": 991,
+        "name": "ELİTE WORLD İSTANBUL TAKSİM",
+        "city": "İstanbul"
+    },
+    {
+        "id": 992,
+        "name": "HAMPTON BY HILTON ISTANBU ZEYTİNBURNU",
+        "city": "İstanbul"
+    },
+    {
+        "id": 994,
+        "name": "BAYMARI SUITES CITY LIFE",
+        "city": "İstanbul"
+    },
+    {
+        "id": 995,
+        "name": "HILTON ISTANBUL BOMONTI HOTEL& CONFERENCE CENTER",
+        "city": null
+    },
+    {
+        "id": 996,
+        "name": "KOZA CAVE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 997,
+        "name": "ISTASYON HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 998,
+        "name": "NOBLE PANGALTİ",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 999,
+        "name": "SAFRANBOLU SEYİR KONAK HOTEL",
+        "city": "Karabük"
+    },
+    {
+        "id": 1000,
+        "name": "SARNICH CAVE SUİTES",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1001,
+        "name": "EXTENSO HOTEL",
+        "city": "İzmir"
+    },
+    {
+        "id": 1002,
+        "name": "HOFT CIHANGIR",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1003,
+        "name": "ALAMODE CAPPADOCIA",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1004,
+        "name": "LUWIAN STONE HOUSE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1005,
+        "name": "PARK DEDEMAN DENIZLI",
+        "city": "Denizli"
+    },
+    {
+        "id": 1006,
+        "name": "SEA VALLEY LODGE",
+        "city": "Muğla"
+    },
+    {
+        "id": 1007,
+        "name": "LUCKY MONKEY OTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 1008,
+        "name": "CAPPADOCIA HATICE",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1009,
+        "name": "CAPPADOCIA SYMBOL HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1010,
+        "name": "RADISSON BLU HOTEL KAS",
+        "city": "Antalya"
+    },
+    {
+        "id": 1011,
+        "name": "ALDINO HOTEL",
+        "city": "Ankara"
+    },
+    {
+        "id": 1012,
+        "name": "STONE HOUSE CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1013,
+        "name": "GOLDEN LOTUS HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 1014,
+        "name": "AYAPAM HOTEL",
+        "city": "Denizli"
+    },
+    {
+        "id": 1015,
+        "name": "CENTRO WESTSIDE BY ROTANA HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1016,
+        "name": "VILLA EPHESUS HOTEL",
+        "city": "Aydın"
+    },
+    {
+        "id": 1017,
+        "name": "NOVOTEL KAYSERİ",
+        "city": "Kayseri"
+    },
+    {
+        "id": 1018,
+        "name": "LAZZONİ HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1019,
+        "name": "KOOKABURRA HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1020,
+        "name": "ROYAL SEGINUS HOTEL",
+        "city": "Antalya"
+    },
+    {
+        "id": 1021,
+        "name": "SURA DESIGN HOTELS SUITES İSTANBUL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1022,
+        "name": "MÖVENPİCK HOTEL İSTANBUL ASİA AİRPORT",
+        "city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 1023,
+        "name": "AREN CAVE HOTEL AND ART GALLERY",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1025,
+        "name": "PERUNA CAVE HOTEL",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1026,
+        "name": "ÖZEL KAPADOKYA HASTANESİ",
+        "city": "Nevşehir"
+    },
+    {
+        "id": 1027,
+        "name": "Kempinski Hotel The Dome Belek",
+        "city": "Antalya"
+    },
+    {
+        "id": 1028,
+        "name": "Trademark Collection By Wyndham Operla Airport Hotels",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1029,
+        "name": "GRAND CEVAHİR HOTEL",
+        "city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 1030,
+        "name": "WOW İSTANBUL HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1031,
+        "name": "KAMELYA CAVE HOTEL",
+        "city": "İstanbul"
+    },
+    {
+        "id": 1032,
+        "name": "RAMADA PLAZA BY WYNDHAM ISTANBUL CITY CENTER",
+        "city": "İstanbul"
+    }
+]

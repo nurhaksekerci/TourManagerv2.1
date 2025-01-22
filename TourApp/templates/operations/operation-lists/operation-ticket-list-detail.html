@@ -1,0 +1,328 @@
+<div class="card stretch stretch-full">
+    <div class="card-header">
+        <h5 class="card-title">İşler {{ operation.ticket|upper }}</h5>
+
+        <div class="card-header-action">
+            <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                <div class="dropdown">
+                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12"
+                        data-bs-auto-close="outside">
+                        <i class="feather-paperclip"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="javascript:void(0);" class="dropdown-item download-item"
+                            data-filetype="pdf" data-day="today">
+                            <i class="bi bi-filetype-pdf me-3"></i>
+                            <span>PDF</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item download-item"
+                            data-filetype="txt" data-day="today">
+                            <i class="bi bi-filetype-txt me-3"></i>
+                            <span>Text</span>
+                        </a>
+                        <a href="{% url 'export_operation_to_excel' operation.id %}" class="dropdown-item download-item"
+                           data-filetype="excel" data-day="today">
+                            <i class="bi bi-filetype-exe me-3"></i>
+                            <span>Excel</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="javascript:void(0);" class="dropdown-item download-item"
+                            data-filetype="print" data-day="today">
+                            <i class="bi bi-printer me-3"></i>
+                            <span>Print</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body custom-card-action p-0">
+        <div class="table-responsive">
+            <table id="operation-table" class="table table-hover mb-0" style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Ticket</th>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Start Date</th>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Finish Date</th>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Sold Employee</th>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Follow Employee</th>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Created Date</th>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Prices</th>
+                        <th style="word-wrap: break-word; white-space: normal;" class="text-primary">Customers</th>
+                    </tr>
+                </thead>
+                <tbody id="operation-details-tbody">
+                    <tr class="opr-details" data-company-name="{{ company.name }}">
+                        <td style="word-wrap: break-word; white-space: normal;" class="text-primary"><strong>{{ operation.ticket }}</strong></td>
+                        <td style="word-wrap: break-word; white-space: normal;" class="text-primary"><strong>{{ operation.start|date:'d.m.Y' }}</strong></td>
+                        <td style="word-wrap: break-word; white-space: normal;" class="text-primary"><strong>{{ operation.finish|date:'d.m.Y' }}</strong></td>
+                        <td style="word-wrap: break-word; white-space: normal;" class="text-primary"><strong>{{ operation.selling_staff }}</strong></td>
+                        <td style="word-wrap: break-word; white-space: normal;" class="text-primary"><strong>{{ operation.follow_staff }}</strong></td>
+                        <td style="word-wrap: break-word; white-space: normal;" class="text-primary"><strong>{{ operation.create_date|date:'d.m.Y H:i' }}</strong></td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                            {% if operation.prices.exists %}
+                                <ol>
+                                    {% for price in operation.prices.all %}
+                                        <li>{{ price.price }} {{ price.currency }}</li>
+                                    {% endfor %}
+                                </ol>
+                            {% else %}
+                                ----
+                            {% endif %}
+                        </td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                            {% if operation.customers.exists %}
+                                <ol>
+                                    {% for customer in operation.customers.all %}
+                                        <li>{{ customer.name }} - {{ customer.phone }}</li>
+                                    {% endfor %}
+                                </ol>
+                            {% else %}
+                                ----
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% if operation.days.exists %}
+                        {% for day in days %}
+                            {% for item in day.items_filtered %}
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;" class="text-danger">Day</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;" class="text-danger">Operation Type</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;" class="text-danger">Description</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;" class="text-danger">Pick-up Time</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;" class="text-danger">Pick-up Point</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;" class="text-danger text-end">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;"><strong>{{ item.day.date|date:'d.m.Y' }}</strong></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.operation_type }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.description }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_time }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_location }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        <button hx-get="#" hx-target="#" hx-swap="innerHTML" class="avatar-text avatar-md ms-auto">
+                                                            <i class="feather-arrow-right"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Tour</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Transfer</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Type</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Supplier</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Sell Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.tour }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.transfer }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle.vehicle }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.suppliler }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_price }} {{ item.vehicle_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_sell_price }} {{ item.vehicle_sell_currency }}</td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Room Type</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Hotel Payment</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.room_type }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_price }} {{ item.hotel_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_sell_price }} {{ item.hotel_sell_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_payment }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museums</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museums Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museums Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Museums Payment</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;">
+                                                        {% if item.museum.exists %}
+                                                            <ol>
+                                                                {% for museum in item.museum.all %}
+                                                                    <li>{{ museum.name }}</li>
+                                                                {% endfor %}
+                                                            </ol>
+                                                        {% else %}
+                                                            ----
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_price }} {{ item.museum_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_sell_price }} {{ item.museum_sell_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_payment }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Supplier</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Activity Payment</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_supplier }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_price }} {{ item.activity_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_sell_price }} {{ item.activity_sell_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_payment }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Guide Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">There is Guide</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide.name }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_price }} {{ item.guide_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_sell_price }} {{ item.guide_sell_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_var }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Driver Name</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Driver Phone</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Vehicle Plate</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.driver }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.driver_phone }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.plaka }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="p-0">
+                                        <table class="table table-hover mb-0"
+                                            style="font-size: 0.6rem; table-layout: fixed; width: 100%;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Other Cost Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;">Other Sell Price</th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                    <th style="word-wrap: break-word; white-space: normal;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="opr-details" data-company-name="{{ company.name }}">
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.other_price }} {{ item.other_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;">{{ item.other_sell_price }} {{ item.other_sell_currency }}</td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                    <td style="word-wrap: break-word; white-space: normal;"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -18,20 +18,19 @@ from django.contrib import admin
 from django.urls import path, include
 from Login.views import *
 from Core.views import check_username
-from rest_framework.routers import DefaultRouter
-from Core.views import OperationItemViewSet
 
-router = DefaultRouter()
-router.register(r'operationitems', OperationItemViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('account/', include('Login.urls')),
-    path('chat/', include('chat.urls')),
     path('', login, name="login"),
+    path('daphne/', include('Daphne.urls')),
     path('TourManagerV2/', include('Core.urls')),
+    path('tour-app/', include('TourApp.urls')),
+    path('auth/', include('LoginApp.urls')),
     path('check_username/', check_username, name='check_username'),
+    path('api/', include('api.urls')),
+
 ]
 from django.conf import settings
 from django.conf.urls.static import static

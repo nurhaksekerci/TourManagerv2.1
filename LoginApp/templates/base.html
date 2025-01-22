@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zxx">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="author" content="Nurhak Şekerci">
+    <title>{{ title }} || {{ company_name }}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon.ico' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/vendors.min.css' %}">
+    {% block css %}{% endblock css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/theme.min.css' %}">
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+
+</head>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-personel-id="{{request.user.personel.first.id}}">
+    {% include 'includes/navbar.html'%}
+    {% include 'includes/header.html'%}
+    <main class="nxl-container">
+        <div class="nxl-content">
+
+            {% block content %}{% endblock content %}
+            
+        </div>
+        {% include 'includes/footer.html'%}
+    </main>
+    {% include 'includes/theme-customizer.html'%}
+    <script src="{% static 'assets/vendors/js/vendors.min.js' %}"></script>
+    <script src="{% static 'assets/js/common-init.min.js' %}"></script>
+    <script src="{% static 'assets/js/theme-customizer-init.min.js' %}"></script>
+    {% block js %}{% endblock js %}
+</body>
+
+</html>

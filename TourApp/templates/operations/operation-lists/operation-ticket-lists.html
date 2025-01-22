@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2-theme.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/jquery.time-to.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/datepicker.min.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-left d-flex align-items-center">
+        <div class="page-header-title">
+            <h5 class="m-b-10">{{ title }}</h5>
+        </div>
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">{{ title }}</li>
+        </ul>
+    </div>
+    <div class="page-header-right ms-auto">
+        <div class="page-header-right-items">
+            <div class="d-flex d-md-none">
+                <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                    <i class="feather-arrow-left me-2"></i>
+                    <span>Back</span>
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                <div class="dropdown">
+                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12"
+                        data-bs-auto-close="outside">
+                        <i class="feather-filter"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <h6 class="my-2 text-center">Filter of date</h6>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="container row">
+                                <div class="col-lg-12 mb-4">
+                                    <label class="form-label">Start <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="startDate" placeholder="start date ">
+                                </div>
+                                <div class="col-lg-12 mb-4">
+                                    <label class="form-label">Due <span class="text-danger"></span></label>
+                                    <input type="date" class="form-control" name="dueDate" placeholder="Due date">
+                                </div>
+                                <div class="col-lg-12 mb-4">
+                                    <button class="btn btn-secondary">Go Jobs</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-md-none d-flex align-items-center">
+            <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                <i class="feather-align-right fs-20"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="row">
+        <div class="col-xxl-2 col-lg-2">
+            <div class="card stretch stretch-full">
+                <div class="card-header">
+                    <div style="display: flex; flex-direction: column; width: 100%;">
+                        <h5 class="card-title">Operations</h5>
+                        <input id="ticket_search" class="form-control mt-2" type="text" name="ticket_search" placeholder="Enter Ticket">
+                    </div>
+                </div>
+                <div class="card-body custom-card-action">
+                    <div class="mb-1">
+                        {% for operation in operations %}
+                            <div class="mb-2 pb-1 d-flex operation-item">
+                                <div class="d-flex w-100 align-items-center me-3">
+                                    <div class="d-flex w-50 align-items-center me-3">
+                                        <div class="operation-item-search">
+                                            <a hx-get="{% url 'operation_ticket_list_details' operation_id=operation.id %}" hx-target="#detail" hx-swap="innerHTML" class="text-truncate-2-line">
+                                                {{ operation.ticket|upper }}
+                                            </a>
+                                            <div class="fs-11 text-muted {% if operation.cont == 'Future' %}text-success{% elif operation.cont == 'Continious' %}text-warning{% elif operation.cont == 'Completed' %}text-danger{% endif %}">{{ operation.cont|upper }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="border-dashed my-1">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10" id="detail">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'assets/vendor/js/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/vendor/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/vendor/js/select2-active.min.js' %}"></script>
+<script src="{% static 'assets/vendor/js/jquery.time-to.min.js' %}"></script>
+<script src="{% static 'assets/js/widgets-tables-init.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="{% static 'assets/vendor/js/datepicker.min.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('ticket_search');
+    const operationsListItems = document.querySelectorAll('.operation-item');
+    const operationsList = document.querySelectorAll('.operation-item-search');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toUpperCase().trim();
+
+        operationsList.forEach(function(operation, index) {
+            const ticketElement = operation.querySelector('a');
+            const companyElement = operation.querySelector('.fs-11.text-muted');
+
+            const ticket = ticketElement ? ticketElement.textContent.toUpperCase().trim() : "";
+            const company = companyElement ? companyElement.textContent.toUpperCase().trim() : "";
+
+            if (ticket.includes(searchTerm) || company.includes(searchTerm)) {
+                operationsListItems[index].classList.remove('d-none');
+
+                const hrElement = operationsListItems[index].nextElementSibling;
+                if (hrElement && hrElement.tagName === 'HR') {
+                    hrElement.classList.remove('d-none');
+                }
+            } else {
+                const operationItem = operationsListItems[index];
+                const hrElement = operationItem.nextElementSibling;
+
+                operationItem.classList.add('d-none');
+                if (hrElement && hrElement.tagName === 'HR') {
+                    hrElement.classList.add('d-none');
+                }
+            }
+        });
+    });
+});
+
+</script>
+{% endblock js %}

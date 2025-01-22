@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zxx">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="author" content="theme_ocean">
+    <title>{{ title }} || Daphne Tour</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon.ico' %}">
+
+    {% block css %}{% endblock css %}
+    <script src="https://unpkg.com/htmx.org@2.0.1" integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/vendors.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/theme.min.css' %}">
+</head>
+
+<body>
+    <!--! ================================================================ !-->
+    <!--! [Start] Navigation Manu !-->
+    <!--! ================================================================ !-->
+    {% include 'includes/main/navbar/navbar.html' %}
+    <!--! ================================================================ !-->
+    <!--! [End]  Navigation Manu !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Header !-->
+    <!--! ================================================================ !-->
+    {% include 'includes/main/header/header.html' %}
+    <!--! ================================================================ !-->
+    <!--! [End] Header !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Main Content !-->
+    <!--! ================================================================ !-->
+    <main class="nxl-container">
+        <div class="nxl-content">
+            <!-- [ page-header ] start -->
+
+            <!-- [ page-header ] end -->
+            <!-- [ Main Content ] start -->
+            {% block content %}{% endblock content %}
+            <!-- [ Main Content ] end -->
+        </div>
+        <!-- [ Footer ] start -->
+        {% include 'includes/main/footer/footer.html' %}
+        <!-- [ Footer ] end -->
+    </main>
+    <!--! ================================================================ !-->
+    <!--! [End] Main Content !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Search Modal !-->
+    <!--! ================================================================ !-->
+    {% include 'includes/main/search/search.html' %}
+    <!--! ================================================================ !-->
+    <!--! [End] Search Modal !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Language Select !-->
+    <!--! ================================================================ !-->
+    {% include 'includes/main/language/language.html' %}
+
+    <!--! ================================================================ !-->
+    <!--! [End] Language Select !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Downloading Toast !-->
+    <!--! ================================================================ !-->
+    <div class="position-fixed" style="right: 5px; bottom: 5px; z-index: 999999">
+        <div id="toast" class="toast bg-black hide" data-bs-delay="3000" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header px-3 bg-transparent d-flex align-items-center justify-content-between border-bottom border-light border-opacity-10">
+                <div class="text-white mb-0 mr-auto">Downloading...</div>
+                <a href="javascript:void(0)" class="ms-2 mb-1 close fw-normal" data-bs-dismiss="toast" aria-label="Close">
+                    <span class="text-white">&times;</span>
+                </a>
+            </div>
+            <div class="toast-body p-3 text-white">
+                <h6 class="fs-13 text-white">Project.zip</h6>
+                <span class="text-light fs-11">4.2mb of 5.5mb</span>
+            </div>
+            <div class="toast-footer p-3 pt-0 border-top border-light border-opacity-10">
+                <div class="progress mt-3" style="height: 5px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated w-75 bg-dark" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--! ================================================================ !-->
+    <!--! END: Downloading Toast !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Theme Customizer !-->
+    <!--! ================================================================ !-->
+
+    {% include 'includes/main/custom-theme/custom-theme.html' %}
+
+    <!--! ================================================================ !-->
+    <!--! [End] Theme Customizer !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! Footer Script !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Vendors JS !-->
+    <script src="{% static 'assets/vendor/js/vendors.min.js' %}"></script>
+    <script src="{% static 'assets/js/common-init.min.js' %}"></script>
+    <script src="{% static 'assets/js/theme-customizer-init.min.js' %}"></script>
+    {% block js %}{% endblock js %}
+</body>
+
+</html>

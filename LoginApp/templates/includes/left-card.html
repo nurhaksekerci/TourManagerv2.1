@@ -1,0 +1,86 @@
+{% load static %}
+<div class="card stretch stretch-full">
+    <div class="card-body">
+        <div class="mb-4 text-center">
+            <div class="wd-150 ht-150 mx-auto mb-3 position-relative">
+                <div class="avatar-image wd-150 ht-150 border border-5 border-gray-3">
+                    {% if employee.gender == "man" %}
+                    <img src="{% static 'assets/images/avatar/man.png' %}" alt="" class="img-fluid">
+                    {% else %}
+                    <img src="{% static 'assets/images/avatar/woman.png' %}" alt="" class="img-fluid">
+                    {% endif %}
+                </div>
+                <div class="wd-10 ht-10 text-success rounded-circle position-absolute translate-middle"
+                    style="top: 76%; right: 10px">
+                    <i class="bi bi-patch-check-fill"></i>
+                </div>
+            </div>
+            <div class="mb-4">
+                <h2 class="fs-14 fw-bold d-block">
+                    {% if employee.user.first_name and employee.user.last_name %}
+                        {{ employee.user.first_name }} {{ employee.user.last_name }}
+                    {% else %}
+                        {{ employee.user.username }}
+                    {% endif %}        
+                </h2>
+                <a href="javascript:void(0);"
+                    class="fs-12 fw-normal text-muted d-block">{{ company.email }}</a>
+            </div>
+            <div class="fs-12 fw-normal text-muted text-center d-flex flex-wrap gap-3 mb-4">
+                <div
+                    class="flex-fill py-3 px-4 rounded-1 d-none d-sm-block border border-dashed border-gray-5">
+                    <h6 class="fs-15 fw-bolder">28.65K</h6>
+                    <p class="fs-12 text-muted mb-0">Last Month</p>
+                </div>
+                <div
+                    class="flex-fill py-3 px-4 rounded-1 d-none d-sm-block border border-dashed border-gray-5">
+                    <h6 class="fs-15 fw-bolder">38.85K</h6>This Month</p>
+                </div>
+                <div
+                    class="flex-fill py-3 px-4 rounded-1 d-none d-sm-block border border-dashed border-gray-5">
+                    <h6 class="fs-15 fw-bolder">43.67K</h6>
+                    <p class="fs-12 text-muted mb-0">In Year</p>
+                </div>
+            </div>
+        </div>
+        <ul class="list-unstyled mb-4">
+            <li class="hstack justify-content-between mb-4">
+                <span class="text-muted fw-medium hstack gap-3"><i
+                        class="feather-map-pin"></i>Company</span>
+                <a href="javascript:void(0);" class="float-end">{{ employee.company.name|upper }}</a>
+            </li>
+            <li class="hstack justify-content-between mb-4">
+                <span class="text-muted fw-medium hstack gap-3"><i class="feather-phone"></i>Phone</span>
+                <a href="javascript:void(0);" class="float-end">{{ employee.phone }}</a>
+            </li>
+            {% if employee.user.email %}
+                <li class="hstack justify-content-between mb-0">
+                    <span class="text-muted fw-medium hstack gap-3"><i class="feather-mail"></i>Email</span>
+                    <a href="javascript:void(0);" class="float-end">{{ employee.user.email }}</a>
+                </li>
+            {% endif %}
+        </ul>
+        {% if slug %}
+            {% if request.user.employees.first.job == "Management" or request.user.employees.first.job == "System Developer" %}
+                <div class="d-flex gap-2 text-center pt-3">
+                    <a href="javascript:void(0);" class="mx-auto w-50 btn btn-danger">
+                        <i class="feather-trash-2 me-2"></i>
+                        <span>Delete</span>
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="d-flex gap-2 text-center pt-3">
+                <a href="javascript:void(0);" class="mx-auto w-50 btn btn-danger">
+                    <i class="feather-trash-2 me-2"></i>
+                    <span>Delete</span>
+                </a>
+                <a href="{% url 'change_password' %}" class="mx-auto w-50 btn btn-primary">
+                    <i class="feather-key me-2"></i>
+                    <span>Change Password</span>
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</div>

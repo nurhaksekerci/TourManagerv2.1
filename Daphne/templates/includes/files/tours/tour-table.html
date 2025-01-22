@@ -1,0 +1,33 @@
+<tr class="single-item" data-tour-id="{{ tour.id }}">
+    <td>
+        {{ tour.route }}
+    </td>
+    <td>
+        <div class="hstack gap-2 justify-content-end">
+            <a href="proposal-view.html" class="avatar-text avatar-md">
+                <i class="feather feather-eye"></i>
+            </a>
+            <a href="proposal-view.html" class="avatar-text avatar-md">
+                <i class="feather feather-edit"></i>
+            </a>
+            <a href="proposal-view.html" class="avatar-text avatar-md">
+                <i class="feather feather-delete"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr class="detail-row" id="details-{{ tour.id }}" style="display: none;">
+    <td colspan="2">
+        <div id="tour-details-{{ tour.id }}">
+            <ul>
+                {% for route in tour.routes %}
+                    <li>{{ route.konum.route }}</li>
+                {% empty %}
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa-solid fa-circle-info"></i> No location found.
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </td>
+</tr>

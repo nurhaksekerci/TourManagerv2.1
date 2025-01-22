@@ -1,0 +1,318 @@
+<form hx-post="{% url 'operation_item_create_day' operation.id day_number %}" hx-target="#form-div" hx-swap="innerHTML" hx-trigger="click from:#next-page">
+
+  <div class="row align-items-center mb-3">
+    <h6 class="text-center">İtem</h6>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="operation_type" class="col-form-label">Operation Type:</label>
+        </div>
+        <div class="col-8">
+          {{ form.operation_type }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="pick_time" class="col-form-label">Pick-up Time:</label>
+        </div>
+        <div class="col-8">
+          {{ form.pick_time }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="pick_location" class="col-form-label">Pick-up Point:</label>
+        </div>
+        <div class="col-8">
+          {{ form.pick_location }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="release_location" class="col-form-label">Finish Point:</label>
+        </div>
+        <div class="col-8">
+          {{ form.release_location }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-2" />
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="tour" class="col-form-label">Tour:</label>
+        </div>
+        <div class="col-8">
+          {{ form.tour }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="transfer" class="col-form-label">Transfer:</label>
+        </div>
+        <div class="col-8">
+          {{ form.transfer }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="vehicle" class="col-form-label">Vehicle Type:</label>
+        </div>
+        <div class="col-8">
+          {{ form.vehicle }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-2" />
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="hotel" class="col-form-label">Hotel:</label>
+        </div>
+        <div class="col-8">
+          {{ form.hotel }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="room_type" class="col-form-label">Room Type:</label>
+        </div>
+        <div class="col-8">
+          {{ form.room_type }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="hotel_sell_price" class="col-form-label">Hotel Sell Price:</label>
+        </div>
+        <div class="col-8">
+          {{ form.hotel_sell_price }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="hotel_sell_currency" class="col-form-label">Hotel Sell Currency:</label>
+        </div>
+        <div class="col-8">
+          {{ form.hotel_sell_currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-2" />
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="activity" class="col-form-label">Activity:</label>
+        </div>
+        <div class="col-8">
+          {{ form.activity }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="activity_payment" class="col-form-label">We Paid :</label>
+        </div>
+        <div class="col-8">
+          {{ form.activity_payment }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="activity_sell_price" class="col-form-label">Activity Sell Price:</label>
+        </div>
+        <div class="col-8">
+          {{ form.activity_sell_price }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="activity_sell_currency" class="col-form-label">Activity Sell Currency:</label>
+        </div>
+        <div class="col-8">
+          {{ form.activity_sell_currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-2" />
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="new_museum" class="col-form-label">Museums:</label>
+        </div>
+        <div class="col-8">
+          {{ form.new_museum }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="museum_payment" class="col-form-label">We Paid:</label>
+        </div>
+        <div class="col-8">
+          {{ form.museum_payment }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="museum_sell_price" class="col-form-label">Museum Sell Price:</label>
+        </div>
+        <div class="col-8">
+          {{ form.museum_sell_price }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="museum_sell_currency" class="col-form-label">Museum Sell Currency:</label>
+        </div>
+        <div class="col-8">
+          {{ form.museum_sell_currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-2" />
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="guide" class="col-form-label">Guide:</label>
+        </div>
+        <div class="col-8">
+          {{ form.guide }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="guide_var" class="col-form-label">There is Guide:</label>
+        </div>
+        <div class="col-8">
+          {{ form.guide_var }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="guide_sell_price" class="col-form-label">Guide Sell Price:</label>
+        </div>
+        <div class="col-8">
+          {{ form.guide_sell_price }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="guide_sell_currency" class="col-form-label">Guide Sell Currency:</label>
+        </div>
+        <div class="col-8">
+          {{ form.guide_sell_currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-2" />
+
+  <div class="row align-items-center mb-3">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="other_sell_price" class="col-form-label">Other Sell Price:</label>
+        </div>
+        <div class="col-8">
+          {{ form.other_sell_price }}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="other_sell_currency" class="col-form-label">Other Sell Currency:</label>
+        </div>
+        <div class="col-8">
+          {{ form.other_sell_currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="my-2" />
+
+  <div class="row align-items-center mb-3">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-4 align-self-center">
+          <label for="description" class="col-form-label">Description:</label>
+        </div>
+        <div class="col-8">
+          {{ form.description }}
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

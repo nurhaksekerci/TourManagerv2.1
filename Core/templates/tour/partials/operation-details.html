@@ -125,11 +125,11 @@
     </div>
 
     <div class="card-body">
-        {% for day in operation.operationday_set.all %}
+        {% for day in operation.days.all %}
             <h5 class="card-title">Tarih: {{ day.date|date:"d.m.Y" }}</h5>
             <div class="responsive-table">
                 <table class="table table-bordered table-striped table-hover mb-2" id="table-id" style="font-size:0.7rem;">
-                    {% for item in day.operationitem_set.all %}
+                    {% for item in day.items.all %}
                         <thead class="thead-light">
                             <tr>
                                 <th colspan="30">Tur Açıklaması</th>

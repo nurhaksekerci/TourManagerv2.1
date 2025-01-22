@@ -1,0 +1,432 @@
+[
+    {
+        "id": 1,
+        "name": "Nurhak ŞEKERCİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 47,
+        "name": "HİERAPOLİS",
+        "city": "PAMUKKALE"
+    },
+    {
+        "id": 48,
+        "name": "ADANA ARKEOLOJİ MÜZESİ",
+        "city": "ADANA"
+    },
+    {
+        "id": 49,
+        "name": "AFYONKARAHİSAR MÜZESİ",
+        "city": "AFYON"
+    },
+    {
+        "id": 50,
+        "name": "IHLARA VADİSİ ÖRENYERİ",
+        "city": "AKSARAY"
+    },
+    {
+        "id": 51,
+        "name": "ANKARA ANADOLU MEDENİYETLER MÜZESİ",
+        "city": "ANKARA"
+    },
+    {
+        "id": 52,
+        "name": "ALANYA KALESİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 53,
+        "name": "ANKARA KURTULUŞ SAVAŞI MÜZESİ",
+        "city": "ANKARA"
+    },
+    {
+        "id": 54,
+        "name": "ASPENDOS ÖRENYERİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 55,
+        "name": "AZİZ NİKOLAOS ANIT MÜZESİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 56,
+        "name": "ANTALYA ARKEOLOJI MÜZESİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 57,
+        "name": "MYRA ÖRENYERİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 58,
+        "name": "OLYMPOS ÖRENYERİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 59,
+        "name": "PATARA ÖREN YERİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 60,
+        "name": "PERGE ÖRENYERİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 61,
+        "name": "PHASELİS ÖRENYERİ",
+        "city": "ANTALYA"
+    },
+    {
+        "id": 62,
+        "name": "SAGALASSOS ÖRENYERİ",
+        "city": "BURDUR"
+    },
+    {
+        "id": 63,
+        "name": "MİLET MÜZESİ+ÖRENYERİ",
+        "city": "AYDIN"
+    },
+    {
+        "id": 64,
+        "name": "SİDE MÜZE+ÖRENYERİ",
+        "city": "ANTA"
+    },
+    {
+        "id": 65,
+        "name": "ASSOS ÖRENYERİ",
+        "city": "ÇANAKKALE"
+    },
+    {
+        "id": 66,
+        "name": "DİDİM ÖRENYERİ",
+        "city": "AYDIN"
+    },
+    {
+        "id": 67,
+        "name": "AFRODİSİAS MÜZE+ÖRENYERİ",
+        "city": "AYDIN"
+    },
+    {
+        "id": 68,
+        "name": "TROİA MÜZESİ+ÖRENYERİ",
+        "city": "ÇANAKKALE"
+    },
+    {
+        "id": 69,
+        "name": "İSTANBUL BÜYÜK SARAY MOZAİKLERİ MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 70,
+        "name": "İSTANBUL GALATA KULESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 71,
+        "name": "İSTANBUL GALATA MEVLEVİHANESİ MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 72,
+        "name": "İSTANBUL HİSARLAR MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 73,
+        "name": "İSLAM BİLİM VE TEKNOLOJİ TARİHİ MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 74,
+        "name": "TOPKAPI+AYA İRİNİ+HAREM",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 75,
+        "name": "TÜRK VE İSLAM ESERLERİ MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 76,
+        "name": "AGORA ÖRENYERİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 77,
+        "name": "LAODİKEİA ÖRENYERİ",
+        "city": "DENİZLİ"
+    },
+    {
+        "id": 78,
+        "name": "DİYARBAKIR MÜZESİ",
+        "city": "DİYARBAKIR"
+    },
+    {
+        "id": 79,
+        "name": "ZEUGMA MOZAİK MÜZESİ",
+        "city": "GAZİANTEP"
+    },
+    {
+        "id": 80,
+        "name": "HATAY MÜZESİ",
+        "city": "HATAY"
+    },
+    {
+        "id": 81,
+        "name": "NECMİ ASFUROĞLU ARKEOLOJİ MÜZESİ",
+        "city": "HATAY"
+    },
+    {
+        "id": 82,
+        "name": "İSTANBUL ARKEOLOJİ MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 83,
+        "name": "ST.PİERRE ANIT MÜZESİ",
+        "city": "HATAY"
+    },
+    {
+        "id": 84,
+        "name": "İSTANBUL AYA İRİNİ ANIT MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 85,
+        "name": "BERGAMA AKROPOL ÖRENYERİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 86,
+        "name": "BERGAMA ASKLEPİON ÖRENYERİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 87,
+        "name": "ÇEŞME MÜZESİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 88,
+        "name": "EFES ARKEOLOJI MÜZESİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 89,
+        "name": "EFES ÖRENYERİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 90,
+        "name": "EFES YAMAÇ EVLERİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 91,
+        "name": "ST.JEAN ÖRENYERİ",
+        "city": "İZMİR"
+    },
+    {
+        "id": 92,
+        "name": "TEKEL KÜLTÜR-SANAT RESİM HEYKEL",
+        "city": "İZMİR"
+    },
+    {
+        "id": 93,
+        "name": "KARS ANI ÖRENYERİ",
+        "city": "KARS"
+    },
+    {
+        "id": 94,
+        "name": "SİLİFKE ASTIM MAĞARASI",
+        "city": "MERSİN"
+    },
+    {
+        "id": 95,
+        "name": "BODRUM SUALTI ARKEOLOJİ MÜZESİ",
+        "city": "MUĞLA"
+    },
+    {
+        "id": 96,
+        "name": "SİLİFKE CENNET CEHENNEM ÖRENYERİ",
+        "city": "MERSİN"
+    },
+    {
+        "id": 98,
+        "name": "MARMARİS KNİDOS ÖRENYERİ",
+        "city": "MUĞLA"
+    },
+    {
+        "id": 99,
+        "name": "DERİNKUYU YERALTI ŞEHRİ",
+        "city": "NEVŞEHİR"
+    },
+    {
+        "id": 100,
+        "name": "MARMARİS MÜZESİ",
+        "city": "MUĞLA"
+    },
+    {
+        "id": 101,
+        "name": "GÖREME ÖRENYERİ",
+        "city": "NEVŞEHİR"
+    },
+    {
+        "id": 102,
+        "name": "KARANLIK KİLİS GÖREME",
+        "city": "NEVŞEHİR"
+    },
+    {
+        "id": 103,
+        "name": "KAYMAKLI YERALTI ŞEHRİ",
+        "city": "NEVŞEHİR"
+    },
+    {
+        "id": 104,
+        "name": "ÖZKONAK YERALTI ŞEHRİ",
+        "city": "NEVŞEHİR"
+    },
+    {
+        "id": 105,
+        "name": "GÖBEKLİTEPE KARŞILAMA MERKEZİ",
+        "city": "ŞANLIURFA"
+    },
+    {
+        "id": 106,
+        "name": "ZELVE PAŞABAĞ ÖRENYERİ",
+        "city": "NEVŞEHİR"
+    },
+    {
+        "id": 107,
+        "name": "GÖBEKLİTEPE ÖRENYERİ",
+        "city": "ŞANLIURFA"
+    },
+    {
+        "id": 108,
+        "name": "SÜMELA MANASTIRI",
+        "city": "TRABZON"
+    },
+    {
+        "id": 109,
+        "name": "ŞANLI URFA MÜZESİ VE HALEPLİBAHÇE MOZAİK MÜZESİ",
+        "city": "ŞANLIURFA"
+    },
+    {
+        "id": 110,
+        "name": "AKDAMAR ANIT MÜZESİ",
+        "city": "VAN"
+    },
+    {
+        "id": 111,
+        "name": "SELAMLIK+HAREM+MİLLİ SARAYLAR RESİM MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 112,
+        "name": "MİLLİ SARAYLAR RESİM MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 113,
+        "name": "BEYLERBEYİ SARAYI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 114,
+        "name": "KÜÇÜKSU KASRI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 115,
+        "name": "TS HAREM",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 116,
+        "name": "DOLMABAHÇE SARAYI HIZLI GEÇİŞ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 118,
+        "name": "KÜÇÜKSU KASRI MESİRE ALANI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 119,
+        "name": "BEYKOZ MECİDİYE KASRI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 120,
+        "name": "MİLLİ SARAYLAR BEYKOZ CAM VE BİLLUR MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 121,
+        "name": "MASLAK KASIRLARI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 122,
+        "name": "AYNALIKAVAK KASRI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 123,
+        "name": "IHLAMUR KASIRLARI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 124,
+        "name": "SARAY KOLEKSİYONLARI MÜZESİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 125,
+        "name": "DOLMABAHÇE SARAYI+AVRUPA SSK",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 126,
+        "name": "DOLMABAHÇE SARAYI+ANADOLU YAKASI SSK",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 127,
+        "name": "ANADOLU YAKASI SSK KOMBİNE GEÇİŞ BİLETİ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 128,
+        "name": "MİLLİ SARAYLAR FULL PASS TOPKAPI SARI VE KÜÇÜKSU KASRI HARİÇ",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 129,
+        "name": "YILDIZ ÇİNİ VE PORSELEN FABRİKASI",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 130,
+        "name": "HEREKE HALI VE İPEKLİ DOKUMA FABRİKASINA BAĞLI WİLHELM KAİSER MÜZE KÖŞK",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 131,
+        "name": "AYASOFYA",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 132,
+        "name": "YEREBATAN",
+        "city": "İSTANBUL"
+    },
+    {
+        "id": 133,
+        "name": "BOĞAZ TURU",
+        "city": "İSTANBUL"
+    }
+]

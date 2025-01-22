@@ -2,23 +2,38 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h1 class="text-center my-4">Tedarikçi İşleri</h1>
+    {% if buyer_gelir %}
+        <h1 class="text-center my-4">Firma Gelirleri</h1>
+    {% else %}
+        <h1 class="text-center my-4">Tedarikçi İşleri</h1>
+    {% endif %}
     <div class="row">
         <div class="col-md-2">
-            
+
             <div class="my-2">
                 <div class="border" style="min-height:56px; padding-top:9px;">
-                    <h3 class="text-center">Tedarikçiler</h3>
+                    {% if buyer_gelir %}
+                        <h3 class="text-center">Firmalar</h3>
+                    {% else %}
+                        <h3 class="text-center">Tedarikçiler</h3>
+                    {% endif %}
+
                 </div>
                 <div class="list-group my-2">
                     {% if activity %}
                         {% for sup in suppliers %}
                             <button type="button" hx-get="{% url 'activity_cari_category' sup.id %}" hx-target="#cat" hx-swap="innerHTML" class="list-group-item list-group-item-action">{{ sup.name }}</button>
                         {% endfor %}
-                    {% else %}
-                        {% for sup in suppliers %}
-                            <button type="button" hx-get="{% url 'cari_category' sup.id %}" hx-target="#cat" hx-swap="innerHTML" class="list-group-item list-group-item-action">{{ sup.name }}</button>
-                        {% endfor %}
+                    {% elif activity == False %}
+                        {% if buyer_gelir %}
+                            {% for sup in suppliers %}
+                                <button type="button" hx-get="{% url 'buyer_category' sup.id %}" hx-target="#cat" hx-swap="innerHTML" class="list-group-item list-group-item-action">{{ sup.name }}</button>
+                            {% endfor %}
+                        {% else %}
+                            {% for sup in suppliers %}
+                                <button type="button" hx-get="{% url 'cari_category' sup.id %}" hx-target="#cat" hx-swap="innerHTML" class="list-group-item list-group-item-action">{{ sup.name }}</button>
+                            {% endfor %}
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

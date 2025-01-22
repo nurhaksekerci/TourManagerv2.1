@@ -76,28 +76,48 @@ class VehicleForm(forms.ModelForm):
 class TransferForm(forms.ModelForm):
     class Meta:
         model = Transfer
-        fields = ['route']
+        fields = ['route', 'start_city', 'finish_city']
         widgets = {
-            'route': forms.TextInput(attrs={'class': 'form-control'})
+            'route': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_city': forms.Select(attrs={'class': 'form-control'}),
+            'finish_city': forms.Select(attrs={'class': 'form-control'})
         }
 
 
 class TourForm(forms.ModelForm):
     class Meta:
         model = Tour
-        fields = ['route']
+        fields = ['route', 'start_city', 'finish_city']
         widgets = {
-            'route': forms.TextInput(attrs={'class': 'form-control'})
+            'route': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_city': forms.Select(attrs={'class': 'form-control'}),
+            'finish_city': forms.Select(attrs={'class': 'form-control'})
+        }
+
+class TourRouteForm(forms.ModelForm):
+    class Meta:
+        model = TourRoute
+        fields = ['konum']
+        widgets = {
+            'konum': forms.Select(attrs={'class': 'form-control'})
+        }
+
+class TransferRouteForm(forms.ModelForm):
+    class Meta:
+        model = TransferRoute
+        fields = ['konum']
+        widgets = {
+            'konum': forms.Select(attrs={'class': 'form-control'})
         }
 
 
 class GuideForm(forms.ModelForm):
     class Meta:
         model = Guide
-        fields = ['name', 'city', 'doc_no', 'phone', 'mail', 'price', 'currency']
+        fields = ['name', 'new_city', 'doc_no', 'phone', 'mail', 'price', 'currency']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'new_city': forms.Select(attrs={'class': 'form-control'}),
             'doc_no': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'mail': forms.EmailInput(attrs={'class': 'form-control'}),
@@ -109,10 +129,10 @@ class GuideForm(forms.ModelForm):
 class HotelForm(forms.ModelForm):
     class Meta:
         model = Hotel
-        fields = ['name', 'city', 'mail', 'one_person', 'two_person', 'tree_person', 'finish', 'currency']
+        fields = ['name', 'new_city', 'mail', 'one_person', 'two_person', 'tree_person', 'finish', 'currency']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'new_city': forms.Select(attrs={'class': 'form-control'}),
             'mail': forms.EmailInput(attrs={'class': 'form-control'}),
             'one_person': forms.NumberInput(attrs={'class': 'form-control'}),
             'two_person': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -133,10 +153,10 @@ class ActivityForm(forms.ModelForm):
 class MuseumForm(forms.ModelForm):
     class Meta:
         model = Museum
-        fields = ['name', 'city', 'contact', 'price', 'currency']
+        fields = ['name', 'new_city', 'contact', 'price', 'currency']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'new_city': forms.Select(attrs={'class': 'form-control'}),
             'contact': forms.TextInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'currency': forms.Select(attrs={'class': 'form-control'}),
@@ -506,6 +526,18 @@ class CariForm(forms.ModelForm):
             'currency': forms.Select(attrs={'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(CariForm, self).__init__(*args, **kwargs)
+        if self.request:
+            personel = Personel.objects.get(user=self.request.user)
+            company = personel.company
+            self.fields['buyer_company'].queryset = Buyercompany.objects.filter(company=company)
+            self.fields['supplier'].queryset = Supplier.objects.filter(company=company)
+            self.fields['activity_supplier'].queryset = Activitysupplier.objects.filter(company=company)
+            self.fields['hotel'].queryset = Hotel.objects.filter(company=company)
+            self.fields['guide'].queryset = Guide.objects.filter(company=company)
+
     def clean(self):
         cleaned_data = super().clean()
         transaction_type = cleaned_data.get('transaction_type')
@@ -518,3 +550,4 @@ class CariForm(forms.ModelForm):
             self.add_error('expense', 'Gider kaynağını belirtmelisiniz.')
 
         return cleaned_data
+

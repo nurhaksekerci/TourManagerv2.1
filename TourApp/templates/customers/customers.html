@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/dataTables.bs5.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/tagify.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/tagify-data.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/quill.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/select2.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/select2-theme.min.css' %}">
+
+
+{% endblock css %}
+
+{% block content %}
+
+<div class="page-header">
+    <div class="page-header-left d-flex align-items-center">
+        <div class="page-header-title">
+            <h5 class="m-b-10">Customers</h5>
+        </div>
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">Customers</li>
+        </ul>
+    </div>
+    <div class="page-header-right ms-auto">
+        <div class="page-header-right-items">
+            <div class="d-flex d-md-none">
+                <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                    <i class="feather-arrow-left me-2"></i>
+                    <span>Back</span>
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    <i class="feather-bar-chart"></i>
+                </a>
+                <div class="dropdown">
+                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                        <i class="feather-filter"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-eye me-3"></i>
+                            <span>All</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-send me-3"></i>
+                            <span>Sent</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-book-open me-3"></i>
+                            <span>Open</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-archive me-3"></i>
+                            <span>Draft</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-bell me-3"></i>
+                            <span>Revised</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-shield-off me-3"></i>
+                            <span>Declined</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-check me-3"></i>
+                            <span>Accepted</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-briefcase me-3"></i>
+                            <span>Leads</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-wifi-off me-3"></i>
+                            <span>Expired</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="feather-users me-3"></i>
+                            <span>Customers</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 12" data-bs-auto-close="outside">
+                        <i class="feather-paperclip"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="bi bi-filetype-pdf me-3"></i>
+                            <span>PDF</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="bi bi-filetype-csv me-3"></i>
+                            <span>CSV</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="bi bi-filetype-xml me-3"></i>
+                            <span>XML</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="bi bi-filetype-txt me-3"></i>
+                            <span>Text</span>
+                        </a>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="bi bi-filetype-exe me-3"></i>
+                            <span>Excel</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="bi bi-printer me-3"></i>
+                            <span>Print</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="proposal-create.html" class="btn btn-primary">
+                    <i class="feather-plus me-2"></i>
+                    <span>New Customers</span>
+                </a>
+            </div>
+        </div>
+        <div class="d-md-none d-flex align-items-center">
+            <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                <i class="feather-align-right fs-20"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
+    <div class="accordion-body pb-2">
+        <div class="row">
+            <div class="col-xxl-3 col-md-6">
+                <div class="card stretch stretch-full">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="javascript:void(0);" class="fw-bold d-block">
+                                <span class="d-block">Paid</span>
+                                <span class="fs-20 fw-bold d-block">78/100</span>
+                            </a>
+                            <div class="progress-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-3 col-md-6">
+                <div class="card stretch stretch-full">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="javascript:void(0);" class="fw-bold d-block">
+                                <span class="d-block">Unpaid</span>
+                                <span class="fs-20 fw-bold d-block">38/50</span>
+                            </a>
+                            <div class="progress-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-3 col-md-6">
+                <div class="card stretch stretch-full">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="javascript:void(0);" class="fw-bold d-block">
+                                <span class="d-block">Overdue</span>
+                                <span class="fs-20 fw-bold d-block">15/30</span>
+                            </a>
+                            <div class="progress-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-3 col-md-6">
+                <div class="card stretch stretch-full">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <a href="javascript:void(0);" class="fw-bold d-block">
+                                <span class="d-block">Draft</span>
+                                <span class="fs-20 fw-bold d-block">3/10</span>
+                            </a>
+                            <div class="progress-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- [ page-header ] end -->
+<!-- [ Main Content ] start -->
+<div class="main-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card stretch stretch-full">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="proposalList">
+                            <thead>
+                                <tr>
+                                    <th class="wd-30">
+                                        <div class="btn-group mb-1">
+                                            <div class="custom-control custom-checkbox ms-1">
+                                                <input type="checkbox" class="custom-control-input" id="checkAllProposal">
+                                                <label class="custom-control-label" for="checkAllProposal"></label>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>Ticket</th>
+                                    <th>Customer Info</th>
+                                    <th>Birthday</th>
+                                    <th>Passaport</th>
+                                    <th>Prices</th>
+                                    <th>Start Date</th>
+                                    <th>Payment Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in customers %}
+                                <tr class="single-item">
+                                    <td>
+                                        <div class="item-checkbox ms-1">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input checkbox" id="checkBox_1">
+                                                <label class="custom-control-label" for="checkBox_1"></label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><a href="javascript:void(0);" class="fw-bold">{{ customer.operation.ticket }}</a></td>
+                                    <td>
+                                        <a href="javascript:void(0)" class="hstack gap-3">
+                                            <div>
+                                                <span class="text-truncate-1-line">{{ customer.name }}</span>
+                                                <small class="fs-12 fw-normal text-muted">{{ customer.phone }}</small>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" class="hstack gap-3">
+                                            <span class="text-truncate-1-line">{{ customer.date_of_birth|date:'d.m.Y' }}</span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" class="hstack gap-3">
+                                            <span class="text-truncate-1-line">{{ customer.pasaport }}</span>
+                                        </a>
+                                    </td>
+                                    <td class="fw-bold text-dark">
+                                        {% for price in customer.operation.prices.all %}
+                                        <small class="fs-12 fw-normal text-muted">{{ price.price }} {{ price.currency }}</small>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="fw-bold">{{ customer.operation.start|date:'d.m.Y'}}</a>
+                                    </td>
+                                    <td>
+                                        <div class="badge bg-soft-success text-success">Paid</div>
+                                    </td>
+                                    <td>
+                                        <div class="hstack gap-2 justify-content-end">
+                                            <a href="javascript:void(0)" class="avatar-text avatar-md" data-bs-toggle="offcanvas" data-bs-target="#proposalSent">
+                                                <i class="feather feather-send"></i>
+                                            </a>
+                                            <a href="proposal-view.html" class="avatar-text avatar-md">
+                                                <i class="feather feather-eye"></i>
+                                            </a>
+                                            <div class="dropdown">
+                                                <a href="javascript:void(0)" class="avatar-text avatar-md" data-bs-toggle="dropdown" data-bs-offset="0,21">
+                                                    <i class="feather feather-more-horizontal"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" href="proposal-edit.html">
+                                                            <i class="feather feather-edit-3 me-3"></i>
+                                                            <span>Edit</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item printBTN" href="javascript:void(0)">
+                                                            <i class="feather feather-printer me-3"></i>
+                                                            <span>Print</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0)">
+                                                            <i class="feather feather-clock me-3"></i>
+                                                            <span>Remind</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="dropdown-divider"></li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0)">
+                                                            <i class="feather feather-archive me-3"></i>
+                                                            <span>Archive</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0)">
+                                                            <i class="feather feather-alert-octagon me-3"></i>
+                                                            <span>Report Spam</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="dropdown-divider"></li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0)">
+                                                            <i class="feather feather-trash-2 me-3"></i>
+                                                            <span>Delete</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "includes/theme-customizer.html" %}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="proposalSent">
+    <div class="offcanvas-header ht-80 px-4 border-bottom border-gray-5">
+        <div>
+            <h2 class="fs-16 fw-bold text-truncate-1-line">Sent Proposal</h2>
+            <small class="fs-12 text-muted">Sent proposal to your client's</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="py-3 px-4 d-flex justify-content-between align-items-center border-bottom border-bottom-dashed border-gray-5 bg-gray-100">
+        <div>
+            <span class="fw-bold text-dark">Date:</span>
+            <span class="fs-11 fw-medium text-muted">25 MAY, 2023</span>
+        </div>
+        <div>
+            <span class="fw-bold text-dark">Proposal No:</span>
+            <span class="fs-12 fw-bold text-primary c-pointer">#NXL369852</span>
+        </div>
+    </div>
+    <div class="offcanvas-body">
+        <div class="form-group mb-4">
+            <label class="form-label">From: <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" value="wrapcode.info@gmail.com" placeholder="Clients..." readonly="" required>
+        </div>
+        <div class="form-group mb-4">
+            <label class="form-label">To: <span class="text-danger">*</span></label>
+            <input class="form-control" name="tomailcontent" value="wrapcode.info@gmail.com" placeholder="To..." required>
+        </div>
+        <div class="form-group mb-4">
+            <label class="form-label">Subject: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Subject..." required>
+        </div>
+        <div class="form-group mb-4">
+            <label class="form-label">URL: </label>
+            <input type="url" class="form-control" placeholder="URL...">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Messages:</label>
+            <div data-editor-target="editor" class="ht-200"></div>
+        </div>
+    </div>
+    <div class="px-4 gap-2 d-flex align-items-center ht-80 border border-end-0 border-gray-2">
+        <a href="javascript:void(0);" class="btn btn-primary w-50" data-alert-target="#alertMessage">Sent Proposal</a>
+        <a href="javascript:void(0);" class="btn btn-danger w-50" data-bs-dismiss="offcanvas">Cancel</a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'assets/vendors/js/circle-progress.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/js/dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/js/dataTables.bs5.min.js' %}"></script>
+    <script src="{% static 'assets/js/proposal-init.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/js/tagify.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/js/tagify-data.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/js/quill.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/js/select2-active.min.js' %}"></script>
+{% endblock js %}

@@ -1,0 +1,13 @@
+<td>
+    <label for="city">Şehirler</label>
+    <input type="text" class="form-control d-none" value="{{ city.id }}" name="city_ids">
+    <select class="form-control" name="city" id="city">
+        {% for cities in cities_model %}
+            {% if city.city == cities.id %}
+                <option value="{{ cities.id }}" selected>{{ cities.name }}</option>
+            {% else %}
+                <option value="{{ cities.id }}">{{ cities.name }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</td>

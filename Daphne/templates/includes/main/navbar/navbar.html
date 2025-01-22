@@ -1,0 +1,129 @@
+<nav class="nxl-navigation">
+    <div class="navbar-wrapper">
+        <div class="m-header">
+            <div class="row">
+                <div class="col">
+                    <a href="index.html" class="b-brand">
+                        <h1 class="logo logo-lg">Daphe Tour</h1>
+                        <h6 class="logo logo-sm">Daphe</h6>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-content">
+            <ul class="nxl-navbar">
+                <li class="nxl-item nxl-caption">
+                    <label>Navigation</label>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-airplay"></i></span>
+                        <span class="nxl-mtext">Dashboards</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="index.html">CRM</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="analytics.html">Analytics</a></li>
+                    </ul>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-cast"></i></span>
+                        <span class="nxl-mtext">Reports</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="reports-sales.html">Sales Report</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="reports-leads.html">Leads Report</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="reports-project.html">Project Report</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="reports-timesheets.html">Timesheets Report</a></li>
+                    </ul>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-send"></i></span>
+                        <span class="nxl-mtext">Operations</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="apps-chat.html">Operation Lists</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="apps-chat.html">Operation Create</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="apps-chat.html">Operation Deleted</a></li>
+                    </ul>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-at-sign"></i></span>
+                        <span class="nxl-mtext">Jobs</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="{% url 'daphne_jobs' %}">Jobs</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{% url 'daphne_my_jobs' %}">My Jobs</a></li>
+
+                    </ul>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-dollar-sign"></i></span>
+                        <span class="nxl-mtext">Payment</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="payment.html">Payment</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="invoice-view.html">Invoice View</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="invoice-create.html">Invoice Create</a></li>
+                    </ul>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-alert-circle"></i></span>
+                        <span class="nxl-mtext">Price Files</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="leads.html">Vehicle Costs</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="leads-view.html">Activity Costs</a></li>
+                        <hr class="my-2">
+                        <li class="nxl-item"><a class="nxl-link" href="leads.html">Vehicle Sales</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="leads-view.html">Activity Sales</a></li>
+
+                    </ul>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                        <span class="nxl-mtext">Document Files</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="{% url 'daphne_locations' %}">Locations</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{% url 'daphne_tours' %}">Tours</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{% url 'daphne_transfers' %}">Transfers</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{% url 'daphne_vehicles' %}">Vehicles</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{% url 'daphne_guides' %}">Guides</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="projects-create.html">Hotels</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="projects-create.html">Activities</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="projects-create.html">Museums</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="projects-create.html">Buyer Companies</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="projects-create.html">Vehicle Suppliers</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="projects-create.html">Activity Suppliers</a></li>
+                    </ul>
+                </li>
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-life-buoy"></i></span>
+                        <span class="nxl-mtext">Help Center</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="https://themeforest.net/user/theme_ocean/">Support</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="https://themeforest.net/user/theme_ocean/">Login Logs</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="https://themeforest.net/user/theme_ocean/">Deleted Logs</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="https://themeforest.net/user/theme_ocean/">Other Logs</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="feather-sunrise fs-4 text-dark"></i>
+                    <h6 class="mt-4 text-dark fw-bolder">Support Center</h6>
+                    <p class="fs-11 my-3 text-dark">For requests, suggestions, and complaints, please contact the developer.</p>
+                    <a href="javascript:void(0);" class="btn btn-primary text-dark w-100">Contact Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

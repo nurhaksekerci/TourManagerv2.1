@@ -1,0 +1,34 @@
+<tr class="fade-in main-row" id="model-div-{{ obj_data.id }}" hx-swap="outerHTML swap:.5s">
+    <td colspan="{{ number_of_columns }}">
+        <form hx-post="{% url 'generic_edit_view' model_name obj_data.id %}" hx-target="#model-div-{{ obj_data.id }}">
+            {% csrf_token %}
+            <table class="table">
+                <tr>
+                    {% for field in form.visible_fields %}
+                    <td>
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </td>
+                    {% endfor %}
+
+                    <td class="text-end" style="word-wrap: break-word; white-space: normal;">
+                        <div class="w-50 ms-auto d-flex justify-content-between">
+                            <button type="submit" class="avatar-text avatar-md"><i class="feather-save"></i></button>
+                            <button type="button" hx-get="{% url 'generic_cancel_view' model_name obj_data.id %}" class="avatar-text avatar-md"><i class="feather-x-circle"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    {% if model_name == "Supplier" or model_name == "Activitysupplier" %}
+                        {% for city in city_instance %}
+                            {% include 'includes/generics/generic-cities/cities-edit-full.html' %}
+                        {% empty %}
+                            {% include 'includes/generics/generic-cities/cities-edit.html' %}
+                        {% endfor %}
+                            {% include 'includes/generics/generic-cities/cities-edit.html' %}
+                    {% endif %}
+                </tr>
+            </table>
+        </form>
+    </td>
+</tr>

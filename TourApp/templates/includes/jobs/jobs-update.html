@@ -1,0 +1,176 @@
+{% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+{% endif %}
+<form method="POST" hx-target="#item-details-row-{{ item.id }}" hx-swap="innerHTML" hx-on="htmx:afterRequest: this.remove()" hx-post="{% url 'update_operationitem' item.id %}">
+    {% csrf_token %}
+    <table class="table table-bordered mb-0" style="font-size: 0.6rem;">
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Operation Type</th>
+            <th style="word-wrap: break-word; white-space: normal;">Pick-up Time</th>
+            <th style="word-wrap: break-word; white-space: normal;">Pick-up Location</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.operation_type }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.pick_time }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.pick_location }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Tour</th>
+            <th style="word-wrap: break-word; white-space: normal;">Transfer</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.tour }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.transfer }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Vehicle Type</th>
+            <th style="word-wrap: break-word; white-space: normal;">Vehicle Cost Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">Vehicle Sell Price</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.vehicle }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.manuel_vehicle_price }} {{ form.vehicle_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.vehicle_sell_price }} {{ form.vehicle_sell_currency }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Hotel Name</th>
+            <th style="word-wrap: break-word; white-space: normal;">Hotel Cost Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">Hotel Sell Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.hotel }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.hotel_price }} {{ form.hotel_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.hotel_sell_price }} {{ form.hotel_sell_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.hotel_payment }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Activity Name</th>
+            <th style="word-wrap: break-word; white-space: normal;">Activity Cost Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">Activity Sell Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.activity }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.manuel_activity_price }} {{ form.activity_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.activity_sell_price }} {{ form.activity_sell_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.activity_payment }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Museums</th>
+            <th style="word-wrap: break-word; white-space: normal;">Museum Cost Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">Museum Sell Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;" class="today-museum">
+                {{ form.new_museum }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.museum_price }} {{ form.museum_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.museum_sell_price }} {{ form.museum_sell_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.museum_payment }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Guide Name</th>
+            <th style="word-wrap: break-word; white-space: normal;">Guide Cost Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">Guide Sell Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">Guide</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.guide }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.guide_price }} {{ form.guide_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.guide_sell_price }} {{ form.guide_sell_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.guide_var }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Driver Name</th>
+            <th style="word-wrap: break-word; white-space: normal;">Driver Phone</th>
+            <th style="word-wrap: break-word; white-space: normal;">Vehicle Plate</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.driver }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.driver_phone }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.plaka }}
+            </td>
+        </tr>
+        <tr>
+            <th style="word-wrap: break-word; white-space: normal;">Description</th>
+            <th style="word-wrap: break-word; white-space: normal;">Other Cost Price</th>
+            <th style="word-wrap: break-word; white-space: normal;">Other Sell Price</th>
+        </tr>
+        <tr>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.description }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.other_price }} {{ form.other_currency }}
+            </td>
+            <td style="word-wrap: break-word; white-space: normal;">
+                {{ form.other_sell_price }} {{ form.other_sell_currency }}
+            </td>
+        </tr>
+        <tr>
+            
+            <th style="word-wrap: break-word; white-space: normal;">Action</th>
+        </tr>
+        <tr>
+            
+            <td class="d-flex" style="word-wrap: break-word; white-space: normal;">
+                <button type="submit" class="btn btn-primary ms-auto">Save</button>
+            </td>
+        </tr>
+    </table>
+</form>

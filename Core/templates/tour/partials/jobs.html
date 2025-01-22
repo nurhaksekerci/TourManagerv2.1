@@ -83,22 +83,26 @@
     <td>{{ today.driver_phone|default:"----" }}</td>
     <td>{{ today.plaka|default:"----" }}</td>
     <td class="text-center">
-        <a target="_blank" href="https://wa.me/send?phone={% if request.user.username == 'DAMLA' %}905304874388{% else %}905533836533{% endif %}&text=Grup%20Kodu:%20{{ today.day.operation.ticket }}%0A
-            Tarih:%20{{ today.day.date|date:'d.m.Y' }}{% if today.operation_type %}%0A
-            İşlem%20Turu:%20{{ today.operation_type }}{% endif %}{% if today.description %}%0A
-            Açıklama:%20{{ today.description }}{% endif %}{% if today.tour %}%0A
-            Tur:%20{{ today.tour }}{% endif %}{% if today.transfer %}%0A
-            Transfer:%20{{ today.transfer }}{% endif %}{% if today.pick_time %}%0A
-            Alış%20Saati:%20{{ today.pick_time|time:'H:i' }}{% endif %}{% if today.release_location %}%0A
-            Bırakma%20Yeri:%20{{ today.release_location }}{% endif %}{% if today.pick_location %}%0A
-            Alış%20Yeri:%20{{ today.pick_location }}{% endif %}{% if today.vehicle %}%0A
-            Araç:%20{{ today.vehicle }}{% endif %}{% if today.hotel %}%0A
-            Otel:%20{{ today.hotel }}{% endif %}{% with museums=today.new_museum.all %}{% if museums.exists %}%0A
-            Müzeler:%20{% for museum in museums %}{{ forloop.counter }})%20{{ museum.name }}{% if not forloop.last %},%20{% endif %}{% endfor %}{% endif %}{% endwith %}{% if today.guide %}%0A
-            Rehber:%20{{ today.guide }}{% endif %}">
-            <i class="fab fa-whatsapp"></i>
-        </a>
-    </td>
+<td class="text-center">
+    <a target="_blank" href="https://wa.me/{% if request.user.username == 'ASLI' or request.user.username == 'nurhak' %}905304874388{% else %}905533836533{% endif %}?text=
+Grup%20Kodu:%20{{ today.day.operation.ticket }}%0A
+Tarih:%20{{ today.day.date|date:'d.m.Y' }}{% if today.operation_type %}%0A
+İşlem%20Turu:%20{{ today.operation_type }}{% endif %}{% if today.day.operation.passenger_info %}%0A
+Yolcu%20Bilgileri:%20{{ today.day.operation.passenger_info }}{% endif %}{% if today.description %}%0A
+Açıklama:%20{{ today.description }}{% endif %}{% if today.tour %}%0A
+Tur:%20{{ today.tour }}{% endif %}{% if today.transfer %}%0A
+Transfer:%20{{ today.transfer }}{% endif %}{% if today.pick_time %}%0A
+Alış%20Saati:%20{{ today.pick_time|time:'H:i' }}{% endif %}{% if today.release_location %}%0A
+Bırakma%20Yeri:%20{{ today.release_location }}{% endif %}{% if today.pick_location %}%0A
+Alış%20Yeri:%20{{ today.pick_location }}{% endif %}{% if today.vehicle %}%0A
+Araç:%20{{ today.vehicle }}{% endif %}{% if today.hotel %}%0A
+Otel:%20{{ today.hotel }}{% endif %}{% with museums=today.new_museum.all %}{% if museums.exists %}%0A
+Müzeler:%20{% for museum in museums %}{{ forloop.counter }})%20{{ museum.name }}{% if not forloop.last %},%20{% endif %}{% endfor %}{% endif %}{% endwith %}{% if today.guide %}%0A
+Rehber:%20{{ today.guide }}{% endif %}">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+</td>
+
     <td>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Modal{{today.id}}">
           Hata

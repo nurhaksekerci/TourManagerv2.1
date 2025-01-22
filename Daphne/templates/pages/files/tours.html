@@ -1,0 +1,182 @@
+{% extends "daphne/main/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2-theme.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/jquery.time-to.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/datepicker.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/tagify.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/tagify-data.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/quill.min.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="page-header">
+                <div class="page-header-left d-flex align-items-center">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">{{ title }}</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item">{{ title }}</li>
+                    </ul>
+                </div>
+                <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            <button hx-post="{{ submit_url }}" hx-include="#form_id" hx-target="#tbody_id" hx-swap="afterbegin" class="btn btn-primary successAlertMessage">
+                                <i class="feather-save me-2"></i>
+                                <span>Save</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- [ page-header ] end -->
+            <!-- [ Main Content ] start -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card stretch stretch-full">
+                            <div class="card-body">
+                                <form id="form_id">
+                                    {% csrf_token %}
+                                    <div class="mb-4">
+                                        <label class="form-label">Route Name <span class="text-danger">*</span></label>
+                                        <input type="text" name="route_name" class="form-control" placeholder="Route Name">
+                                    </div>
+                                    <hr class="mb-4">
+                                    {% if locations == False %}
+                                        <div id="konum" class="mb-4">
+                                            <div class="mb-4">
+                                                <label class="form-label">Location <span class="text-danger">*</span></label>
+                                                <div class="input-group dropdown mb-4">
+                                                    <span class="input-group-text text-success">
+                                                        <i class="fa-solid fa-location-dot"></i>
+                                                    </span>
+                                                    <select class="form-control" name="location" placeholder="Location">
+                                                        {% for lct in locations_select %}
+                                                            <option  value="{{ lct.route }}">{{ lct.route }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <button type="button" class="btn btn-light-brand">
+                                                        <i class="feather-x"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <button class="btn btn-primary" hx-get="{% url 'daphne_tour_route' %}" hx-target="#konum" hx-swap="beforeend"><i class="fa-solid fa-plus"></i> Add Route</button>
+                                        </div>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="card stretch stretch-full">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="proposalList">
+                                        <thead>
+                                            <tr>
+                                                <th>Route</th>
+                                                <th class="text-end">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody_id">
+                                            {% for tour in tours %}
+                                            <tr class="single-item" data-tour-id="{{ tour.id }}">
+                                                <td>
+                                                    {{ tour.route }}
+                                                </td>
+                                                <td>
+                                                    <div class="hstack gap-2 justify-content-end">
+                                                        <a href="proposal-view.html" class="avatar-text avatar-md">
+                                                            <i class="feather feather-eye"></i>
+                                                        </a>
+                                                        <a href="proposal-view.html" class="avatar-text avatar-md">
+                                                            <i class="feather feather-edit"></i>
+                                                        </a>
+                                                        <a href="proposal-view.html" class="avatar-text avatar-md">
+                                                            <i class="feather feather-delete"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% if locations == False %}
+                                                <tr class="detail-row" id="details-{{ tour.id }}" style="display: none;">
+                                                    <td colspan="2">
+                                                        <div id="tour-details-{{ tour.id }}">
+                                                            <ul>
+                                                                {% for route in tour.routes %}
+                                                                    <li>{{ route.konum.route }}</li>
+                                                                {% empty %}
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        <i class="fa-solid fa-circle-info"></i> No location found.
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'assets/vendor/js/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/tagify.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/tagify-data.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/quill.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/select2-active.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/datepicker.min.js' %}"></script>
+    <script src="{% static 'assets/js/proposal-create-init.min.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.single-item');
+
+            rows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const tourId = this.getAttribute('data-tour-id');
+                    const detailRow = document.getElementById(`details-${tourId}`);
+
+                    if (detailRow.style.display === 'none') {
+                        detailRow.style.display = '';
+                    } else {
+                        detailRow.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+{% endblock %}

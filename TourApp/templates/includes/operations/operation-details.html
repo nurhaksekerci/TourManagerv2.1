@@ -1,0 +1,146 @@
+<div class="col-lg-4 my-3">
+  <div class="card border-primary mb-3">
+    <div class="card-header bg-primary text-white text-center">
+      <h4 class="text-white">Operation Details</h4>
+    </div>
+    <div class="card-body p-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="row w-100">
+            <h3 class="card-title text-center">Ticket: {{ operation.ticket }}</h3>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 d-flex flex-column align-self-start">
+              <h6 class="card-title">Start At</h6>
+              <p class="card-text">{{ operation.start|date:'d.m.Y'}}</p>
+            </div>
+            <div class="col-md-4 d-flex flex-column align-self-start">
+              <h6 class="card-title">Finish At</h6>
+              <p class="card-text">{{ operation.finish|date:'d.m.Y'}}</p>
+            </div>
+            <div class="col-md-4 d-flex flex-column align-self-start">
+              <h6 class="card-title">Created By</h6>
+              <p class="card-text">{{ operation.selling_staff.user.first_name }}
+                {{ operation.selling_staff.user.last_name }}</p>
+            </div>
+            <div class="col-md-4 d-flex flex-column align-self-start">
+              <h6 class="card-title">Follow Up</h6>
+              <p class="card-text">{{ operation.follow_staff.user.first_name }}
+                {{ operation.follow_staff.user.last_name }}</p>
+            </div>
+            <div class="col-md-8 d-flex flex-column align-self-start">
+              <h6 class="card-title">Sales Price</h6>
+              <ul class="card-text">
+                {% for price in operation.prices.all %}
+                <li>{{ price.price }} {{ price.currency }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="col-md-12 d-flex flex-column align-self-start">
+              <h6 class="card-title">Customers</h6>
+              <ol class="card-text">
+                {% for customer in operation.customers.all %}
+                <li>{{ customer.name }} {{ customer.pasaport }} {{ customer.phone }}
+                  {{ customer.date_of_birth|date:'d.m.Y' }}</li>
+                {% endfor %}
+              </ol>
+            </div>
+          </div>
+          {% for day in operation.days.all %}
+          <div class="row mt-2">
+            <div class="d-flex flex-row justify-content-between">
+              <h3 class="card-title text-center">{{ day.date|date:'d.m.Y'}}</h3>
+            </div>
+            {% for item in day.items.all %}
+            <div class="row">
+              <div class="col-md-3 d-flex flex-column align-self-start">
+                <h6 class="card-title">Operation Type</h6>
+                <p class="card-text">{{ item.operation_type }}</p>
+              </div>
+              <div class="col-md-3 d-flex flex-column align-self-start">
+                <h6 class="card-title">Pick-up Time</h6>
+                <p class="card-text">{{ item.pick_time }}</p>
+              </div>
+              <div class="col-md-3 d-flex flex-column align-self-start">
+                <h6 class="card-title">Pick-up Location</h6>
+                <p class="card-text">{{ item.pick_location }}</p>
+              </div>
+              <div class="col-md-3 d-flex flex-column align-self-start">
+                <h6 class="card-title">Route</h6>
+                <p class="card-text">
+                  {% if item.tour %}
+                  {{ item.tour.route }}
+                  {% else %}
+                  {{ item.transfer.route }}
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Vehicle Type</h6>
+                <p class="card-text">{{ item.vehicle.vehicle }}</p>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Vehicle Supplier</h6>
+                <p class="card-text">{{ item.supplier }}</p>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Hotel</h6>
+                <p class="card-text">{{ item.hotel }}</p>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Room Type</h6>
+                <p class="card-text">{{ item.room_type }}</p>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Activity</h6>
+                <p class="card-text">{{ item.activity }}</p>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Activity Supplier</h6>
+                <p class="card-text">{{ item.activity_supplier }}</p>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Museums</h6>
+                <ol class="card-text">
+                  {% for museum in item.new_museum.all %}
+                    <li>{{ museum.name }}</li>
+                  {% endfor %}
+                </ol>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Guide</h6>
+                <p class="card-text">{{ item.guide }}</p>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Driver Name</h6>
+                <p class="card-text">{{ item.driver }}</p>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Driver Phone</h6>
+                <p class="card-text">{{ item.driver_phone }}</p>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-self-start">
+                <h6 class="card-title">Vehicle Plate</h6>
+                <p class="card-text">{{ item.plaka }}</p>
+              </div>
+            </div>
+            <hr class="my-2">
+            {% endfor %}
+          </div>
+          <hr class="my-2">
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,154 @@
+<div class="tab-pane fade" id="billingTab" role="tabpanel">
+  {% if employee.company.payments.paymet == False %} {% include
+  "includes/paymet/declined-alert.html" %} {% endif %}
+  <div class="subscription-plan px-4 pt-4">
+    <div class="mb-4 d-flex align-items-center justify-content-between">
+      <h5 class="fw-bold mb-0">Subscription & Plan:</h5>
+      <a href="javascript:void(0);" class="btn btn-sm btn-light-brand"
+        >4 days remaining</a
+      >
+    </div>
+    <div
+      class="p-4 mb-4 d-xxl-flex d-xl-block d-md-flex align-items-center justify-content-between gap-4 border border-dashed border-gray-5 rounded-1"
+    >
+      <div>
+        <div class="fs-14 fw-bold text-dark mb-1">
+          Your current plan is
+          <a href="javascript:void(0);" class="badge bg-primary text-white ms-2"
+            >{{ employee.company.statu|upper }} PLAN</a
+          >
+        </div>
+        <div class="fs-12 text-muted">A simple start for everyone</div>
+      </div>
+      <div class="my-3 my-xxl-0 my-md-3 my-md-0">
+        <div class="fs-20 text-dark">
+          <span class="fw-bold">$00.00</span> /
+          <em class="fs-11 fw-medium">Month</em>
+        </div>
+        <div class="fs-12 text-muted mt-1">
+          Billed Monthly / Next payment on {{ employee.company.finish|date:"d.m.y"}} for
+          <strong class="text-dark">$00.00</strong>
+        </div>
+      </div>
+      <div class="hstack gap-3">
+        <a href="javascript:void(0);" class="text-danger">Cancel Plan</a>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" class="d-none" name="plan" id="plan_input" value="{{ employee.company.statu|lower }}">
+        <button type="submit" class="btn btn-light-brand"
+          >Update Plan</button
+        >
+      </div>
+    </div>
+    <div class="row">
+        {% for plan in plans %}
+        <div class="col-xxl-4 col-xl-12 col-lg-4">
+            <a
+              href="javascript:void(0);"
+              class="p-4 mb-4 d-block bg-soft-200 border border-dashed border-gray-5 rounded-1 position-relative"
+            >
+              <h6 class="fs-13 fw-bold">{{ plan.name|upper }} PLAN</h6>
+              <p class="fs-12 fw-normal text-muted text-truncate-2-line">
+                {{ plan.description }}
+              </p>
+              <div class="row">
+              <div class="col-6 mt-4">
+                <span class="fs-16 fw-bold text-dark">${{ plan.monthly_price }}</span> /
+                <em class="fs-11 fw-medium">Month</em>
+              </div>
+              <div class="col-6 mt-4 text-end">
+                <span class="fs-16 fw-bold text-dark">${{ plan.yearly_price }}</span> /
+                <em class="fs-11 fw-medium">Year</em>
+              </div>
+            </div>
+              <div class="position-absolute top-0 start-50 translate-middle d-none">
+                <i
+                  class="feather-check fs-12 bg-primary text-white p-1 rounded-circle"
+                ></i>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+    </div>
+  </div>
+  <hr class="mt-2" />
+  <div class="payment-history">
+    <div class="mb-4 px-4 d-flex align-items-center justify-content-between">
+      <h5 class="fw-bold mb-0">Billing History:</h5>
+      <a href="javascript:void(0);" class="btn btn-sm btn-light-brand"
+        >Alls History</a
+      >
+    </div>
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr class="border-top">
+            <th>ID</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Amount</th>
+            <th class="text-center">Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="javascript:void(0);">#258963</a></td>
+            <td class="text-center">02 NOV, 2022</td>
+            <td class="text-center">$350</td>
+            <td class="text-center">
+              <span class="badge bg-soft-success text-success">Completed</span>
+            </td>
+            <td class="hstack justify-content-end gap-4 text-end">
+              <a
+                href="javascript:void(0);"
+                data-bs-toggle="tooltip"
+                data-bs-trigger="hover"
+                title="Invoice Details"
+              >
+                <i class="feather feather-eye fs-12"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const plan_input = document.getElementById('plan_input')
+        const planElements = document.querySelectorAll(".row .col-xxl-4 a");
+        const currentPlanElement = document.querySelector(".fs-14 a");
+        const currentPlanPriceElement = document.querySelector(".fs-20 .fw-bold");
+        const currentPlanDescriptionElement = document.querySelector(".fs-12.text-muted");
+    
+        planElements.forEach(plan => {
+            plan.addEventListener("click", function() {
+                // Tüm planlardaki simgeyi gizle (d-none ekle)
+                planElements.forEach(p => {
+                    const checkIcon = p.querySelector(".position-absolute");
+                    if (checkIcon) {
+                        checkIcon.classList.add("d-none");
+                    }
+                });
+    
+                // Tıklanan plandaki simgeyi göster (d-none kaldır)
+                const clickedIcon = this.querySelector(".position-absolute");
+                if (clickedIcon) {
+                    clickedIcon.classList.remove("d-none");
+                }
+    
+                // Plan adı ve fiyatını güncelle
+                const planName = this.querySelector("h6").innerText;
+                const planPrice = this.querySelector(".fs-16").innerText;
+                const planDescription = this.querySelector(".fs-12.text-muted.text-truncate-2-line").innerText;
+    
+                currentPlanElement.textContent = planName;
+                plan_input.value=planName.toLowerCase();
+                currentPlanPriceElement.textContent = planPrice;
+                currentPlanDescriptionElement.textContent = planDescription;
+            });
+        });
+    });
+    
+</script>

@@ -1,0 +1,192 @@
+{% extends "daphne/main/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/select2-theme.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/jquery.time-to.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/datepicker.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/tagify.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/tagify-data.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css/quill.min.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="page-header">
+                <div class="page-header-left d-flex align-items-center">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">{{ title }}</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item">{{ title }}</li>
+                    </ul>
+                </div>
+                <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            <button hx-post="{{ submit_url }}" hx-include="#form_id" hx-target="#tbody_id" hx-swap="afterbegin" class="btn btn-primary successAlertMessage">
+                                <i class="feather-save me-2"></i>
+                                <span>Save</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- [ page-header ] end -->
+            <!-- [ Main Content ] start -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card stretch stretch-full">
+                            <div class="card-body">
+                                <form id="form_id">
+                                    {% csrf_token %}
+                                    <div class="row">
+
+                                    <div class="col-md-3 mb-4">
+                                        <label class="form-label">Guide Full Name <span class="text-danger">*</span></label>
+                                        <input type="text" name="guide_name" class="form-control" placeholder="Guide Full Name">
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <label class="form-label">Location <span class="text-danger">*</span></label>
+                                        <select name="location" class="form-control">
+                                            {% for lct in locations %}
+                                                <option value="{{ lct.route }}">{{ lct.route }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <label class="form-label">Doc No</label>
+                                        <input type="text" name="doc_no" class="form-control" placeholder="Guide Documnet No">
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <label class="form-label">Phone <span class="text-danger">*</span></label>
+                                        <input type="text" name="phone" class="form-control" placeholder="Guide Phone">
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <label class="form-label">E-mail</label>
+                                        <input type="mail" name="email" class="form-control" placeholder="Guide E-mail (E-mail Formated)">
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <label class="form-label">Guide Cost Price <span class="text-danger">*</span></label>
+                                        <input type="number" step="0.1" name="price" class="form-control" placeholder="Guide Cost Price">
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <label class="form-label">Currency <span class="text-danger">*</span></label>
+                                        <select name="currency" class="form-control">
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="TL">TL</option>
+                                        </select>
+                                    </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="card stretch stretch-full">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="proposalList">
+                                        <thead>
+                                            <tr>
+                                                <th>Full Name</th>
+                                                <th class="text-center">Location</th>
+                                                <th class="text-end">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody_id">
+                                            {% for guide in guides %}
+                                            <tr class="single-item" data-guide-id="{{ guide.id }}">
+                                                <td>
+                                                    {{ guide.name }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ guide.location }}
+                                                </td>
+                                                <td>
+                                                    <div class="hstack gap-2 justify-content-end">
+                                                        <a href="proposal-view.html" class="avatar-text avatar-md">
+                                                            <i class="feather feather-eye"></i>
+                                                        </a>
+                                                        <a href="proposal-view.html" class="avatar-text avatar-md">
+                                                            <i class="feather feather-edit"></i>
+                                                        </a>
+                                                        <a href="proposal-view.html" class="avatar-text avatar-md">
+                                                            <i class="feather feather-delete"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="detail-row" id="details-{{ guide.id }}" style="display: none;">
+                                                <td colspan="3">
+                                                    <div id="guide-details-{{ guide.id }}">
+                                                        <ul>
+                                                            <li><span>Phone: </span>{{ guide.phone }}</li>
+                                                            <li><span>Doc No: </span>{{ guide.doc_no }}</li>
+                                                            <li><span>E-mail: </span>{{ guide.mail }}</li>
+                                                            <li><span>Cost Price: </span>{{ guide.price }} {{ guide.currency }}</li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'assets/vendor/js/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/tagify.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/tagify-data.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/quill.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/select2-active.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js/datepicker.min.js' %}"></script>
+    <script src="{% static 'assets/js/proposal-create-init.min.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.single-item');
+
+            rows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const guideId = this.getAttribute('data-guide-id');
+                    const detailRow = document.getElementById(`details-${guideId}`);
+
+                    if (detailRow.style.display === 'none') {
+                        detailRow.style.display = '';
+                    } else {
+                        detailRow.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+{% endblock %}

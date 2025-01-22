@@ -1,0 +1,12 @@
+{% load custom_filters %}
+<tr class="fade-in main-row" id="model-div-{{ obj_data.id }}">
+    {% for field in fields %}
+        <td style="word-wrap: break-word; white-space: normal;">{{ obj_data|get_field_value:field|upper }}</td>
+    {% endfor %}
+    <td class="text-end" style="word-wrap: break-word; white-space: normal;">
+        <div class="w-50 ms-auto d-flex justify-content-between">
+            <button hx-delete="{% url 'generic_delete_view' model_name obj_data.id %}" hx-confirm="Are you sure, you want to delete?" hx-on="htmx:afterRequest: this.closest('tr').remove()" class="avatar-text avatar-md"><i class="feather-trash-2"></i></button>
+            <button hx-get="{% url 'generic_edit_view' model_name obj_data.id %}" hx-target="#model-div-{{ obj_data.id }}" hx-swap="outerHTML swap:.5s" class="avatar-text avatar-md"><i class="feather-arrow-right"></i></button>
+        </div>
+    </td>
+</tr>

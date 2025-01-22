@@ -5,16 +5,32 @@
     <button class="btn btn-secondary my-2" onclick="printDiv('cari-item')">Yazdır</button>
     <button class="btn btn-secondary my-2" onclick="saveToExcel('cari-item', 'Cari-Listesi')">Excel'e Kaydet</button>
     <a class="btn btn-success my-2" href="{% url 'ortak_cost' %}">Ortak işleri Hesapla</a>
+    {% if tedarikci_id %}
+        <form hx-post="{% url 'buyer_category' tedarikci_id %}" hx-target="#details"  hx-swap="innerHTML" method="POST">
+            {% csrf_token %}
+            <input class="form-group-item" type="month" name="month">
+            <button class="form-group-item" type="submit">Ara</button>
+        </form>
+    {% endif %}
 </div>
+
 <div class="row">
     <div  class="container-fluid">
         <div class="card">
             <div class="row">
                 <div class="col-md-6">
-                    <strong class="m-2">Önceki Aydan Devreden Bakiye :</strong><p>{{ devreden_toplam_bakiye }}</p>
-                    <strong class="m-2">Toplam Bakiye :</strong><p>{{ toplam_bakiye|currency }} ₺</p>
-                    <strong class="m-2">Ödenen Toplam Bakiye :</strong><p>{{ total_payment_price }}</p>
-                    <strong class="m-2">Kalan Toplam Bakiye :</strong><p>{{ kalan_toplam_bakiye }}</p>
+                    {% if buyer_gelir %}
+                        <strong class="m-2">Toplam USD karşılığı  :</strong><p>{{ toplam_bakiye|currency }} USD</p>
+                        <strong class="m-2">Toplam TL  :</strong><p>{{ toplam_tl_bakiye|currency }}</p>
+                        <strong class="m-2">Toplam USD :</strong><p>{{ toplam_usd_bakiye|currency }} </p>
+                        <strong class="m-2">Toplam EUR :</strong><p>{{ toplam_eur_bakiye|currency }}</p>
+                        <strong class="m-2">Toplam RMB  :</strong><p>{{ toplam_rmb_bakiye|currency }}</p>
+                    {% else %}
+                        <strong class="m-2">Önceki Aydan Devreden Bakiye :</strong><p>{{ devreden_toplam_bakiye|currency }}</p>
+                        <strong class="m-2">Toplam Bakiye :</strong><p>{{ toplam_bakiye|currency }} ₺</p>
+                        <strong class="m-2">Ödenen Toplam Bakiye :</strong><p>{{ total_payment_price|currency }}</p>
+                        <strong class="m-2">Kalan Toplam Bakiye :</strong><p>{{ kalan_toplam_bakiye|currency }}</p>
+                    {% endif %}
                 </div>
                 <div class="col-md-6">
                     <h2 class="text-center">Dökümanlar</h2>
@@ -28,71 +44,143 @@
                 </div>
             </div>
         </div>
-
-
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Etiket</th>
-                    <th>İşlem Tarihi</th>
-                    <th>İşlem Türü </th>
-                    {% if activity %}
-                        <th>Aktivite</th>
-                        <th>Aktivite Ücret</th>
-                        <th>Aktivite Ödeme Bizde</th>
-                    {% else %}
-                        <th>Tur</th>
-                        <th>Transfer</th>
-                        <th>Araç</td>
-                        <th>Şoför</th>
-                        <th>Şoför Tel</th>
-                        <th>Plaka</td>
-
-                        <th>Ücret</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for operation_item in items %}
-                    {% if activity %}
-                        {% if operation_item.activity_price == 0 %}
-                            <tr style="border: 2px solid red;">
-                        {% else %}
-                            <tr>
-                        {% endif %}
-                    {% else %}
-                        {% if operation_item.vehicle_price == 0 and operation_item.vehicle and not operation_item.vehicle.vehicle == "Birleştirme" %}
-                            <tr style="border: 2px solid red;">
-                        {% else %}
-                            <tr>
-                        {% endif %}
-
-                    {% endif %}
-                        <td>{{ operation_item.id }}</td>
-                        <td>{{ operation_item.day.operation.ticket }}</td>
-                        <td>{{ operation_item.day.date }}</td>
-                        <td>{{ operation_item.operation_type }}</td>
+        <div id="cari-item">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Etiket</th>
                         {% if activity %}
-                            <td>{{ operation_item.activity }}</td>
-                            <td>{{ operation_item.activity_price }} {{ operation_item.activity_currency }}</td>
-                            <td>{{ operation_item.activity_payment }}</td>
-                        {% else %}
-                            <td>{{ operation_item.tour }}</td>
-                            <td>{{ operation_item.transfer }}</td>
-                            <td>{{ operation_item.vehicle.vehicle }}</td>
-                            <td>{{ operation_item.driver }}</td>
-                            <td>{{ operation_item.driver_phone }}</td>
-                            <td>{{ operation_item.plaka }}</td>
-
-                            <td>{{ operation_item.vehicle_price }}</td>
+                            <th>İşlem Tarihi</th>
+                            <th>İşlem Türü </th>
+                            <th>Aktivite</th>
+                            <th>Aktivite Ücret</th>
+                            <th>Aktivite Ödeme Bizde</th>
+                        {% elif activity == False %}
+                            {% if buyer_gelir %}
+                                <th>Toplam Satış Fiyatı</th>
+                                <th>TL Satış Fiyatı</th>
+                                <th>USD Satış Fiyatı</th>
+                                <th>EUR Satış Fiyatı</th>
+                                <th>RMB Satış Fiyatı</th>
+                            {% else %}
+                                <th>İşlem Tarihi</th>
+                                <th>İşlem Türü </th>
+                                <th>Tur</th>
+                                <th>Transfer</th>
+                                <th>Araç</td>
+                                <th>Şoför</th>
+                                <th>Şoför Tel</th>
+                                <th>Plaka</td>
+                                <th>Ücret</th>
+                            {% endif %}
                         {% endif %}
                     </tr>
-                {% empty %}
-                    <p>Herhangi bir kayıt bulunamadı!!!</p>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for operation_item in items %}
+                        {% if activity %}
+                            {% if operation_item.activity_price == 0 %}
+                                <tr style="border: 2px solid red;">
+                            {% else %}
+                                <tr>
+                            {% endif %}
+                        {% elif activity == False %}
+                            {% if buyer_gelir == False %}
+                                {% if operation_item.vehicle_price == 0 and operation_item.vehicle and not operation_item.vehicle.vehicle == "Birleştirme" %}
+                                    <tr style="border: 2px solid red;">
+                                {% else %}
+                                    <tr>
+                                {% endif %}
+
+                            {% endif %}
+                        {% endif %}
+                            {% if buyer_gelir %}
+                                <td>{{ operation_item.id }}</td>
+                                <td><a href="{% url 'update_operation' operation_item.id  %}" target="_blank">{{ operation_item.ticket }}</a></td>
+                                <td class="currency-cell">{{ operation_item.total_sales_price|currency }} USD</td>
+                                <td class="currency-cell">{{ operation_item.tl_sales_price|currency }}</td>
+                                <td class="currency-cell">{{ operation_item.usd_sales_price|currency }}</td>
+                                <td class="currency-cell">{{ operation_item.eur_sales_price|currency }}</td>
+                                <td class="currency-cell">{{ operation_item.rbm_sales_price|currency }}</td>
+
+                            {% else %}
+                                <td>{{ operation_item.id }}</td>
+                                <td><a href="{% url 'update_operation' operation_item.day.operation.id  %}" target="_blank">{{ operation_item.day.operation.ticket }}</a></td>
+                                <td>{{ operation_item.day.date }}</td>
+                                <td>{{ operation_item.operation_type }}</td>
+                                {% if activity %}
+                                    <td>{{ operation_item.activity }}</td>
+                                    <td>{{ operation_item.activity_price|currency }} {{ operation_item.activity_currency }}</td>
+                                    <td>{{ operation_item.activity_payment }}</td>
+                                {% elif activity == False %}
+                                    {% if buyer_gelir == False %}
+                                        <td>{{ operation_item.tour }}</td>
+                                        <td>{{ operation_item.transfer }}</td>
+                                        <td>{{ operation_item.vehicle.vehicle }}</td>
+                                        <td>{{ operation_item.driver }}</td>
+                                        <td>{{ operation_item.driver_phone }}</td>
+                                        <td>{{ operation_item.plaka }}</td>
+
+                                        <td>{{ operation_item.vehicle_price|currency }}</td>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% empty %}
+                        <p>Herhangi bir kayıt bulunamadı!!!</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+<script>
+    // Excel dosyasına kaydetme fonksiyonu
+    function saveToExcel(tableId, filename) {
+        var tedarikciName = "{{ tedarikci.name|escapejs }}";
+        var month = "{{ month|escapejs }}";
+        filename = tedarikciName + "_" + month;
+
+        var table = document.getElementById(tableId);
+        if (!table) {
+            console.error("Tablo bulunamadı: " + tableId);
+            return;
+        }
+
+        // Tabloyu excel için string olarak dönüştür
+        var sheetData = [];
+        var rows = table.querySelectorAll('tr');
+
+        rows.forEach(function(row) {
+            var rowData = [];
+            var cells = row.querySelectorAll('th, td');
+            cells.forEach(function(cell) {
+                var textContent = cell.textContent || cell.innerText;
+                rowData.push(textContent.trim());
+            });
+            sheetData.push(rowData);
+        });
+
+        // Sheet'i oluştur ve Excel dosyasına yaz
+        var ws = XLSX.utils.aoa_to_sheet(sheetData);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, filename + ".xlsx");
+    }
+
+    // DOM yüklendikten sonra tabloyu işleme
+    document.addEventListener("DOMContentLoaded", function() {
+        var table = document.getElementById("cari-item");
+        if (!table) {
+            console.error("Tablo bulunamadı: cari-item");
+            return;
+        }
+
+        // Tabloyu doğrudan olduğu gibi bırak, herhangi bir ek işlem yapma
+    });
+</script>
+
+
 {% endif %}

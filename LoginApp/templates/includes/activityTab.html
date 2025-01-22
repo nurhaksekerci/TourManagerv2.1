@@ -1,0 +1,89 @@
+<div class="tab-pane fade" id="activityTab" role="tabpanel">
+    <div class="recent-activity p-4 pb-0">
+        <div class="mb-4 pb-2 d-flex justify-content-between">
+            <h5 class="fw-bold">Recent Activity [07.08.2024]: </h5>
+            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">View Alls</a>
+        </div>
+        <ul class="list-unstyled activity-feed">
+            <li class="d-flex justify-content-between feed-item feed-item-success">
+                <div>
+                    <span class="text-truncate-1-line lead_date">Operation Type: Guide</span>
+                    <span class="text">
+                        You must check!
+                    </span>
+                    <br>
+                    <span class="text">Ticket: <a href="javascript:void(0);"
+                            class="fw-bold text-primary">C070824001</a></span>
+                </div>
+                <div class="ms-3 d-flex gap-2 align-items-center">
+                    <a href="javascript:void(0);" class="avatar-text avatar-sm"
+                        data-bs-toggle="tooltip" data-bs-trigger="hover" title="Make Read"><i
+                            class="feather feather-check fs-12"></i></a>
+                    <a href="javascript:void(0);" class="avatar-text avatar-sm"
+                        data-bs-toggle="tooltip" data-bs-trigger="hover" title="View Activity"><i
+                            class="feather feather-eye fs-12"></i></a>
+                </div>
+            </li>
+        </ul>
+        <a href="javascript:void(0);" class="d-flex align-items-center text-muted">
+            <i class="feather feather-more-horizontal fs-12"></i>
+            <span class="fs-10 text-uppercase ms-2 text-truncate-1-line">Load More</span>
+        </a>
+    </div>
+    <hr>
+    <div class="logs-history mb-0">
+        <div class="px-4 mb-4 d-flex justify-content-between">
+            <h5 class="fw-bold">Logs History</h5>
+            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">View Alls</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="text-dark text-center border-top">
+                    <tr>
+                        <th class="text-start ps-4">Descrition</th>
+                        <th>Browser</th>
+                        <th>IP</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for log in security_logs %}
+                    <tr>
+                        <td class="fw-medium text-dark text-start ps-4">{{ log.event_description }}</td>
+                        <td class="text-muted">{{ log.browser_info }}</td>
+                        <td><span class="text-muted">{{ log.ip_address }}</span></td>
+                        <td>
+                            <span class="text-muted"> <span class="d-none d-sm-inline-block">{{ log.timestamp|date:"d.m.y H:i" }}</span></span>
+                        </td>
+                        <td>
+                            {% if  log.event_type == "LOGIN_FAILURE" %}
+                                <i class="feather feather-x text-danger"></i>
+                            {% else %}
+                                <i class="feather feather-check-circle text-success"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% for log in security_logs_not %}
+                    <tr>
+                        <td class="fw-medium text-dark text-start ps-4">{{ log.event_description }}</td>
+                        <td class="text-muted">{{ log.browser_info }}</td>
+                        <td><span class="text-muted">{{ log.ip_address }}</span></td>
+                        <td>
+                            <span class="text-muted"> <span class="d-none d-sm-inline-block">{{ log.timestamp|date:"d.m.y H:i" }}</span></span>
+                        </td>
+                        <td>
+                            {% if  log.event_type == "LOGIN_FAILURE" %}
+                                <i class="feather feather-x text-danger"></i>
+                            {% else %}
+                                <i class="feather feather-check-circle text-success"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

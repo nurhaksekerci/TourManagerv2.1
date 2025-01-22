@@ -1,0 +1,13 @@
+<div class="row my-2">
+    <div class="col-10">
+        <select name="city" id="city" class="form-control">
+            <option value="">Seçim Yapınız</option>
+            {% for city in cities %}
+                <option value="{{ city.id}}">{{ city.name }}</option>
+            {% endfor %}
+        </select>
+    </div> 
+    <div class="col-2 align-self-center">
+        <button class="btn btn-sm btn-danger ms-auto" hx-on="click: this.closest('.row').remove()">Cancel City</button>
+    </div>
+</div>

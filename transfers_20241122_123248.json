@@ -1,0 +1,392 @@
+[
+    {
+        "id": 5,
+        "route": "ASR-KAPADOKYA",
+        "start_city": "Nevşehir",
+        "finish_city": "Nevşehir"
+    },
+    {
+        "id": 6,
+        "route": "NAV-KAPADOKYA",
+        "start_city": "Nevşehir",
+        "finish_city": "Nevşehir"
+    },
+    {
+        "id": 7,
+        "route": "KAPADOKYA-NAV",
+        "start_city": "Nevşehir",
+        "finish_city": "Nevşehir"
+    },
+    {
+        "id": 8,
+        "route": "IST-AVR OTEL",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 9,
+        "route": "KAPADOKYA-ASR",
+        "start_city": "Nevşehir",
+        "finish_city": "Kayseri"
+    },
+    {
+        "id": 10,
+        "route": "AVR OTEL-IST",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 11,
+        "route": "SAW-AVR OTEL",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 12,
+        "route": "AVR OTEL-SAW",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 13,
+        "route": "SAW-AND OTEL",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 14,
+        "route": "PAMUKKALE-DNZ",
+        "start_city": "Denizli",
+        "finish_city": "Denizli"
+    },
+    {
+        "id": 15,
+        "route": "IST-AND OTEL",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 16,
+        "route": "OTEL-DNZ",
+        "start_city": "Denizli",
+        "finish_city": "Denizli"
+    },
+    {
+        "id": 17,
+        "route": "AYT-OTEL",
+        "start_city": "Antalya",
+        "finish_city": "Antalya"
+    },
+    {
+        "id": 18,
+        "route": "AND OTEL-SAW",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 19,
+        "route": "OTEL-AYT",
+        "start_city": "Antalya",
+        "finish_city": "Antalya"
+    },
+    {
+        "id": 20,
+        "route": "AND OTEL-IST",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 21,
+        "route": "DLM-FETHIYE",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 22,
+        "route": "DLM-OLUDENIZ",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 23,
+        "route": "DNZ-PAMUKKALE",
+        "start_city": "Denizli",
+        "finish_city": "Denizli"
+    },
+    {
+        "id": 24,
+        "route": "AVR OTEL-AVR OTEL",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 25,
+        "route": "FETHIYE-DLM",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 26,
+        "route": "OLUDENIZ-DLM",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 27,
+        "route": "OTEL-ADB",
+        "start_city": "İzmir",
+        "finish_city": "İzmir"
+    },
+    {
+        "id": 28,
+        "route": "SULTANAHMET-AVR OTEL",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 29,
+        "route": "NAV-KAPADOKYA SHUTTLE",
+        "start_city": "Nevşehir",
+        "finish_city": "Nevşehir"
+    },
+    {
+        "id": 30,
+        "route": "ASR-KAPADOKYA SHUTTLE",
+        "start_city": "Kayseri",
+        "finish_city": null
+    },
+    {
+        "id": 31,
+        "route": "KAPADOKYA-NAV SHUTTLE",
+        "start_city": "Nevşehir",
+        "finish_city": "Nevşehir"
+    },
+    {
+        "id": 32,
+        "route": "ADB-OTEL",
+        "start_city": "İzmir",
+        "finish_city": "İzmir"
+    },
+    {
+        "id": 33,
+        "route": "KAPADOKYA-ASR SHUTTLE",
+        "start_city": "Nevşehir",
+        "finish_city": "Kayseri"
+    },
+    {
+        "id": 34,
+        "route": "OTEL-OTEL",
+        "start_city": null,
+        "finish_city": null
+    },
+    {
+        "id": 35,
+        "route": "CNR EXPO-IST",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 36,
+        "route": "TUYAP-IST",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 37,
+        "route": "SAW-TUYAP",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 38,
+        "route": "TUYAP-SAW",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 39,
+        "route": "IST-CNR EXPO",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 40,
+        "route": "IST-TUYAP",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 41,
+        "route": "KUSADASI SELCUK-ADB",
+        "start_city": "İzmir",
+        "finish_city": "İzmir"
+    },
+    {
+        "id": 42,
+        "route": "CNR EXPO-SAW",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 43,
+        "route": "SAW-CNR EXPO",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 44,
+        "route": "ADB-KUSADASI SELCUK",
+        "start_city": "İzmir",
+        "finish_city": "İzmir"
+    },
+    {
+        "id": 45,
+        "route": "SAW-IST",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 46,
+        "route": "ADB-CESME-ALACATI",
+        "start_city": "İzmir",
+        "finish_city": "İzmir"
+    },
+    {
+        "id": 47,
+        "route": "CESME-ALACATI-ADB",
+        "start_city": "İzmir",
+        "finish_city": "İzmir"
+    },
+    {
+        "id": 48,
+        "route": "test",
+        "start_city": null,
+        "finish_city": null
+    },
+    {
+        "id": 49,
+        "route": "ESB-OTEL",
+        "start_city": "Ankara",
+        "finish_city": "Ankara"
+    },
+    {
+        "id": 50,
+        "route": "OTEL-ESB",
+        "start_city": "Ankara",
+        "finish_city": "Ankara"
+    },
+    {
+        "id": 51,
+        "route": "BJV-OTEL",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 52,
+        "route": "BJV-ÖLÜDENİZ",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 57,
+        "route": "IST-SAW",
+        "start_city": "İstanbul (Anadolu)",
+        "finish_city": "İstanbul (Anadolu)"
+    },
+    {
+        "id": 58,
+        "route": "KAS-KAPADOKYA",
+        "start_city": "Antalya",
+        "finish_city": "Nevşehir"
+    },
+    {
+        "id": 59,
+        "route": "KAS-ANTALYA",
+        "start_city": null,
+        "finish_city": null
+    },
+    {
+        "id": 60,
+        "route": "KAS-ANTALYA",
+        "start_city": "Antalya",
+        "finish_city": "Antalya"
+    },
+    {
+        "id": 61,
+        "route": "testt 2",
+        "start_city": "Adana",
+        "finish_city": "Adıyaman"
+    },
+    {
+        "id": 62,
+        "route": "test",
+        "start_city": "Adana",
+        "finish_city": "Adıyaman"
+    },
+    {
+        "id": 63,
+        "route": "test",
+        "start_city": "Adana",
+        "finish_city": "Adıyaman"
+    },
+    {
+        "id": 64,
+        "route": "test",
+        "start_city": "Adana",
+        "finish_city": "Adana"
+    },
+    {
+        "id": 65,
+        "route": "test",
+        "start_city": "Adana",
+        "finish_city": "Adıyaman"
+    },
+    {
+        "id": 66,
+        "route": "test",
+        "start_city": "Adana",
+        "finish_city": "Adıyaman"
+    },
+    {
+        "id": 67,
+        "route": "test",
+        "start_city": "Afyonkarahisar",
+        "finish_city": "Ağrı"
+    },
+    {
+        "id": 68,
+        "route": "test",
+        "start_city": "Adana",
+        "finish_city": "Adıyaman"
+    },
+    {
+        "id": 69,
+        "route": "TESST",
+        "start_city": "Adana",
+        "finish_city": "Adıyaman"
+    },
+    {
+        "id": 70,
+        "route": "IST - AVR İSKELESİ",
+        "start_city": "İstanbul (Avrupa)",
+        "finish_city": "İstanbul (Avrupa)"
+    },
+    {
+        "id": 71,
+        "route": "FARALYA-DLM",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 72,
+        "route": "DLM-FARALYA",
+        "start_city": "Muğla",
+        "finish_city": "Muğla"
+    },
+    {
+        "id": 73,
+        "route": "KAPADOKYA-IST",
+        "start_city": "Nevşehir",
+        "finish_city": "İstanbul"
+    }
+]

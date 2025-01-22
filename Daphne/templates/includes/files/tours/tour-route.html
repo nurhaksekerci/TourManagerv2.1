@@ -1,0 +1,16 @@
+<div class="mb-4">
+    <label class="form-label">Location <span class="text-danger">*</span></label>
+    <div class="input-group dropdown mb-4">
+        <span class="input-group-text text-success">
+            <i class="fa-solid fa-location-dot"></i>
+        </span>
+        <select class="form-control" name="location" placeholder="Location">
+            {% for lct in locations_select %}
+                <option  value="{{ lct.route }}">{{ lct.route }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" class="btn btn-light-brand">
+            <i class="feather-x"></i>
+        </button>
+    </div>
+</div>

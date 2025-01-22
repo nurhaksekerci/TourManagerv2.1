@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dsg_u_02)i!eva2o+cu!q&ar&38fxzesd$uj=ea1*we%w%jtro'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -33,7 +33,6 @@ LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/TourManagerV2/'
 
 # Application definition
-
 INSTALLED_APPS = [
     "daphne",
     'django.contrib.admin',
@@ -42,29 +41,56 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'channels',
     'Core',
+    'Daphne',
+    'LoginApp',
+    'TourApp',
     'Login',
-    "chat",
+    'api',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
 }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'Core.middlewares.AutoLogoutMiddleware',
+    'LoginApp.middleware.MaintenanceModeMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://defnesera.pythonanywhere.com',
+    'http://127.0.0.1:5500',
+    'https://mixifind.vercel.app',
+]
+
+# Tüm kökenlerden gelen istekleri kabul etmek için (güvenli değil):
+# CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://defnesera.pythonanywhere.com',
+    'http://127.0.0.1:5500',
+    # Diğer güvenilen kökenler
+]
+
+# Diğer ayarlar
 
 ROOT_URLCONF = 'TourManager.urls'
 
@@ -88,21 +114,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'TourManager.wsgi.application'
-ASGI_APPLICATION = "TourManager.asgi.application"
 
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [
-                {
-                    "address": "redis://:4ugkT4pY6bGcI5LGl5fJ5KrVYuxC9PGT@redis-12956.c311.eu-central-1-1.ec2.redns.redis-cloud.com:12956",
-                }
-            ],
-        },
-    },
-}
 
 
 # Database

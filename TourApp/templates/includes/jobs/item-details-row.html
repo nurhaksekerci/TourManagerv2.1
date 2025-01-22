@@ -1,0 +1,38 @@
+<tr class="fade-in main-row" onclick="toggleDetails(this)">
+    <td style="word-wrap: break-word; white-space: normal;">
+        <small class="text-muted">{{ item.day.operation.follow_staff.user.first_name }} {{ item.day.operation.follow_staff.user.last_name }}</small>
+    </td>
+    <td style="word-wrap: break-word; white-space: normal;"><a href="javascript:void(0);"><span>{{ item.day.operation.ticket }}</span></a></td>
+    <td style="word-wrap: break-word; white-space: normal;">{{ item.operation_type }}</td>
+    <td style="word-wrap: break-word; white-space: normal;">{{ item.description }}</td>
+    <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_time }}</td>
+    <td style="word-wrap: break-word; white-space: normal;">{{ item.pick_location }}</td>
+    <td style="word-wrap: break-word; white-space: normal;">
+        {% if item.tour %}
+        {{ item.tour.route }}
+        {% elif item.transfer %}
+        {{ item.transfer.route }}
+        {% else %}
+        ---
+        {% endif %}
+    </td>
+    <td style="word-wrap: break-word; white-space: normal;">
+        {% if item.vehicle %}
+        {{ item.vehicle.vehicle }}
+        {% else %}
+        ---
+        {% endif %}
+    </td>
+    <td style="word-wrap: break-word; white-space: normal;">
+        {% if item.hotel %}
+        {{ item.hotel.name }}
+        {% else %}
+        ---
+        {% endif %}
+    </td>
+</tr>
+<tr id="details-row-{{ item.id }}" class="details-row" style="display: none;">
+    <td colspan="9" style="word-wrap: break-word; white-space: normal;">
+        {% include 'includes/jobs/jobs-detail.html' %}
+    </td>
+</tr>

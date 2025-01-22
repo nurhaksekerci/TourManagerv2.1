@@ -1,0 +1,10 @@
+{% if messages %}
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+
+            {% for message in messages %}
+                alertify.dialog('alert').set({transition:'flipy',message: '{{ message|escapejs }}', title:"{{ message.tags|upper }}"}).show(); 
+            {% endfor %}
+        });
+    </script>
+{% endif %}

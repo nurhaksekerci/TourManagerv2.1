@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/select2.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/select2-theme.min.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-left d-flex align-items-center">
+        <div class="page-header-title">
+            <h5 class="m-b-10">Employee</h5>
+        </div>
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">View</li>
+        </ul>
+    </div>
+</div>
+<div class="main-content">
+    <div class="row">
+        <div class="col-xxl-4 col-xl-6">
+            {% include "includes/left-card.html" %}
+        </div>
+        <div class="col-xxl-8 col-xl-6">
+            <div class="card border-top-0">
+                <div class="card-header p-0">
+                    <!-- Nav tabs -->
+                    {% include "includes/tabs-header.html" %}
+                </div>
+                <div class="tab-content">
+                    {% include "includes/overviewTab.html" %}
+                    {% include "includes/billingTab.html" %}
+                    {% include "includes/activityTab.html" %}
+                    {% include "includes/securityTab.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'assets/vendors/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/vendors/js/select2-active.min.js' %}"></script>
+<script src="{% static 'assets/js/customers-view-init.min.js' %}"></script>
+{% endblock js %}

@@ -1,0 +1,120 @@
+<table class="table table-bordered mb-0" style="font-size: 0.6rem;">
+    <tr>
+        <th style="word-wrap: break-word; white-space: normal;">Vehicle Cost Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">Vehicle Sell Price</th>
+    </tr>
+    <tr>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_price }} {{ item.vehicle_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.vehicle_sell_price }} {{ item.vehicle_sell_currency }}</td>
+    </tr>
+    <tr>
+        <th style="word-wrap: break-word; white-space: normal;">Hotel Name</th>
+        <th style="word-wrap: break-word; white-space: normal;">Hotel Cost Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">Hotel Sell Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+    </tr>
+    <tr>
+        <td style="word-wrap: break-word; white-space: normal;">
+            {% if item.hotel %}
+            {{item.hotel.name}}
+            {% else %}
+            ---
+            {% endif %}
+        </td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_price }} {{ item.hotel_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_price }} {{ item.hotel_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.hotel_payment }}</td>
+    </tr>
+    <tr>
+        <th style="word-wrap: break-word; white-space: normal;">Activity Name</th>
+        <th style="word-wrap: break-word; white-space: normal;">Activity Cost Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">Activity Sell Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+    </tr>
+    <tr>
+        <td style="word-wrap: break-word; white-space: normal;">
+            {% if item.activity %}
+            {{item.activity.name}}
+            {% else %}
+            ---
+            {% endif %}
+        </td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_price }} {{ item.activity_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_price }} {{ item.activity_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.activity_payment }}</td>
+    </tr>
+    <tr>
+        <th style="word-wrap: break-word; white-space: normal;">Museums</th>
+        <th style="word-wrap: break-word; white-space: normal;">Museum Cost Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">Museum Sell Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">We Paid</th>
+    </tr>
+    <tr>
+        <td style="word-wrap: break-word; white-space: normal;" class="today-museum">
+            {% if item.new_museum.exists %}
+            {% for museum in item.new_museum.all %}
+            {{ museum.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            {% else %}
+            ---
+            {% endif %}
+        </td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_price }} {{ item.museum_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_price }} {{ item.museum_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.museum_payment }}</td>
+    </tr>
+    <tr>
+        <th style="word-wrap: break-word; white-space: normal;">Guide Name</th>
+        <th style="word-wrap: break-word; white-space: normal;">Guide Cost Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">Guide Sell Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">There is Guide</th>
+    </tr>
+    <tr>
+        <td style="word-wrap: break-word; white-space: normal;">
+            {% if item.guide %}
+            {{item.guide.name}}
+            {% else %}
+            ---
+            {% endif %}
+        </td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_price }} {{ item.guide_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_price }} {{ item.guide_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.guide_var }}</td>
+    </tr>
+    <tr>
+        <th style="word-wrap: break-word; white-space: normal;">Driver Name</th>
+        <th style="word-wrap: break-word; white-space: normal;">Driver Phone</th>
+        <th style="word-wrap: break-word; white-space: normal;">Vehicle Plate</th>
+    </tr>
+    <tr>
+        <td style="word-wrap: break-word; white-space: normal;">
+            {% if item.driver %}
+            {{item.driver}}
+            {% else %}
+            ---
+            {% endif %}
+        </td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.driver_phone }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.plaka }}</td>
+    </tr>
+    <tr>
+        <th style="word-wrap: break-word; white-space: normal;">Other Sell Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">Other Cost Price</th>
+        <th style="word-wrap: break-word; white-space: normal;">Action</th>
+    </tr>
+    <tr>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.other_sell_price }} {{ item.other_sell_currency }}</td>
+        <td style="word-wrap: break-word; white-space: normal;">{{ item.other_price }} {{ item.other_currency }}</td>
+        <td class="d-flex" style="word-wrap: break-word; white-space: normal;">
+            <a href="javascript:void(0);" class="avatar-text avatar-md ms-auto">
+                <i class="feather-alert-circle"></i>
+            </a>
+            <a href="javascript:void(0);" class="avatar-text avatar-md ms-auto">
+                <i class="feather-check-circle"></i>
+            </a>
+            <button hx-get="{% url 'update_operationitem' item.id %}" hx-target="#details-row-{{ item.id }} td" hx-swap="innerHTML" class="avatar-text avatar-md ms-auto">
+                <i class="feather-arrow-right"></i>
+            </button>
+        </td>
+    </tr>
+</table>

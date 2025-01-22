@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zxx">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="author" content="theme_ocean">
+    <title>Daphne || Verify Cover</title>
+    {% comment %} Start Alert {% endcomment %}
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css"/>
+    {% comment %} End Alert {% endcomment %}
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon.ico' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/vendors.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/theme.min.css' %}">
+</head>
+
+<body>
+    <main class="auth-cover-wrapper">
+        <div class="auth-cover-content-inner">
+            <div class="auth-cover-content-wrapper">
+                <div class="auth-img">
+                    <img src="{% static 'assets/images/auth/auth-cover-verify-bg.svg' %}" alt="" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="auth-cover-sidebar-inner">
+            <div class="auth-cover-card-wrapper">
+                <div class="auth-cover-card p-sm-5">
+                    <div class="wd-50 mb-5">
+                        <img src="{% static 'assets/images/logo-abbr.png' %}" alt="" class="img-fluid">
+                    </div>
+                    <h2 class="fs-20 fw-bolder mb-4">Verify <a href="javascript:void(0);" class="float-end fs-12 text-primary">Change Methord</a></h2>
+                    <h4 class="fs-13 fw-bold mb-2">Please enter th e code generated one time password to verify your account.</h4>
+                    <p class="fs-12 fw-medium text-muted"><span>A code has been sent to</span> <strong>*******9897</strong></p>
+                    <form method="POST" class="w-100 mt-4 pt-2">
+                        {% csrf_token %}
+                        <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                            <input class="m-2 text-center form-control rounded" type="text" id="first" name="first" maxlength="1" required>
+                            <input class="m-2 text-center form-control rounded" type="text" id="second" name="second" maxlength="1" required>
+                            <input class="m-2 text-center form-control rounded" type="text" id="third" name="third" maxlength="1" required>
+                            <input class="m-2 text-center form-control rounded" type="text" id="fourth" name="fourth" maxlength="1" required>
+                            <input class="m-2 text-center form-control rounded" type="text" id="fifth" name="fifth" maxlength="1" required>
+                            <input class="m-2 text-center form-control rounded" type="text" id="sixth"  name="sixth"maxlength="1" required>
+                        </div>
+                        <div class="mt-5">
+                            <button type="submit" class="btn btn-lg btn-primary w-100">Validate</button>
+                        </div>
+                        <div class="mt-5 text-muted">
+                            <span>Didn't get the code</span>
+                            <a href="javascript:void(0);">Resend(1/3)</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    {% include "includes/theme-customizer.html" %}
+    <script src="{% static 'assets/vendors/js/vendors.min.js' %}"></script>
+    <script src="{% static 'assets/js/common-init.min.js' %}"></script>
+    <script src="{% static 'assets/js/theme-customizer-init.min.js' %}"></script>
+    {% comment %} Start Alert {% endcomment %}
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+    {% comment %} End Alert {% endcomment %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            function OTPInput() {
+                const inputs = document.querySelectorAll("#otp > *[id]");
+                for (let i = 0; i < inputs.length; i++) {
+                    inputs[i].addEventListener("input", function(event) {
+                        // Girdi alındığında, değeri input alanına koyun
+                        if (inputs[i].value.length === 1 && i !== inputs.length - 1) {
+                            inputs[i + 1].focus();
+                        }
+                    });
+        
+                    inputs[i].addEventListener("keydown", function(event) {
+                        if (event.key === "Backspace") {
+                            inputs[i].value = "";
+                            if (i !== 0) inputs[i - 1].focus();
+                        }
+                    });
+                }
+            }
+            OTPInput();
+        });
+        
+    </script>
+    {% include "includes/alert.html" %}
+</body>
+
+</html>

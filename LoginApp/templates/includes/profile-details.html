@@ -1,0 +1,37 @@
+<div class="profile-details mb-5">
+    <div class="mb-4 d-flex align-items-center justify-content-between">
+        <h5 class="fw-bold mb-0">Profile Details:</h5>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Name:</div>
+        <div class="col-sm-6 fw-semibold">{{ employee.user.first_name }}</div>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Surname:</div>
+        <div class="col-sm-6 fw-semibold">{{ employee.user.last_name }}</div>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Company:</div>
+        <div class="col-sm-6 fw-semibold">{{ employee.company.name }}</div>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Job:</div>
+        <div class="col-sm-6 fw-semibold">{{ employee.job }}</div>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Joining Date:</div>
+        <div class="col-sm-6 fw-semibold">{{ employee.created_at|date:"d.m.y" }}</div>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Mobile Number:</div>
+        <div class="col-sm-6 fw-semibold">{{ employee.phone }}</div>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Email Address:</div>
+        <div class="col-sm-6 fw-semibold">{{ employee.user.email }}</div>
+    </div>
+    <div class="row g-0 mb-4">
+        <div class="col-sm-6 text-muted">Communication:</div>
+        <div class="col-sm-6 fw-semibold">Email, Phone, Notification</div>
+    </div>
+</div>

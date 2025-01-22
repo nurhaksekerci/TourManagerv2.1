@@ -22,6 +22,7 @@ from django.conf import settings
 from decimal import Decimal, DivisionUndefined
 from django.views.decorators.csrf import csrf_exempt
 import requests
+from django.db.models import Q
 
 def get_exchange_rates(request):
     today = date.today()
@@ -153,6 +154,9 @@ def generic_create_view(request, model):
     if request.method == "POST":
         form = form_class(request.POST or None)
         if form.is_valid():
+            print('##############################################')
+            print(form)
+            print('##############################################')
             new_object = form.save(commit=False)
             new_object.company = company
             if model == "Notification":
@@ -311,7 +315,7 @@ def generic_excel_download(request, model):
     ws.title = f"{model} Template"
 
     # Başlıkları yaz
-    fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company']]
+    fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company', 'is_delete']]
     field_names = [field.verbose_name for field in fields]
 
     for col_num, field_name in enumerate(field_names, 1):
@@ -339,7 +343,7 @@ def generic_excel_full_download(request, model):
     ws.title = f"{model} Template"
 
     # Başlıkları yaz
-    fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company']]
+    fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company', 'is_delete']]
     field_names = [field.verbose_name for field in fields]
 
     for col_num, field_name in enumerate(field_names, 1):
@@ -348,7 +352,7 @@ def generic_excel_full_download(request, model):
         cell.font = Font(bold=True)
 
     # Verileri yaz
-    for row_num, obj in enumerate(ModelClass.objects.all(), 2):
+    for row_num, obj in enumerate(ModelClass.objects.filter(is_delete=False), 2):
         for col_num, field in enumerate(fields, 1):
             cell = ws.cell(row=row_num, column=col_num)
             cell_value = getattr(obj, field.name)
@@ -388,7 +392,7 @@ def generic_excel_upload(request, model):
                 return HttpResponseNotFound(f"{model} model not found.")
 
             # Alanları alın, id ve company hariç
-            fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company']]
+            fields = [field for field in ModelClass._meta.fields if field.name not in ['id', 'company', 'is_delete']]
             field_names = [field.name for field in fields]
             print("Field names:", field_names)
 
@@ -691,7 +695,7 @@ def create_operation(request):
             recipients_group = "Herkes"
             notification = Notification(company=sirket, sender=sender, recipients_group=recipients_group, title=notification_title, message=notification_text)
             notification.save()
-            recipients = Personel.objects.filter(company=sirket)
+            recipients = Personel.objects.filter(company=sirket, is_delete=False)
             for recipient in recipients:
                 NotificationReceipt.objects.create(notification=notification, recipient=recipient)
             context = {
@@ -773,7 +777,7 @@ from django.db.models import Prefetch
 @login_required
 def operation_details(request, operation_id):
     # Retrieve the operation with related objects in a single query
-    operation_day_prefetch = Prefetch('operationday_set', queryset=Operationday.objects.order_by('date').prefetch_related('operationitem_set'))
+    operation_day_prefetch = Prefetch('days', queryset=Operationday.objects.order_by('date').prefetch_related('items'))
     # Operation nesnesini ilgili nesnelerle birlikte tek bir sorguda alın
     operation = Operation.objects.filter(id=operation_id).prefetch_related(operation_day_prefetch).first()
 
@@ -782,11 +786,14 @@ def operation_details(request, operation_id):
         # Handle the case where the operation doesn't exist, e.g., return a 404 response
         return HttpResponseNotFound('Operation not found')
 
+    update_operation_costs(operation)
+
     context = {
         'operation': operation,
     }
 
     return render(request, 'tour/partials/operation-details.html', context)
+
 @login_required
 def update_operation(request, operation_id):
     requestPersonel = Personel.objects.get(user=request.user)
@@ -840,7 +847,7 @@ def update_operation(request, operation_id):
                         )
                         current_date += timedelta(days=1)
 
-                days_with_items = Operationday.objects.filter(operation=updated_operation).annotate(items_count=Count('operationitem')).filter(items_count__gt=0)
+                days_with_items = Operationday.objects.filter(operation=updated_operation).annotate(items_count=Count('items')).filter(items_count__gt=0)
 
                 if updated_operation.finish < finish:
                     max_date = days_with_items.filter(date__gt=updated_operation.finish).aggregate(max_date=Max('date'))['max_date']
@@ -908,7 +915,7 @@ def update_operation(request, operation_id):
                 recipients_group = "Herkes"
                 notification = Notification(company=sirket, sender=sender, recipients_group=recipients_group, title=notification_title, message=notification_text)
                 notification.save()
-                recipients = Personel.objects.filter(company=sirket)
+                recipients = Personel.objects.filter(company=sirket, is_delete=False)
                 for recipient in recipients:
                     NotificationReceipt.objects.create(notification=notification, recipient=recipient)
 
@@ -925,22 +932,34 @@ def update_operation(request, operation_id):
         form = OperationForm(instance=operation, request=request)
 
     operation_day_forms = [
-        (OperationdayForm(instance=day), [OperationitemForm(instance=item, request=request) for item in day.operationitem_set.all()])
-        for day in operation.operationday_set.all().order_by('date')
+        (OperationdayForm(instance=day), [OperationitemForm(instance=item, request=request) for item in day.items.filter(is_delete=False)])
+        for day in operation.days.filter(is_delete=False).order_by('date')
     ]
+
 
     return render(request, 'tour/pages/update_operation.html', {'operation_form': form, 'title': 'Güncelle', 'operation_day_forms': operation_day_forms, 'operation': operation})
 
 def update_total_cost(operation_item, currency, price):
-    if currency == "TL":
-        operation_item.tl_cost_price += price
-    elif currency == "USD":
-        operation_item.usd_cost_price += price
-    elif currency == "EUR":
-        operation_item.eur_cost_price += price
-    elif currency == "RMB":
-        operation_item.rmb_cost_price += price
-    operation_item.save()
+    if price:
+        if price != 0 and price != Decimal('0.00'):
+            if operation_item.tl_cost_price is None:
+                operation_item.tl_cost_price = Decimal('0.0')
+            if operation_item.usd_cost_price is None:
+                operation_item.usd_cost_price = Decimal('0.0')
+            if operation_item.eur_cost_price is None:
+                operation_item.eur_cost_price = Decimal('0.0')
+            if operation_item.rmb_cost_price is None:
+                operation_item.rmb_cost_price = Decimal('0.0')
+
+            if currency == "TL":
+                operation_item.tl_cost_price += price
+            elif currency == "USD":
+                operation_item.usd_cost_price += price
+            elif currency == "EUR":
+                operation_item.eur_cost_price += price
+            elif currency == "RMB":
+                operation_item.rmb_cost_price += price
+            operation_item.save()
 
 def update_operation_costs(operation):
 
@@ -990,7 +1009,6 @@ def add_operation_item(request, day_id):
 
     return render(request, 'tour/partials/add_operation_item.html', {'formitem': formitem, 'day_id': day_id, 'operation_day': operation_day, 'random_number': random.randint(1000, 9999)})
 
-
 @login_required
 def update_or_add_operation_item(request, day_id, item_id=None):
     requestPersonel = Personel.objects.get(user=request.user)
@@ -1037,7 +1055,8 @@ def update_or_add_operation_item(request, day_id, item_id=None):
             operation_item.usd_cost_price = 0
             operation_item.eur_cost_price = 0
             operation_item.rmb_cost_price = 0
-
+            if not operation_item.vehicle_price:
+                operation_item.vehicle_price = 0
 
             operation_item.save()
             formitem.save_m2m()  # ManyToMany alanları kaydet
@@ -1046,6 +1065,9 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                 operation_item.vehicle_price = operation_item.manuel_vehicle_price
                 vehicle_currency = operation_item.vehicle_currency
                 vehicle_price = operation_item.vehicle_price
+                if operation_item.vehicle_price is None:
+                    operation_item.vehicle_price = 0
+
                 operation_item.save()
                 operation_item.refresh_from_db()
                 update_total_cost(operation_item, vehicle_currency, vehicle_price)
@@ -1186,7 +1208,7 @@ def update_or_add_operation_item(request, day_id, item_id=None):
                     recipients_group = "Herkes"
                     notification = Notification(company=sirket, sender=sender, recipients_group=recipients_group, title=notification_title, message=notification_text)
                     notification.save()
-                    recipients = Personel.objects.filter(company=sirket)
+                    recipients = Personel.objects.filter(company=sirket, is_delete=False)
                     for recipient in recipients:
                         NotificationReceipt.objects.create(notification=notification, recipient=recipient)
 
@@ -1280,6 +1302,9 @@ def sms(staff, action, item=None, old_value=None, phone=None):
     mesaj = ""
     if item:
         operation_detail = item.tour if item.tour else item.transfer
+    else:
+        operation_detail = "Belirtilmemiş"
+
     if staff == "driver":
         if action == "assigned":
             mesaj = f"Sayın {old_value}, {item.day.date.day}.{item.day.date.month}.{item.day.date.year} tarihinde {item.operation_type} tanımlanmıştır. Açıklaması: {item.description}, Güzergah: {operation_detail}, Alış Saati: {item.pick_time}, Alış Yeri: {item.pick_location}, Bırakış Yeri: {item.release_location}"
@@ -1332,7 +1357,12 @@ def delete_operation(request, operation_id):
         except Personel.DoesNotExist:
             pass  # veya uygun bir hata mesajı göster
         operation.is_delete = True
-        operation.ticket = f"{ticket}Silindi"
+        base_ticket = f"{ticket}Silindi"
+        operation.ticket = base_ticket
+        suffix = 1
+        while Operation.objects.filter(ticket=operation.ticket).exists():
+            operation.ticket = f"{base_ticket}{suffix}"
+            suffix += 1
         operation.save()
          # İlgili gün ve itemları sil
         Operationday.objects.filter(operation=operation).update(is_delete=True)
@@ -1398,13 +1428,13 @@ def index(request):
         for job in jobs:
             if job.operation_type in ['Tur', 'TurTransfer', 'TransferTur']:
                 if job.vehicle and job.supplier and job.pick_time:
-                    if job.hotel_payment == 'Evet':
+                    if job.hotel_payment == 'Yes':
                         if job.hotel and job.hotel_price:
-                            if job.museum_payment == 'Evet':
+                            if job.museum_payment == 'Yes':
                                 if job.new_museum and job.museum_price:
-                                    if job.activity_payment == 'Evet':
+                                    if job.activity_payment == 'Yes':
                                         if job.activity and job.activity_price and job.activity_supplier:
-                                            if job.guide_var == 'Evet':
+                                            if job.guide_var == 'Yes':
                                                 if job.guide and job.guide_price != 0:
                                                     job.row_class = ""
                                                 else:
@@ -1427,13 +1457,13 @@ def index(request):
                     job.row_class = "red_tr"
             elif job.operation_type == 'Transfer':
                 if job.vehicle and job.supplier and job.pick_time:
-                    if job.hotel_payment == 'Evet':
+                    if job.hotel_payment == 'Yes':
                         if job.hotel and job.room_type and job.hotel_price:
-                            if job.museum_payment == 'Evet':
+                            if job.museum_payment == 'Yes':
                                 if job.new_museum and job.museum_price:
-                                    if job.activity_payment == 'Evet':
+                                    if job.activity_payment == 'Yes':
                                         if job.activity and job.activity_price and job.activity_supplier:
-                                            if job.guide_var == 'Evet':
+                                            if job.guide_var == 'Yes':
                                                 if job.guide and job.guide_price != 0:
                                                     job.row_class = ""
                                                 else:
@@ -1455,17 +1485,17 @@ def index(request):
                 else:
                     job.row_class = "red_tr"
             elif job.operation_type == 'Aktivite':
-                if job.activity_payment == 'Evet' and job.activity and job.pick_time and job.activity_price and job.activity_supplier:
+                if job.activity_payment == 'Yes' and job.activity and job.pick_time and job.activity_price and job.activity_supplier:
                     job.row_class = ""
                 else:
                     job.row_class = "red_tr"
             elif job.operation_type == 'Müze':
-                if job.museum_payment == 'Evet' and job.new_museum and job.pick_time and job.museum_price:
+                if job.museum_payment == 'Yes' and job.new_museum and job.pick_time and job.museum_price:
                     job.row_class = ""
                 else:
                     job.row_class = "red_tr"
             elif job.operation_type == 'Rehber':
-                if job.guide_var == 'Evet' and job.guide and job.guide_price and job.guide_currency:
+                if job.guide_var == 'Yes' and job.guide and job.guide_price and job.guide_currency:
                     job.row_class = ""
                 else:
                     job.row_class = "red_tr"
@@ -1581,13 +1611,13 @@ def indexim(request):
         for job in jobs:
             if job.operation_type in ['Tur', 'TurTransfer', 'TransferTur']:
                 if job.vehicle and job.supplier and job.pick_time:
-                    if job.hotel_payment == 'Evet':
+                    if job.hotel_payment == 'Yes':
                         if job.hotel and job.room_type and job.hotel_price:
-                            if job.museum_payment == 'Evet':
+                            if job.museum_payment == 'Yes':
                                 if job.new_museum and job.museum_price:
-                                    if job.activity_payment == 'Evet':
+                                    if job.activity_payment == 'Yes':
                                         if job.activity and job.activity_price and job.activity_supplier:
-                                            if job.guide_var == 'Evet':
+                                            if job.guide_var == 'Yes':
                                                 if job.guide and job.guide_price != 0:
                                                     job.row_class = ""
                                                 else:
@@ -1610,13 +1640,13 @@ def indexim(request):
                     job.row_class = "red_tr"
             elif job.operation_type == 'Transfer':
                 if job.vehicle and job.supplier and job.pick_time:
-                    if job.hotel_payment == 'Evet':
+                    if job.hotel_payment == 'Yes':
                         if job.hotel and job.room_type and job.hotel_price:
-                            if job.museum_payment == 'Evet':
+                            if job.museum_payment == 'Yes':
                                 if job.new_museum and job.museum_price:
-                                    if job.activity_payment == 'Evet':
+                                    if job.activity_payment == 'Yes':
                                         if job.activity and job.activity_price and job.activity_supplier:
-                                            if job.guide_var == 'Evet':
+                                            if job.guide_var == 'Yes':
                                                 if job.guide and job.guide_price != 0:
                                                     job.row_class = ""
                                                 else:
@@ -1638,17 +1668,17 @@ def indexim(request):
                 else:
                     job.row_class = "red_tr"
             elif job.operation_type == 'Aktivite':
-                if job.activity_payment == 'Evet' and job.activity and job.pick_time and job.activity_price and job.activity_supplier:
+                if job.activity_payment == 'Yes' and job.activity and job.pick_time and job.activity_price and job.activity_supplier:
                     job.row_class = ""
                 else:
                     job.row_class = "red_tr"
             elif job.operation_type == 'Müze':
-                if job.museum_payment == 'Evet' and job.new_museum and job.pick_time and job.museum_price:
+                if job.museum_payment == 'Yes' and job.new_museum and job.pick_time and job.museum_price:
                     job.row_class = ""
                 else:
                     job.row_class = "red_tr"
             elif job.operation_type == 'Rehber':
-                if job.guide_var == 'Evet' and job.guide and job.guide_price and job.guide_currency:
+                if job.guide_var == 'Yes' and job.guide and job.guide_price and job.guide_currency:
                     job.row_class = ""
                 else:
                     job.row_class = "red_tr"
@@ -1697,17 +1727,17 @@ def create_notification(request):
             job_title = form.cleaned_data['recipients_group']
             if notification.sender.job == "Sistem Geliştiricisi":
                 if job_title != "Herkes":
-                    recipients = Personel.objects.filter(job=job_title)
+                    recipients = Personel.objects.filter(job=job_title, is_delete=False)
                 else:
-                    recipients = Personel.objects.all()
+                    recipients = Personel.objects.filter(is_delete=False)
                 for recipient in recipients:
                     NotificationReceipt.objects.create(notification=notification, recipient=recipient)
 
             else:
                 if job_title != "Herkes":
-                    recipients = Personel.objects.filter(company=sirket, job=job_title)
+                    recipients = Personel.objects.filter(company=sirket, job=job_title, is_delete=False)
                 else:
-                    recipients = Personel.objects.filter(company=sirket)
+                    recipients = Personel.objects.filter(company=sirket, is_delete=False)
                 for recipient in recipients:
                     NotificationReceipt.objects.create(notification=notification, recipient=recipient)
 
@@ -1715,13 +1745,21 @@ def create_notification(request):
             return redirect('notification_create') # Başarıyla oluşturulduktan sonra yönlendirilecek yer
     else:
         form = NotificationForm()
-        my_notifications = Notification.objects.filter(
-            company=sirket,
-            sender=requestPersonel,
-            timestamp__range=(start_of_today, end_of_today)
-        ).prefetch_related(
-            Prefetch('receipts', queryset=NotificationReceipt.objects.filter(recipient__company=sirket))
-        ).order_by('-timestamp')  # Azalan sıralama için '-timestamp'
+        if requestPersonel.job == "Sistem Geliştiricisi":
+            my_notifications = Notification.objects.filter(
+                sender=requestPersonel,
+                timestamp__range=(start_of_today, end_of_today)
+            ).prefetch_related(
+                Prefetch('receipts', queryset=NotificationReceipt.objects.all())
+            ).order_by('-timestamp')  # Azalan sıralama için '-timestamp'
+        else:
+            my_notifications = Notification.objects.filter(
+                company=sirket,
+                sender=requestPersonel,
+                timestamp__range=(start_of_today, end_of_today)
+            ).prefetch_related(
+                Prefetch('receipts', queryset=NotificationReceipt.objects.filter(recipient__company=sirket))
+            ).order_by('-timestamp')  # Azalan sıralama için '-timestamp'
 
 
     return render(request, 'tour/pages/create_notification.html', {'form': form, 'my_notifications' : my_notifications, 'title' : 'Bildirim Oluştur'})
@@ -1730,14 +1768,23 @@ def create_notification(request):
 def notifications_api(request):
     if request.method == 'GET':
         try:
-            personel = request.user.personel.first()
+            personel = Personel.objects.get(user=request.user)
+            company = personel.company
         except AttributeError:
             return JsonResponse({'error': 'Personel object not found for this user'}, status=404)
 
+
+
+
+        today = datetime.now().date()
+        yesterday = today - timedelta(days=1)
+
         notifications = NotificationReceipt.objects.filter(
-            recipient=personel,
+            Q(recipient=personel, notification__company=company) |
+            Q(notification__sender__job="Sistem Geliştiricisi", recipient=personel),
+            notification__timestamp__date__in=[yesterday, today],
             read_at__isnull=True
-        ).order_by('-notification__timestamp')[:5]
+        ).order_by('notification__timestamp')
 
         notifications_data = [
             {
@@ -1779,15 +1826,17 @@ def mark_notification_as_read(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         notification_id = data.get('notification_id')
-        user = request.user  # Kullanıcı oturum bilgisini kullanarak alınır
+        personel = Personel.objects.get(user = request.user)  # Kullanıcı oturum bilgisini kullanarak alınır
 
         try:
-            receipt = NotificationReceipt.objects.get(notification_id=notification_id, recipient=user.personel)
+            receipt = NotificationReceipt.objects.get(notification__id=notification_id, recipient=personel)
             receipt.read_at = date.now()
             receipt.save()
             return JsonResponse({'status': 'success', 'message': 'Notification marked as read.'})
         except NotificationReceipt.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Notification not found.'}, status=404)
+
+
 
 
 def template_create(request, operation_id):
@@ -1921,12 +1970,155 @@ def template_list(request):
 def cari(request):
     requestPersonel = Personel.objects.get(user=request.user)
     sirket = requestPersonel.company
-    suppliers = Supplier.objects.filter(company=sirket).order_by('name')
+    suppliers = Supplier.objects.filter(company=sirket, is_delete=False).order_by('name')
 
     context={
-        'suppliers' : suppliers
+        'suppliers' : suppliers,
+        'activity' : False,
+        'buyer_gelir' : False,
     }
     return render(request, 'tour/pages/cari.html', context)
+
+def buyer(request):
+    requestPersonel = Personel.objects.get(user=request.user)
+    sirket = requestPersonel.company
+    buyers = Buyercompany.objects.filter(company=sirket, is_delete=False).order_by('name')
+
+    context={
+        'suppliers' : buyers,
+        'buyer_gelir' : True,
+        'activity' : False
+    }
+    return render(request, 'tour/pages/cari.html', context)
+
+def buyer_category(request, tedarikci_id, month=None):
+    toplam_rmb_bakiye = 0
+    toplam_usd_bakiye = 0
+    toplam_eur_bakiye = 0
+    toplam_tl_bakiye = 0
+    toplam_bakiye = 0
+    requestPersonel = Personel.objects.get(user=request.user)
+    sirket = requestPersonel.company
+    tedarikci = get_object_or_404(Buyercompany, id=tedarikci_id)
+    month = datetime.now().month
+    items = Operation.objects.filter(company=sirket, buyer_company=tedarikci, start__month=month, is_delete=False)
+    if items:
+        for item in items:
+            satis = 0
+            exchange = ExchangeRate.objects.filter(created_at__gte=item.start).order_by('created_at').first()
+            if exchange:
+                eur_sales_price = Decimal(item.eur_sales_price or 0)
+                tl_sales_price = Decimal(item.tl_sales_price or 0)
+                rbm_sales_price = Decimal(item.rbm_sales_price or 0)
+                usd_sales_price = Decimal(item.usd_sales_price or 0)
+
+                usd_to_eur = Decimal(exchange.usd_to_eur)
+                usd_to_try = Decimal(exchange.usd_to_try)
+                usd_to_rmb = Decimal(exchange.usd_to_rmb)
+
+                satis += (eur_sales_price / usd_to_eur) + (tl_sales_price / usd_to_try) + (rbm_sales_price / usd_to_rmb) + usd_sales_price
+            else:
+                exchange = ExchangeRate.objects.filter(created_at__lte=item.start).order_by('created_at').first()
+                if exchange:
+                    eur_sales_price = Decimal(item.eur_sales_price or 0)
+                    tl_sales_price = Decimal(item.tl_sales_price or 0)
+                    rbm_sales_price = Decimal(item.rbm_sales_price or 0)
+                    usd_sales_price = Decimal(item.usd_sales_price or 0)
+
+                    usd_to_eur = Decimal(exchange.usd_to_eur)
+                    usd_to_try = Decimal(exchange.usd_to_try)
+                    usd_to_rmb = Decimal(exchange.usd_to_rmb)
+
+                    satis += (eur_sales_price / usd_to_eur) + (tl_sales_price / usd_to_try) + (rbm_sales_price / usd_to_rmb) + usd_sales_price
+            toplam_tl_bakiye += item.tl_sales_price
+            toplam_usd_bakiye += item.usd_sales_price
+            toplam_eur_bakiye += item.eur_sales_price
+            toplam_rmb_bakiye += item.rbm_sales_price
+            item.total_sales_price = satis
+            item.save()
+            toplam_bakiye += item.total_sales_price
+
+    if request.method == "POST":
+        month_input = request.POST.get('month', '')
+        month = datetime.now().month if not month_input else datetime.strptime(month_input, '%Y-%m').month
+        tedarikci = get_object_or_404(Buyercompany, id=tedarikci_id)
+
+        items = Operation.objects.filter(company=sirket, buyer_company=tedarikci, start__month=month, is_delete=False)
+
+        toplam_rmb_bakiye = 0
+        toplam_usd_bakiye = 0
+        toplam_eur_bakiye = 0
+        toplam_tl_bakiye = 0
+        toplam_bakiye = 0
+
+        for item in items:
+            satis = 0
+            exchange = ExchangeRate.objects.filter(created_at__gte=item.start).order_by('created_at').first()
+            if exchange:
+                eur_sales_price = Decimal(item.eur_sales_price or 0)
+                tl_sales_price = Decimal(item.tl_sales_price or 0)
+                rbm_sales_price = Decimal(item.rbm_sales_price or 0)
+                usd_sales_price = Decimal(item.usd_sales_price or 0)
+
+                usd_to_eur = Decimal(exchange.usd_to_eur)
+                usd_to_try = Decimal(exchange.usd_to_try)
+                usd_to_rmb = Decimal(exchange.usd_to_rmb)
+
+                satis += (eur_sales_price / usd_to_eur) + (tl_sales_price / usd_to_try) + (rbm_sales_price / usd_to_rmb) + usd_sales_price
+            else:
+                exchange = ExchangeRate.objects.filter(created_at__lte=item.start).order_by('created_at').first()
+                if exchange:
+                    eur_sales_price = Decimal(item.eur_sales_price or 0)
+                    tl_sales_price = Decimal(item.tl_sales_price or 0)
+                    rbm_sales_price = Decimal(item.rbm_sales_price or 0)
+                    usd_sales_price = Decimal(item.usd_sales_price or 0)
+
+                    usd_to_eur = Decimal(exchange.usd_to_eur)
+                    usd_to_try = Decimal(exchange.usd_to_try)
+                    usd_to_rmb = Decimal(exchange.usd_to_rmb)
+
+                    satis += (eur_sales_price / usd_to_eur) + (tl_sales_price / usd_to_try) + (rbm_sales_price / usd_to_rmb) + usd_sales_price
+            toplam_tl_bakiye += item.tl_sales_price
+            toplam_usd_bakiye += item.usd_sales_price
+            toplam_eur_bakiye += item.eur_sales_price
+            toplam_rmb_bakiye += item.rbm_sales_price
+            item.total_sales_price = satis
+            item.save()
+            toplam_bakiye += item.total_sales_price
+
+        context = {
+            'tedarikci_id': tedarikci_id,
+            'tedarikci' : tedarikci,
+            'items': items,
+            'month': month,
+            'toplam_bakiye': toplam_bakiye,
+            'toplam_rmb_bakiye': toplam_rmb_bakiye,
+            'toplam_usd_bakiye': toplam_usd_bakiye,
+            'toplam_eur_bakiye': toplam_eur_bakiye,
+            'toplam_tl_bakiye': toplam_tl_bakiye,
+            'activity': False,
+            'buyer_gelir': True,
+        }
+
+        if not items.exists():  # Öğeler yoksa mesajı güncelle
+            context['message'] = 'Uygun iş bulunamadı'
+        return render(request, 'tour/partials/tedarikci_isleri.html', context)
+
+    context = {
+        'tedarikci_id': tedarikci_id,
+        'tedarikci' : tedarikci,
+        'items': items,
+        'month' : month,
+        'toplam_bakiye' : toplam_bakiye,
+        'toplam_rmb_bakiye' : toplam_rmb_bakiye,
+        'toplam_usd_bakiye' : toplam_usd_bakiye,
+        'toplam_eur_bakiye' : toplam_eur_bakiye,
+        'toplam_tl_bakiye' : toplam_tl_bakiye,
+        'activity' : False,
+        'buyer_gelir' : True,
+    }
+
+    return render(request, 'tour/partials/cost_categories.html', context)
 
 def cari_category(request, tedarikci_id, month=None, field=None):
     toplam_bakiye = 0
@@ -1962,6 +2154,8 @@ def cari_category(request, tedarikci_id, month=None, field=None):
             'items': items,
             'month' : month,
             'toplam_bakiye' : toplam_bakiye,
+            'activity' : False,
+            'buyer_gelir' : False,
         }
 
         if not items.exists():  # Öğeler yoksa mesajı güncelle
@@ -2115,7 +2309,11 @@ def activity_cari_category(request, tedarikci_id, month=None, field=None):
 
 
 def support_ticket_create(request):
-    request_personel = Personel.objects.get(user=request.user)
+    try:
+        request_personel = Personel.objects.get(user=request.user)
+        # Diğer işlemler...
+    except Personel.DoesNotExist:
+        raise PermissionDenied("Personel bulunamadı.")
     sirket = request_personel.company
 
     if request.method == 'POST':
@@ -2568,57 +2766,48 @@ def hata_bildir(request):
             mesaj = f"{item.day.operation.ticket} grup kodlu turun {item.day.date.day}.{item.day.date.month} tarihinde hata tespit edildi. \n Hata: {message} \n {personel.user.first_name} {personel.user.last_name} {personel.job}"
             alici = item.day.operation.follow_staff
             if alici.phone:
-                    phone = alici.phone.strip()
-                    if phone.startswith('('):
-                        match = re.match(r'\((\d{3})\)\s*(\d{3})-(\d{4})', phone)
-                        if match:
-                            formatted_phone = match.group(1) + match.group(2) + match.group(3)
-                        else:
-                            pass
-                    elif phone.startswith('5'):
-                        formatted_phone = '0' + phone
+                phone = alici.phone.strip()
+                if phone.startswith('('):
+                    match = re.match(r'\((\d{3})\)\s*(\d{3})-(\d{4})', phone)
+                    if match:
+                        formatted_phone = match.group(1) + match.group(2) + match.group(3)
                     else:
-                        formatted_phone = phone
+                        pass
+                elif phone.startswith('5'):
+                    formatted_phone = '0' + phone
+                else:
+                    formatted_phone = phone
 
-                    body = f"""<?xml version="1.0"?>
-                        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-                                    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                            <SOAP-ENV:Body>
-                                <ns3:smsGonder1NV2 xmlns:ns3="http://sms/">
-                                    <username>8503081334</username>
-                                    <password>6D18AD8</password>
-                                    <header>MNC GROUP</header>
-                                    <msg>{mesaj}</msg>
-                                    <gsm>{formatted_phone}</gsm>
-                                    <encoding>TR</encoding>
-                                    <filter>0</filter>
-                                    <startdate></startdate>
-                                    <stopdate></stopdate>
-                                </ns3:smsGonder1NV2>
-                            </SOAP-ENV:Body>
-                        </SOAP-ENV:Envelope>"""
-                    response = requests.post(url, data=body, headers=headers)
-                    log = UserActivityLog(
-                        company=company,
-                        staff=personel,
-                        action=f"Sms Gönderildi. SMS: {mesaj}"
-                    )
-                    log.save()
-                    return redirect(index)
+                body = f"""<?xml version="1.0"?>
+                    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <SOAP-ENV:Body>
+                            <ns3:smsGonder1NV2 xmlns:ns3="http://sms/">
+                                <username>8503081334</username>
+                                <password>6D18AD8</password>
+                                <header>MNC GROUP</header>
+                                <msg>{mesaj}</msg>
+                                <gsm>{formatted_phone}</gsm>
+                                <encoding>TR</encoding>
+                                <filter>0</filter>
+                                <startdate></startdate>
+                                <stopdate></stopdate>
+                            </ns3:smsGonder1NV2>
+                        </SOAP-ENV:Body>
+                    </SOAP-ENV:Envelope>"""
+                response = requests.post(url, data=body, headers=headers)
+                log = UserActivityLog(
+                    company=company,
+                    staff=personel,
+                    action=f"Sms Gönderildi. SMS: {mesaj}"
+                )
+                log.save()
+                return redirect(index)
             else:
                 return redirect(indexim)
 
     return redirect(index)
-
-from rest_framework import viewsets
-
-from .serializers import OperationItemSerializer
-
-class OperationItemViewSet(viewsets.ModelViewSet):
-    today = date.today()
-    queryset = Operationitem.objects.filter(day__date=today, is_delete=False).order_by('pick_time')
-    serializer_class = OperationItemSerializer
 
 
 
@@ -2626,7 +2815,7 @@ def odeme_create(request):
     personel = Personel.objects.get(user=request.user)
     company = personel.company
     if request.method == 'POST':
-        form = CariForm(request.POST, request.FILES)
+        form = CariForm(request.POST, request.FILES, request=request)
         if form.is_valid():
             odeme = form.save(commit=False)  # commit=False kullanarak formu kaydetmeden önce instance'ı döndürüyoruz
             odeme.company = company  # company alanını ayarlıyoruz
@@ -2634,18 +2823,19 @@ def odeme_create(request):
             odeme.save()  # şimdi instance'ı kaydediyoruz
             return redirect('gelir')
     else:
-        form = CariForm()
+        form = CariForm(request=request)
     return render(request, 'tour/pages/odeme.html', {'form': form})
 
 def odeme_update(request, pk):
+    personel = Personel.objects.get(user=request.user)
     cari = get_object_or_404(Cari, pk=pk)
     if request.method == 'POST':
-        form = CariForm(request.POST, request.FILES, instance=cari)
+        form = CariForm(request.POST, request.FILES, instance=cari, request=request)
         if form.is_valid():
             form.save()
             return redirect('gelir')
     else:
-        form = CariForm(instance=cari)
+        form = CariForm(instance=cari, request=request)
     return render(request, 'cari_form.html', {'form': form})
 
 def odeme_delete(request, pk):
